@@ -1,0 +1,90 @@
+package com.ntu.igts.services.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
+import com.ntu.igts.enums.OrderByEnum;
+import com.ntu.igts.enums.SortByEnum;
+import com.ntu.igts.model.User;
+import com.ntu.igts.model.container.Query;
+import com.ntu.igts.repository.UserRepository;
+import com.ntu.igts.services.UserService;
+import com.ntu.igts.utils.MD5Util;
+import com.ntu.igts.utils.StringUtil;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    @Resource
+    private UserRepository userRepository;
+
+    @Override
+    public User create(User user) {
+        user.setPassword(MD5Util.getMd5(user.getPassword()));
+        return userRepository.create(user);
+    }
+
+    @Override
+    public User update(User user) {
+        return userRepository.update(user);
+    }
+
+    @Override
+    public User updatePassword(String userId, String password) {
+        int count = userRepository.updatePassword(userId, MD5Util.getMd5(password));
+        if (count > 0) {
+            return getUserById(userId);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean delete(String userId) {
+        userRepository.delete(userId);
+        User user = userRepository.findById(userId);
+        if (user == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public User getUserById(String userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public Page<User> getByPage(Query query) {
+        if (query.getSearchTerm() == null) {
+            query.setSearchTerm(StringUtil.EMPTY);
+        }
+        if (query.getSize() == 0) {
+            query.setSize(10);
+        }
+        if (query.getSortBy() == null) {
+            query.setSortBy(SortByEnum.USERNAME);
+        }
+        if (query.getOrderBy() == null) {
+            query.setOrderBy(OrderByEnum.ASC);
+        }
+
+        return userRepository.findByPage(query);
+    }
+
+    @Override
+    public User getUserByUserName(String userName) {
+        return userRepository.getUserByUserName(userName);
+    }
+
+}
