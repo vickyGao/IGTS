@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ntu.igts.model.Tag;
 import com.ntu.igts.repository.TagRepository;
@@ -18,16 +19,19 @@ public class TagServiceImpl implements TagService {
     private TagRepository tagRepository;
 
     @Override
+    @Transactional
     public Tag create(Tag tag) {
         return tagRepository.create(tag);
     }
 
     @Override
+    @Transactional
     public Tag update(Tag tag) {
         return tagRepository.update(tag);
     }
 
     @Override
+    @Transactional
     public boolean delete(String tagId) {
         tagRepository.delete(tagId);
         Tag tag = tagRepository.findById(tagId);

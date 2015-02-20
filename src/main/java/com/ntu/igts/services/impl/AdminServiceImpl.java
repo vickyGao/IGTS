@@ -3,6 +3,7 @@ package com.ntu.igts.services.impl;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ntu.igts.model.Admin;
 import com.ntu.igts.repository.AdminRepository;
@@ -16,17 +17,20 @@ public class AdminServiceImpl implements AdminService {
     private AdminRepository adminRepository;
 
     @Override
+    @Transactional
     public Admin create(Admin admin) {
         admin.setAdminPassword(MD5Util.getMd5(admin.getAdminPassword()));
         return adminRepository.create(admin);
     }
 
     @Override
+    @Transactional
     public Admin update(Admin admin) {
         return adminRepository.update(admin);
     }
 
     @Override
+    @Transactional
     public boolean delete(String adminId) {
         adminRepository.delete(adminId);
         ;
