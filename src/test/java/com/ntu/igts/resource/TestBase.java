@@ -60,9 +60,8 @@ public abstract class TestBase extends JerseyTest {
         Response adminLoginResponse = doPost("login/admin", StringUtil.EMPTY, postBody.toString());
         String userLoginResponseJson = userLoginResponse.readEntity(String.class);
         String adminLoginResponseJson = adminLoginResponse.readEntity(String.class);
-        SessionContext userSessionContext = (SessionContext) JsonUtil.getPojoFromJsonString(userLoginResponseJson,
-                        SessionContext.class);
-        SessionContext adminSessionContext = (SessionContext) JsonUtil.getPojoFromJsonString(adminLoginResponseJson,
+        SessionContext userSessionContext = JsonUtil.getPojoFromJsonString(userLoginResponseJson, SessionContext.class);
+        SessionContext adminSessionContext = JsonUtil.getPojoFromJsonString(adminLoginResponseJson,
                         SessionContext.class);
         userToken = userSessionContext.getToken();
         adminToken = adminSessionContext.getToken();

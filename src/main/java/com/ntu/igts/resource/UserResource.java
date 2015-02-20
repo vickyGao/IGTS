@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.ntu.igts.enums.ActiveStateEnum;
+import com.ntu.igts.enums.OrderByEnum;
+import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
@@ -46,7 +48,7 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String create(String inString) {
-        User pojo = (User) JsonUtil.getPojoFromJsonString(inString, User.class);
+        User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
         User user = userService.create(pojo);
         if (user == null) {
             String[] param = { pojo.getUserName() };
@@ -68,7 +70,7 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String update(String inString) {
-        User pojo = (User) JsonUtil.getPojoFromJsonString(inString, User.class);
+        User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
         User existingUser = userService.getUserById(pojo.getId());
         if (existingUser == null) {
             String[] param = { pojo.getId() };
@@ -94,7 +96,7 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String updateDetail(String inString) {
-        User pojo = (User) JsonUtil.getPojoFromJsonString(inString, User.class);
+        User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
         User existingUser = userService.getUserById(pojo.getId());
         if (existingUser == null) {
             String[] param = { pojo.getId() };
@@ -110,7 +112,7 @@ public class UserResource {
 
     @PUT
     @Path("entity/{activeyn}/{userid}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String updateUserActiveYnState(@PathParam("activeyn") ActiveStateEnum activeStateEnum,
                     @PathParam("userid") String userId) {
         User existingUser = userService.getUserById(userId);
@@ -146,9 +148,11 @@ public class UserResource {
     }
 
     @GET
-    @Path("entity/searchTerm")
+    @Path("entity/search_term")
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserByPage(@BeanParam Query query) {
+        query.setSortBy(SortByEnum.fromValue(query.getSortByString()));
+        query.setOrderBy(OrderByEnum.fromValue(query.getOrderByString()));
         Page<User> page = userService.getByPage(query);
         Pagination<User> pagination = new Pagination<User>();
         pagination.setSearchTerm(query.getSearchTerm());

@@ -38,7 +38,7 @@ public class TagResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String create(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
-        Tag pojo = (Tag) JsonUtil.getPojoFromJsonString(inString, Tag.class);
+        Tag pojo = JsonUtil.getPojoFromJsonString(inString, Tag.class);
         Tag sameStandardNameTag = tagService.getTagForStandardName(pojo.getStandardName());
         if (sameStandardNameTag != null) {
             throw new ServiceWarningException("Cannot create tag with an existing standard name.",
@@ -58,7 +58,7 @@ public class TagResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
-        Tag pojo = (Tag) JsonUtil.getPojoFromJsonString(inString, Tag.class);
+        Tag pojo = JsonUtil.getPojoFromJsonString(inString, Tag.class);
         Tag existingTag = tagService.getById(pojo.getId());
         if (existingTag == null) {
             String[] param = { pojo.getId() };
