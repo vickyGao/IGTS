@@ -26,6 +26,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public Admin update(Admin admin) {
+        admin.setAdminPassword(MD5Util.getMd5(admin.getAdminPassword()));
         return adminRepository.update(admin);
     }
 
