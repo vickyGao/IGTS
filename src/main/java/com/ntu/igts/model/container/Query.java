@@ -19,16 +19,19 @@ public class Query {
     @DefaultValue("10")
     private int size;
     @QueryParam("sortby")
-    private SortByEnum sortBy;
+    private String sortByString;
     @QueryParam("orderby")
     @DefaultValue("ASC")
-    private OrderByEnum orderBy;
-    @QueryParam("orderby")
+    private String orderByString;
+    @QueryParam("startprice")
     private double startPrice;
-    @QueryParam("orderby")
+    @QueryParam("endprice")
     private double endPrice;
-    @QueryParam("orderby")
+    @QueryParam("district")
     @DefaultValue(StringUtil.EMPTY)
+    private SortByEnum sortBy;
+    private OrderByEnum orderBy;
+
     private String district;
 
     public String getSearchTerm() {
@@ -55,20 +58,20 @@ public class Query {
         this.size = size;
     }
 
-    public SortByEnum getSortBy() {
-        return sortBy;
+    public String getSortByString() {
+        return sortByString;
     }
 
-    public void setSortBy(SortByEnum sortBy) {
-        this.sortBy = sortBy;
+    public void setSortByString(String sortByString) {
+        this.sortByString = sortByString;
     }
 
-    public OrderByEnum getOrderBy() {
-        return orderBy;
+    public String getOrderByString() {
+        return orderByString;
     }
 
-    public void setOrderBy(OrderByEnum orderBy) {
-        this.orderBy = orderBy;
+    public void setOrderByString(String orderByString) {
+        this.orderByString = orderByString;
     }
 
     public double getStartPrice() {
@@ -94,4 +97,21 @@ public class Query {
     public void setDistrict(String district) {
         this.district = district;
     }
+
+    public SortByEnum getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(SortByEnum sortBy) {
+        this.sortBy = sortBy;
+    }
+
+    public OrderByEnum getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(OrderByEnum orderBy) {
+        this.orderBy = orderBy;
+    }
+
 }

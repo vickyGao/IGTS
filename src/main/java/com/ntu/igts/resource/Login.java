@@ -37,7 +37,7 @@ public class Login {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String userLogin(String inString) {
-        LoginForm loginForm = (LoginForm) JsonUtil.getPojoFromJsonString(inString, LoginForm.class);
+        LoginForm loginForm = JsonUtil.getPojoFromJsonString(inString, LoginForm.class);
         User user = userService.getUserByUserName(loginForm.getUserName());
         if (user != null) {
             if (user.getPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
@@ -53,7 +53,7 @@ public class Login {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String adminLogin(String inString) {
-        LoginForm loginForm = (LoginForm) JsonUtil.getPojoFromJsonString(inString, LoginForm.class);
+        LoginForm loginForm = JsonUtil.getPojoFromJsonString(inString, LoginForm.class);
         Admin admin = adminService.getAdminByAdminName(loginForm.getUserName());
         if (admin != null) {
             if (admin.getAdminPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {

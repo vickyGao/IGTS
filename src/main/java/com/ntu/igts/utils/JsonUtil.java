@@ -31,9 +31,9 @@ public class JsonUtil {
         }
     }
 
-    public static Object getPojoFromJsonString(String jsonString, Class<?> targetClass) {
+    public static <T> T getPojoFromJsonString(String jsonString, Class<T> targetClass) {
         try {
-            Object object = objectMapper.readValue(jsonString, targetClass);
+            T object = objectMapper.readValue(jsonString, targetClass);
             return object;
         } catch (IOException e) {
             throw new JsonTransferException("transfer fail");
