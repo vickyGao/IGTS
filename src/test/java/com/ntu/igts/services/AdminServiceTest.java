@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.ntu.igts.model.Admin;
 import com.ntu.igts.test.Order;
+import com.ntu.igts.utils.MD5Util;
 
 public class AdminServiceTest extends TestBase {
 
@@ -29,5 +30,29 @@ public class AdminServiceTest extends TestBase {
         assertNotNull("Create admin fail", insertedAdmin);
 
         admin = insertedAdmin;
+    }
+
+    @Test
+    @Order(10)
+    public void testUpdate() {
+        admin.setAdminPassword("password2");
+        Admin updatedAdmin = adminService.update(admin);
+        assertNotNull("Update admin fail", updatedAdmin);
+        assertEquals("Update admin fail", MD5Util.getMd5("password2"), updatedAdmin.getAdminPassword());
+    }
+
+    @Test
+    @Order(20)
+    public void testGetAdminByAdminName() {
+        Admin returnAdmin = adminService.getAdminByAdminName(admin.getAdminName());
+        assertNotNull("Get admin by admin name fail", returnAdmin);
+        assertEquals("Get admin by admin name fail", admin.getId(), returnAdmin.getId());
+    }
+
+    @Test
+    @Order(30)
+    public void testDelete() {
+        boolean flage = adminService.delete(admin.getId());
+        assertTrue("Delete admin fail", flage);
     }
 }
