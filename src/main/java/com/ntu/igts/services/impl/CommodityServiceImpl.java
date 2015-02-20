@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.CommodityTag;
@@ -31,6 +32,7 @@ public class CommodityServiceImpl implements CommodityService {
     private TagRepository tagRepository;
 
     @Override
+    @Transactional
     public Commodity create(Commodity commodity) {
         Commodity insertedCommodity = commodityRepository.create(commodity);
         if (insertedCommodity != null) {
@@ -46,11 +48,13 @@ public class CommodityServiceImpl implements CommodityService {
     }
 
     @Override
+    @Transactional
     public Commodity update(Commodity commodity) {
         return commodityRepository.update(commodity);
     }
 
     @Override
+    @Transactional
     public boolean delete(String commodityId) {
         List<CommodityTag> commodityTags = commodityTagRepository.getCommodityTagsForCommodityId(commodityId);
         for (CommodityTag commodityTag : commodityTags) {

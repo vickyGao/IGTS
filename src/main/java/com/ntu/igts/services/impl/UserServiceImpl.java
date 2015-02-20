@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
@@ -23,17 +24,20 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
+    @Transactional
     public User create(User user) {
         user.setPassword(MD5Util.getMd5(user.getPassword()));
         return userRepository.create(user);
     }
 
     @Override
+    @Transactional
     public User update(User user) {
         return userRepository.update(user);
     }
 
     @Override
+    @Transactional
     public User updatePassword(String userId, String password) {
         int count = userRepository.updatePassword(userId, MD5Util.getMd5(password));
         if (count > 0) {
@@ -44,6 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean delete(String userId) {
         userRepository.delete(userId);
         User user = userRepository.findById(userId);

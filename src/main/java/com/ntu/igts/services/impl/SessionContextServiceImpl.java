@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.repository.SessionContextRepository;
@@ -18,6 +19,7 @@ public class SessionContextServiceImpl implements SessionContextService {
     private SessionContextRepository sessionContextRepository;
 
     @Override
+    @Transactional
     public SessionContext create(String userId) {
         SessionContext sessionContext = new SessionContext();
         sessionContext.setUserId(userId);
@@ -34,6 +36,7 @@ public class SessionContextServiceImpl implements SessionContextService {
     }
 
     @Override
+    @Transactional
     public SessionContext update(SessionContext sessionContext) {
         if (sessionContext.getToken() != null) {
             return sessionContextRepository.update(sessionContext);
@@ -48,6 +51,7 @@ public class SessionContextServiceImpl implements SessionContextService {
     }
 
     @Override
+    @Transactional
     public SessionContext flushSessionContext(SessionContext sessionContext) {
         if (sessionContext != null) {
             // Set expire time to be 30 minutes later
@@ -64,6 +68,7 @@ public class SessionContextServiceImpl implements SessionContextService {
     }
 
     @Override
+    @Transactional
     public boolean delete(String token) {
         sessionContextRepository.delete(token, false);
         SessionContext sessionContext = sessionContextRepository.getByToken(token);
