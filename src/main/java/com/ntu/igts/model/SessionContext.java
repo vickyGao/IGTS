@@ -17,10 +17,12 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.ntu.igts.annotations.QueryField;
 
 @Entity
 @Table(name = "session_context")
 @JsonRootName("sessioncontext")
+@QueryField({})
 public class SessionContext implements Serializable {
 
     private static final long serialVersionUID = 6827625899927899731L;
@@ -51,6 +53,9 @@ public class SessionContext implements Serializable {
     @Transient
     @JsonIgnore
     private User user;
+    @Transient
+    @JsonIgnore
+    private Admin admin;
 
     public String getToken() {
         return token;
@@ -106,6 +111,14 @@ public class SessionContext implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
     }
 
 }

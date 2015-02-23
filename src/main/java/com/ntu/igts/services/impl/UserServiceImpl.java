@@ -1,5 +1,6 @@
 package com.ntu.igts.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,9 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
+import com.ntu.igts.model.Role;
 import com.ntu.igts.model.User;
+import com.ntu.igts.model.UserRole;
 import com.ntu.igts.model.container.Query;
+import com.ntu.igts.repository.RoleRepository;
 import com.ntu.igts.repository.UserRepository;
+import com.ntu.igts.repository.UserRoleRepository;
 import com.ntu.igts.services.UserService;
 import com.ntu.igts.utils.MD5Util;
 import com.ntu.igts.utils.StringUtil;
@@ -22,6 +27,10 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserRepository userRepository;
+    @Resource
+    private UserRoleRepository userRoleRepository;
+    @Resource
+    private RoleRepository roleRepository;
 
     @Override
     @Transactional
@@ -62,6 +71,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(String userId) {
         return userRepository.findById(userId);
+    }
+
+    @Override
+    public User getUserDetailById(String userId) {
+        User user = userRepository.findById(userId);
+        if (user != null) {
+            List<UserRole> userRoles = userRoleRepository.getUserRolesByUserId(userId);
+            List<Role> roles = new ArrayList<Role>();
+            for (UserRole userRole : userRoles) {
+                roles.add(roleRepository.findById(userRole.getRoleId()));
+            }
+            user.setRoles(roles);
+        }
+        return user;
     }
 
     @Override

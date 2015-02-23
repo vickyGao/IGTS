@@ -8,10 +8,12 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.ntu.igts.annotations.QueryField;
 
 @Entity
 @Table(name = "image")
 @JsonRootName("image")
+@QueryField({})
 public class Image extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 4331430220570339151L;

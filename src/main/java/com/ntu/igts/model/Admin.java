@@ -1,10 +1,13 @@
 package com.ntu.igts.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -22,6 +25,9 @@ public class Admin extends BaseModel implements Serializable {
     @Column(name = "admin_password")
     @JsonProperty("adminpassword")
     private String adminPassword;
+    @Transient
+    @JsonProperty("roles")
+    private List<Role> roles = new ArrayList<Role>();
 
     public String getAdminName() {
         return adminName;
@@ -37,6 +43,14 @@ public class Admin extends BaseModel implements Serializable {
 
     public void setAdminPassword(String adminPassword) {
         this.adminPassword = adminPassword;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
 }

@@ -6,6 +6,7 @@ import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.ActiveStateEnum;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
@@ -150,7 +152,7 @@ public class UserResource {
     @GET
     @Path("entity/search_term")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUserByPage(@BeanParam Query query) {
+    public String getUserByPage(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @BeanParam Query query) {
         query.setSortBy(SortByEnum.fromValue(query.getSortByString()));
         query.setOrderBy(OrderByEnum.fromValue(query.getOrderByString()));
         Page<User> page = userService.getByPage(query);

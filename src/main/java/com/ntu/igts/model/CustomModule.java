@@ -11,10 +11,12 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.ntu.igts.annotations.QueryField;
 
 @Entity
 @Table(name = "custom_module")
 @JsonRootName("custommodule")
+@QueryField({})
 public class CustomModule extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -2984260644374625063L;

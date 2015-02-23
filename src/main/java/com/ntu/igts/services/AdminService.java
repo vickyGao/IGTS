@@ -12,4 +12,7 @@ public interface AdminService {
 
     public Admin getAdminByAdminName(String adminName);
 
+    public Admin getAdminDetailtById(String adminId);
+
+    public Admin getById(String adminId);
 }
