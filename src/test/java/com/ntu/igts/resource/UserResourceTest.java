@@ -84,8 +84,8 @@ public class UserResourceTest extends TestBase {
         queryParam.put("search_term", "");
         queryParam.put("page", "0");
         queryParam.put("size", "10");
-        queryParam.put("sortby", SortByEnum.USERNAME.value());
-        queryParam.put("orderby", OrderByEnum.ASC.value());
+        queryParam.put("sortby", SortByEnum.USERNAME.toString());
+        queryParam.put("orderby", OrderByEnum.ASC.toString());
         Response response = doGetWithQueryParam(BASE_PATH + "entity/search_term", adminToken, queryParam);
         String returnJson = response.readEntity(String.class);
         @SuppressWarnings("unchecked")

@@ -16,12 +16,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.ActiveStateEnum;
-import com.ntu.igts.enums.OrderByEnum;
-import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
@@ -36,7 +36,7 @@ import com.ntu.igts.utils.StringUtil;
 
 @Component
 @Path("user")
-public class UserResource {
+public class UserResource extends BaseResource {
 
     @Context
     private HttpServletRequest webRequest;
@@ -45,11 +45,20 @@ public class UserResource {
     @Resource
     private MessageBuilder messageBuilder;
 
+    /**
+     * Create a new user (register)
+     * 
+     * @param token
+     *            The sessionContext id
+     * @param inString
+     *            The post body of user pojo
+     * @return The created user
+     */
     @POST
     @Path("entity")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(String inString) {
+    public String create(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
         User user = userService.create(pojo);
         if (user == null) {
@@ -61,17 +70,20 @@ public class UserResource {
     }
 
     /**
-     * For user modify password
+     * Update user's password
      * 
+     * @param token
+     *            The sessionContext id
      * @param inString
-     *            User json body
-     * @return The user after update
+     *            The json put body of user pojo
+     * @return The updated user
      */
     @PUT
     @Path("entity")
+    @ResponseStatus(HttpStatus.OK)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String update(String inString) {
+    public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
         User existingUser = userService.getUserById(pojo.getId());
         if (existingUser == null) {
@@ -93,11 +105,20 @@ public class UserResource {
         }
     }
 
+    /**
+     * Update user's detail info (realName, age, etc.)
+     * 
+     * @param token
+     *            The sessionContext id
+     * @param inString
+     *            The json put body of user pojo
+     * @return The updated user
+     */
     @PUT
     @Path("detail")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateDetail(String inString) {
+    public String updateDetail(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
         User existingUser = userService.getUserById(pojo.getId());
         if (existingUser == null) {
@@ -112,11 +133,22 @@ public class UserResource {
         return JsonUtil.getJsonStringFromPojo(returnUser);
     }
 
+    /**
+     * Update user's active state (from active to negative etc.)
+     * 
+     * @param token
+     *            The sessionContext id
+     * @param activeStateEnum
+     *            ACTIVE or NEGATIVE
+     * @param userId
+     *            The id of the user
+     * @return The updated user
+     */
     @PUT
     @Path("entity/{activeyn}/{userid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateUserActiveYnState(@PathParam("activeyn") ActiveStateEnum activeStateEnum,
-                    @PathParam("userid") String userId) {
+    public String updateUserActiveYnState(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("activeyn") ActiveStateEnum activeStateEnum, @PathParam("userid") String userId) {
         User existingUser = userService.getUserById(userId);
         if (existingUser == null) {
             String[] param = { userId };
@@ -128,10 +160,19 @@ public class UserResource {
         return JsonUtil.getJsonStringFromPojo(returnUser);
     }
 
+    /**
+     * Delete the user
+     * 
+     * @param token
+     *            The sessionContext id
+     * @param userId
+     *            The id of the user
+     * @return If succeed to delete the user, will return success, or return fail
+     */
     @DELETE
     @Path("entity/{userid}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String delete(@PathParam("userid") String userId) {
+    public String delete(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @PathParam("userid") String userId) {
         User existingUser = userService.getUserById(userId);
         if (existingUser == null) {
             String[] param = { userId };
@@ -145,16 +186,23 @@ public class UserResource {
                             + " success.", CommonUtil.getLocaleFromRequest(webRequest));
         } else {
             return messageBuilder.buildMessage(MessageKeys.DELETE_USER_FOR_ID_FAIL, param, "Delete user " + userId
-                            + " success.", CommonUtil.getLocaleFromRequest(webRequest));
+                            + " fail.", CommonUtil.getLocaleFromRequest(webRequest));
         }
     }
 
+    /**
+     * Get users by page
+     * 
+     * @param token
+     *            The sessionContext id
+     * @param query
+     *            The query parameters, like searchTerm, sortBy, orderBy etc.
+     * @return The pagination of users
+     */
     @GET
     @Path("entity/search_term")
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserByPage(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @BeanParam Query query) {
-        query.setSortBy(SortByEnum.fromValue(query.getSortByString()));
-        query.setOrderBy(OrderByEnum.fromValue(query.getOrderByString()));
         Page<User> page = userService.getByPage(query);
         Pagination<User> pagination = new Pagination<User>();
         pagination.setSearchTerm(query.getSearchTerm());

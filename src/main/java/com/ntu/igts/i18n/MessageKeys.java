@@ -3,9 +3,12 @@ package com.ntu.igts.i18n;
 public class MessageKeys {
 
     /** Common */
+    public static final String INTERNAL_SERVER_ERROR = "internal.server.error";
 
     /** Authentication */
     public static final String USER_NAME_OR_PASSWORD_IS_WRONG = "user.name.or.password.is.wrong";
+    public static final String FORBIDDEN = "forbidden";
+    public static final String ILLEGAL_ROLE = "illegal.role";
 
     /** Tag */
     public static final String CANNOT_CREATE_TAG_WITH_EXISTING_STANDARD_NAME = "cannot.create.tag.with.existing.standard.name";

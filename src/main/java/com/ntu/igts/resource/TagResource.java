@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.stereotype.Component;
 
 import com.ntu.igts.constants.Constants;
+import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
@@ -24,7 +25,7 @@ import com.ntu.igts.utils.JsonUtil;
 
 @Component
 @Path("tag")
-public class TagResource {
+public class TagResource extends BaseResource {
 
     @Context
     private HttpServletRequest webRequest;
@@ -33,11 +34,21 @@ public class TagResource {
     @Resource
     private MessageBuilder messageBuilder;
 
+    /**
+     * Create a new tag
+     * 
+     * @param token
+     *            The sessionContext id
+     * @param inString
+     *            The post body of tag pojo
+     * @return The created tag
+     */
     @POST
     @Path("entity")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String create(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
+        filterSessionContext(token, RoleEnum.ADMIN);
         Tag pojo = JsonUtil.getPojoFromJsonString(inString, Tag.class);
         Tag sameStandardNameTag = tagService.getTagForStandardName(pojo.getStandardName());
         if (sameStandardNameTag != null) {
@@ -53,11 +64,21 @@ public class TagResource {
         return JsonUtil.getJsonStringFromPojo(insertedTag);
     }
 
+    /**
+     * Update a tag
+     * 
+     * @param token
+     *            The sessionContext id
+     * @param inString
+     *            The put body of tag pojo
+     * @return The updated tag
+     */
     @PUT
     @Path("entity")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
+        filterSessionContext(token, RoleEnum.ADMIN);
         Tag pojo = JsonUtil.getPojoFromJsonString(inString, Tag.class);
         Tag existingTag = tagService.getById(pojo.getId());
         if (existingTag == null) {

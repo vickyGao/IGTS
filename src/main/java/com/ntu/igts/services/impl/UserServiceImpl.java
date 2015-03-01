@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ntu.igts.enums.OrderByEnum;
+import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Role;
 import com.ntu.igts.model.User;
@@ -19,6 +20,7 @@ import com.ntu.igts.repository.RoleRepository;
 import com.ntu.igts.repository.UserRepository;
 import com.ntu.igts.repository.UserRoleRepository;
 import com.ntu.igts.services.UserService;
+import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.MD5Util;
 import com.ntu.igts.utils.StringUtil;
 
@@ -36,7 +38,18 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User create(User user) {
         user.setPassword(MD5Util.getMd5(user.getPassword()));
-        return userRepository.create(user);
+        User insertedUser = userRepository.create(user);
+        if (insertedUser != null) {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(insertedUser.getId());
+            List<Role> roles = roleRepository.findAll();
+            String roleId = CommonUtil.getRequiredRoleIdFromRoles(roles, RoleEnum.USER);
+            userRole.setRoleId(roleId);
+            userRoleRepository.create(userRole);
+            return getUserDetailById(insertedUser.getId());
+        } else {
+            return null;
+        }
     }
 
     @Override

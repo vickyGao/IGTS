@@ -1,5 +1,7 @@
 package com.ntu.igts.resource;
 
+import static org.junit.Assert.*;
+
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -58,6 +60,8 @@ public abstract class TestBase extends JerseyTest {
         postBody.append("}");
         Response userLoginResponse = doPost("login/user", StringUtil.EMPTY, postBody.toString());
         Response adminLoginResponse = doPost("login/admin", StringUtil.EMPTY, postBody.toString());
+        assertEquals("Login fail", 200, userLoginResponse.getStatus());
+        assertEquals("Login fail", 200, adminLoginResponse.getStatus());
         String userLoginResponseJson = userLoginResponse.readEntity(String.class);
         String adminLoginResponseJson = adminLoginResponse.readEntity(String.class);
         SessionContext userSessionContext = JsonUtil.getPojoFromJsonString(userLoginResponseJson, SessionContext.class);
