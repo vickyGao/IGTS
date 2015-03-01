@@ -3,6 +3,8 @@ package com.ntu.igts.utils;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +12,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ntu.igts.exception.JsonTransferException;
 
 public class JsonUtil {
+
+    private static final Logger LOGGER = Logger.getLogger(JsonUtil.class);
 
     private static ObjectMapper objectMapper;
 
@@ -27,6 +31,7 @@ public class JsonUtil {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
+            LOGGER.error("transfer fail", e);
             throw new JsonTransferException("transfer fail");
         }
     }
@@ -36,6 +41,7 @@ public class JsonUtil {
             T object = objectMapper.readValue(jsonString, targetClass);
             return object;
         } catch (IOException e) {
+            LOGGER.error("transfer fail", e);
             throw new JsonTransferException("transfer fail");
         }
     }
