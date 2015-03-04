@@ -102,6 +102,22 @@ public class TagServiceTest extends TestBase {
     }
 
     @Test
+    @Order(41)
+    public void testGetAllTopLevelTags() {
+        List<Tag> topLevelTags = tagService.getAllTopLevelTags();
+        assertNotNull("Get all top-level tags failed", topLevelTags);
+        assertTrue("Get all top-level tags failed", topLevelTags.size() > 0);
+    }
+
+    @Test
+    @Order(42)
+    public void testGetAllTags() {
+        List<Tag> returnTags = tagService.getAllTags();
+        assertNotNull("Get all tags failed", returnTags);
+        assertTrue("Get all tags failed", returnTags.size() > 0);
+    }
+
+    @Test
     @Order(50)
     public void testDelete() {
         List<Tag> subTags = tagService.getTagsWithSubTagsForParentId(tag.getId());

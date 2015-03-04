@@ -2,40 +2,40 @@ package com.ntu.igts.exception;
 
 import java.util.Collection;
 
-public class UnAuthenticationException extends BaseException {
+public class UnAuthorizedException extends BaseException {
 
     private static final long serialVersionUID = -5469199039846817137L;
 
-    public UnAuthenticationException() {
+    public UnAuthorizedException() {
         super("403 Forbidden");
     }
 
-    public UnAuthenticationException(String message, String code, Collection<?> details) {
+    public UnAuthorizedException(String message, String code, Collection<?> details) {
         super(message, code, details);
         // TODO Auto-generated constructor stub
     }
 
-    public UnAuthenticationException(String message, String code, Object[] param, Collection<?> details, Throwable cause) {
+    public UnAuthorizedException(String message, String code, Object[] param, Collection<?> details, Throwable cause) {
         super(message, code, param, details, cause);
         // TODO Auto-generated constructor stub
     }
 
-    public UnAuthenticationException(String message, String code, Object[] param, Collection<?> details) {
+    public UnAuthorizedException(String message, String code, Object[] param, Collection<?> details) {
         super(message, code, param, details);
         // TODO Auto-generated constructor stub
     }
 
-    public UnAuthenticationException(String message, String code) {
+    public UnAuthorizedException(String message, String code) {
         super(message, code);
         // TODO Auto-generated constructor stub
     }
 
-    public UnAuthenticationException(String message) {
+    public UnAuthorizedException(String message) {
         super(message);
         // TODO Auto-generated constructor stub
     }
 
-    public UnAuthenticationException(String message, String code, Object[] param) {
+    public UnAuthorizedException(String message, String code, Object[] param) {
         super(message, code, param);
         // TODO Auto-generated constructor stub
     }

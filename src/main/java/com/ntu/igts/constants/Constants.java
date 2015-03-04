@@ -22,4 +22,7 @@ public class Constants {
     /** Roles */
     public static final String ROLE_ADMIN = "ADMIN";
     public static final String ROLE_USER = "USER";
+
+    /** Time format */
+    public static final String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 }

@@ -11,6 +11,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import net.sf.json.JSONObject;
 
@@ -60,8 +61,8 @@ public abstract class TestBase extends JerseyTest {
         postBody.append("}");
         Response userLoginResponse = doPost("login/user", StringUtil.EMPTY, postBody.toString());
         Response adminLoginResponse = doPost("login/admin", StringUtil.EMPTY, postBody.toString());
-        assertEquals("Login fail", 200, userLoginResponse.getStatus());
-        assertEquals("Login fail", 200, adminLoginResponse.getStatus());
+        assertEquals("Login fail", Status.OK.getStatusCode(), userLoginResponse.getStatus());
+        assertEquals("Login fail", Status.OK.getStatusCode(), adminLoginResponse.getStatus());
         String userLoginResponseJson = userLoginResponse.readEntity(String.class);
         String adminLoginResponseJson = adminLoginResponse.readEntity(String.class);
         SessionContext userSessionContext = JsonUtil.getPojoFromJsonString(userLoginResponseJson, SessionContext.class);

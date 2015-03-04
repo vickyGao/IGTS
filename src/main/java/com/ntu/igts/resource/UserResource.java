@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.ActiveStateEnum;
+import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
@@ -48,8 +49,6 @@ public class UserResource extends BaseResource {
     /**
      * Create a new user (register)
      * 
-     * @param token
-     *            The sessionContext id
      * @param inString
      *            The post body of user pojo
      * @return The created user
@@ -58,7 +57,7 @@ public class UserResource extends BaseResource {
     @Path("entity")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
+    public String create(String inString) {
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
         User user = userService.create(pojo);
         if (user == null) {
@@ -84,13 +83,9 @@ public class UserResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
+        filterSessionContext(token, RoleEnum.USER);
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
-        User existingUser = userService.getUserById(pojo.getId());
-        if (existingUser == null) {
-            String[] param = { pojo.getId() };
-            throw new ServiceWarningException("Cannot find user for id " + pojo.getId(),
-                            MessageKeys.USER_NOT_FOUND_FOR_ID, param);
-        }
+        User existingUser = checkUserAvailibility(pojo.getId());
         if (!existingUser.getPassword().equals(pojo.getPassword())) {
             existingUser.setPassword(pojo.getPassword());
             User updatedUser = userService.updatePassword(pojo.getId(), pojo.getPassword());
@@ -119,13 +114,9 @@ public class UserResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String updateDetail(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
+        filterSessionContext(token, RoleEnum.USER);
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
-        User existingUser = userService.getUserById(pojo.getId());
-        if (existingUser == null) {
-            String[] param = { pojo.getId() };
-            throw new ServiceWarningException("Cannot find user for id " + pojo.getId(),
-                            MessageKeys.USER_NOT_FOUND_FOR_ID, param);
-        }
+        User existingUser = checkUserAvailibility(pojo.getId());
         if (StringUtil.isEmpty(pojo.getPassword())) {
             pojo.setPassword(existingUser.getPassword());
         }
@@ -149,12 +140,8 @@ public class UserResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String updateUserActiveYnState(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("activeyn") ActiveStateEnum activeStateEnum, @PathParam("userid") String userId) {
-        User existingUser = userService.getUserById(userId);
-        if (existingUser == null) {
-            String[] param = { userId };
-            throw new ServiceWarningException("Cannot find user for id " + userId, MessageKeys.USER_NOT_FOUND_FOR_ID,
-                            param);
-        }
+        filterSessionContext(token, RoleEnum.ADMIN);
+        User existingUser = checkUserAvailibility(userId);
         existingUser.setActiveYN(activeStateEnum.value());
         User returnUser = userService.update(existingUser);
         return JsonUtil.getJsonStringFromPojo(returnUser);
@@ -173,12 +160,8 @@ public class UserResource extends BaseResource {
     @Path("entity/{userid}")
     @Produces(MediaType.TEXT_PLAIN)
     public String delete(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @PathParam("userid") String userId) {
-        User existingUser = userService.getUserById(userId);
-        if (existingUser == null) {
-            String[] param = { userId };
-            throw new ServiceWarningException("Cannot find user for id " + userId, MessageKeys.USER_NOT_FOUND_FOR_ID,
-                            param);
-        }
+        filterSessionContext(token, RoleEnum.ADMIN);
+        checkUserAvailibility(userId);
         boolean flag = userService.delete(userId);
         String[] param = { userId };
         if (flag) {
@@ -203,6 +186,7 @@ public class UserResource extends BaseResource {
     @Path("entity/search_term")
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserByPage(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @BeanParam Query query) {
+        filterSessionContext(token, RoleEnum.ADMIN);
         Page<User> page = userService.getByPage(query);
         Pagination<User> pagination = new Pagination<User>();
         pagination.setSearchTerm(query.getSearchTerm());
@@ -211,6 +195,26 @@ public class UserResource extends BaseResource {
         pagination.setPageCount(page.getTotalPages());
         pagination.setContent(page.getContent());
         return JsonUtil.getJsonStringFromPojo(pagination);
+    }
+
+    @GET
+    @Path("entity/userid")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getUserById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("userid") String userId) {
+        checkUserAvailibility(userId);
+        return JsonUtil.getJsonStringFromPojo(userService.getUserById(userId));
+    }
+
+    private User checkUserAvailibility(String userId) {
+        User existingUser = userService.getUserById(userId);
+        if (existingUser == null) {
+            String[] param = { userId };
+            throw new ServiceWarningException("Cannot find user for id " + userId, MessageKeys.USER_NOT_FOUND_FOR_ID,
+                            param);
+        } else {
+            return existingUser;
+        }
     }
 
 }

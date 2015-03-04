@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.ntu.igts.constants.Constants;
 import com.ntu.igts.exception.JsonTransferException;
 
 public class JsonUtil {
@@ -21,7 +22,7 @@ public class JsonUtil {
         objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
-        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        objectMapper.setDateFormat(new SimpleDateFormat(Constants.DEFAULT_TIME_FORMAT));
     }
 
     private JsonUtil() {

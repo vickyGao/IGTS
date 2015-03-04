@@ -5,7 +5,8 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import com.ntu.igts.enums.RoleEnum;
-import com.ntu.igts.exception.UnAuthenticationException;
+import com.ntu.igts.exception.UnAuthorizedException;
+import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Admin;
 import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.User;
@@ -52,7 +53,7 @@ public class BaseResource {
                 }
             }
         }
-        throw new UnAuthenticationException();
+        throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
     }
 
     protected void flushSessionContext(String token) {

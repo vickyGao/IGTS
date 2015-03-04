@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.junit.Test;
 
@@ -28,6 +29,7 @@ public class TagResourceTest extends TestBase {
         testTag.setStandardName("TEST_TAG" + randomNumber);
 
         Response response = doPost(BASE_PATH + "entity", adminToken, JsonUtil.getJsonStringFromPojo(testTag));
+        assertEquals("Create tag fail", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         Tag insertedTag = JsonUtil.getPojoFromJsonString(returnJson, Tag.class);
         assertNotNull("Create tag fail", insertedTag);
@@ -40,6 +42,7 @@ public class TagResourceTest extends TestBase {
     public void testUpdate() {
         tag.setName("update test tag");
         Response response = doPut(BASE_PATH + "entity", adminToken, JsonUtil.getJsonStringFromPojo(tag));
+        assertEquals("Update tag fail", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         Tag updatedTag = JsonUtil.getPojoFromJsonString(returnJson, Tag.class);
         assertNotNull("Update tag fail", updatedTag);

@@ -8,7 +8,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.stereotype.Component;
-import com.ntu.igts.exception.UnAuthenticationException;
+
+import com.ntu.igts.exception.LoginException;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Admin;
 import com.ntu.igts.model.SessionContext;
@@ -44,8 +45,7 @@ public class Login {
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
             }
         }
-        throw new UnAuthenticationException("User name or password is wrong.",
-                        MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
+        throw new LoginException("User name or password is wrong.", MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
     }
 
     @POST
@@ -61,8 +61,7 @@ public class Login {
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
             }
         }
-        throw new UnAuthenticationException("User name or password is wrong.",
-                        MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
+        throw new LoginException("User name or password is wrong.", MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
     }
 
 }

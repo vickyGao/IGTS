@@ -3,10 +3,13 @@ package com.ntu.igts.resource;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -20,7 +23,9 @@ import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Tag;
+import com.ntu.igts.model.container.TagList;
 import com.ntu.igts.services.TagService;
+import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
 
 @Component
@@ -80,13 +85,7 @@ public class TagResource extends BaseResource {
     public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         filterSessionContext(token, RoleEnum.ADMIN);
         Tag pojo = JsonUtil.getPojoFromJsonString(inString, Tag.class);
-        Tag existingTag = tagService.getById(pojo.getId());
-        if (existingTag == null) {
-            String[] param = { pojo.getId() };
-            throw new ServiceWarningException("Cannot find tag for id " + pojo.getId(),
-                            MessageKeys.TAG_NOT_FOUND_FOR_ID, param);
-
-        }
+        checkTagAvailibility(pojo.getId());
         Tag updatedTag = tagService.update(pojo);
         if (updatedTag == null) {
             String[] param = { pojo.getName() };
@@ -94,5 +93,53 @@ public class TagResource extends BaseResource {
                             param);
         }
         return JsonUtil.getJsonStringFromPojo(updatedTag);
+    }
+
+    @DELETE
+    @Path("entity/{tagid}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String delete(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @PathParam("tagid") String tagId) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        checkTagAvailibility(tagId);
+        boolean flag = tagService.delete(tagId);
+        String[] param = { tagId };
+        if (flag) {
+            return messageBuilder.buildMessage(MessageKeys.DELETE_TAG_FOR_ID_SUCCESS, param, "Delete tag " + tagId
+                            + " success.", CommonUtil.getLocaleFromRequest(webRequest));
+        } else {
+            return messageBuilder.buildMessage(MessageKeys.DELETE_TAG_FOR_ID_FAIL, param, "Delete tag " + tagId
+                            + " fail.", CommonUtil.getLocaleFromRequest(webRequest));
+        }
+    }
+
+    /**
+     * Get all tags with sub-tags (Used for display all tags in UI)
+     * 
+     * @return All tags with sub-tags
+     */
+    @GET
+    @Path("entity")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllTags() {
+        return JsonUtil.getJsonStringFromPojo(new TagList(tagService.getAllTags()));
+    }
+
+    @GET
+    @Path("entity/{tagid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTagById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @PathParam("tagid") String tagId) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return JsonUtil.getJsonStringFromPojo(tagService.getById(tagId));
+    }
+
+    private Tag checkTagAvailibility(String tagId) {
+        Tag existingTag = tagService.getById(tagId);
+        if (existingTag == null) {
+            String[] param = { tagId };
+            throw new ServiceWarningException("Cannot find tag for id " + tagId, MessageKeys.TAG_NOT_FOUND_FOR_ID,
+                            param);
+        } else {
+            return existingTag;
+        }
     }
 }
