@@ -21,4 +21,8 @@ public interface TagService {
     public Tag getById(String tagId);
 
     public Tag getTagForStandardName(String standardName);
+
+    public List<Tag> getAllTopLevelTags();
+
+    public List<Tag> getAllTags();
 }

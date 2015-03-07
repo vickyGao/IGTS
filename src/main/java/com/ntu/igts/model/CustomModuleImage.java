@@ -8,10 +8,12 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.ntu.igts.annotations.QueryField;
 
 @Entity
 @Table(name = "custom_module_image")
 @JsonRootName("custommoduleimage")
+@QueryField({})
 public class CustomModuleImage extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 1479030798110953804L;

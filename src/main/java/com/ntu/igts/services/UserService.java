@@ -19,6 +19,8 @@ public interface UserService {
 
     public User getUserById(String userId);
 
+    public User getUserDetailById(String userId);
+
     public List<User> getUsers();
 
     public Page<User> getByPage(Query query);

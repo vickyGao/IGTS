@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.stereotype.Component;
 
-import com.ntu.igts.exception.AuthenticationException;
+import com.ntu.igts.exception.LoginException;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Admin;
 import com.ntu.igts.model.SessionContext;
@@ -42,10 +42,11 @@ public class Login {
         if (user != null) {
             if (user.getPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
                 SessionContext sessionContext = sessionContextService.create(user.getId());
+                sessionContext.setUserName(user.getUserName());
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
             }
         }
-        throw new AuthenticationException("User name or password is wrong.", MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
+        throw new LoginException("User name or password is wrong.", MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
     }
 
     @POST
@@ -58,10 +59,11 @@ public class Login {
         if (admin != null) {
             if (admin.getAdminPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
                 SessionContext sessionContext = sessionContextService.create(admin.getId());
+                sessionContext.setUserName(admin.getAdminName());
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
             }
         }
-        throw new AuthenticationException("User name or password is wrong.", MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
+        throw new LoginException("User name or password is wrong.", MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
     }
 
 }

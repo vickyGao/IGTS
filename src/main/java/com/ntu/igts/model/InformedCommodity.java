@@ -8,10 +8,12 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.ntu.igts.annotations.QueryField;
 
 @Entity
 @Table(name = "informed_commodity")
 @JsonRootName("informedcommodity")
+@QueryField({})
 public class InformedCommodity extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -1085197309220212560L;

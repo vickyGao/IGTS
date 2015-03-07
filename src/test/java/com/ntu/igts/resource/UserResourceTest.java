@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.junit.Test;
 
@@ -33,6 +34,7 @@ public class UserResourceTest extends TestBase {
         testUser.setUserName("user" + randomNumber);
         testUser.setPassword("password");
         Response response = doPost(BASE_PATH + "entity", userToken, JsonUtil.getJsonStringFromPojo(testUser));
+        assertEquals("Create user fail", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         User insertedUser = JsonUtil.getPojoFromJsonString(returnJson, User.class);
         assertNotNull("Create user fail", insertedUser);
@@ -45,6 +47,7 @@ public class UserResourceTest extends TestBase {
     public void testUpdatePassword() {
         user.setPassword("password2");
         Response response = doPut(BASE_PATH + "entity", userToken, JsonUtil.getJsonStringFromPojo(user));
+        assertEquals("Update user password fail", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         User updatedUser = JsonUtil.getPojoFromJsonString(returnJson, User.class);
         assertNotNull("Update user password fail", updatedUser);
@@ -60,6 +63,7 @@ public class UserResourceTest extends TestBase {
         user.setPhoneNumber("13333333333");
         user.setRealName("张三");
         Response response = doPut(BASE_PATH + "detail", userToken, JsonUtil.getJsonStringFromPojo(user));
+        assertEquals("Update user detail fail", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         User updatedUser = JsonUtil.getPojoFromJsonString(returnJson, User.class);
         assertNotNull("Update user detail fail", updatedUser);
@@ -71,6 +75,7 @@ public class UserResourceTest extends TestBase {
         ActiveStateEnum activeStateEnum = ActiveStateEnum.ACTIVE;
         String userId = user.getId();
         Response response = doPut(BASE_PATH + "entity/" + activeStateEnum + "/" + userId, adminToken);
+        assertEquals("Update user active state fail", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         User updatedUser = JsonUtil.getPojoFromJsonString(returnJson, User.class);
         assertNotNull("Update user active state fail", updatedUser);
@@ -84,9 +89,10 @@ public class UserResourceTest extends TestBase {
         queryParam.put("search_term", "");
         queryParam.put("page", "0");
         queryParam.put("size", "10");
-        queryParam.put("sortby", SortByEnum.USERNAME.value());
-        queryParam.put("orderby", OrderByEnum.ASC.value());
+        queryParam.put("sortby", SortByEnum.USERNAME.toString());
+        queryParam.put("orderby", OrderByEnum.ASC.toString());
         Response response = doGetWithQueryParam(BASE_PATH + "entity/search_term", adminToken, queryParam);
+        assertEquals("Get users by page fail", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         @SuppressWarnings("unchecked")
         Pagination<User> pagination = JsonUtil.getPojoFromJsonString(returnJson, Pagination.class);
@@ -98,7 +104,6 @@ public class UserResourceTest extends TestBase {
     @Order(50)
     public void testDelete() {
         Response response = doDelete(BASE_PATH + "entity/" + user.getId(), adminToken);
-        String returnJson = response.readEntity(String.class);
-        assertNotNull("Delete user fail", returnJson);
+        assertEquals("Delete user fail", Status.OK.getStatusCode(), response.getStatus());
     }
 }

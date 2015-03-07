@@ -9,10 +9,12 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.ntu.igts.annotations.QueryField;
 
 @Entity
 @Table(name = "indent")
 @JsonRootName("indent")
+@QueryField({})
 public class Indent extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 3479323334885410999L;

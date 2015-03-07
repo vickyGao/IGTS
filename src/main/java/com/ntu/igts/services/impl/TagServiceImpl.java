@@ -79,4 +79,19 @@ public class TagServiceImpl implements TagService {
         return tagRepository.getTagForStandardName(standardName);
     }
 
+    @Override
+    public List<Tag> getAllTopLevelTags() {
+        return tagRepository.getAllTopLevelTags();
+    }
+
+    @Override
+    public List<Tag> getAllTags() {
+        List<Tag> topLevelTags = tagRepository.getAllTopLevelTags();
+        for (Tag topLevelTag : topLevelTags) {
+            List<Tag> subTags = getTagsWithSubTagsForParentId(topLevelTag.getId());
+            topLevelTag.setTags(subTags);
+        }
+        return topLevelTags;
+    }
+
 }

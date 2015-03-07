@@ -17,10 +17,12 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.ntu.igts.annotations.QueryField;
 
 @Entity
 @Table(name = "session_context")
 @JsonRootName("sessioncontext")
+@QueryField({})
 public class SessionContext implements Serializable {
 
     private static final long serialVersionUID = 6827625899927899731L;
@@ -38,8 +40,10 @@ public class SessionContext implements Serializable {
     @JsonIgnore
     private Date expireTime;
     @Column(name = "user_id")
-    @JsonIgnore
     private String userId;
+    @Transient
+    @JsonProperty("username")
+    private String userName;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_time", insertable = false, updatable = false, columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     @JsonIgnore
@@ -51,6 +55,9 @@ public class SessionContext implements Serializable {
     @Transient
     @JsonIgnore
     private User user;
+    @Transient
+    @JsonIgnore
+    private Admin admin;
 
     public String getToken() {
         return token;
@@ -84,6 +91,14 @@ public class SessionContext implements Serializable {
         this.userId = userId;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public Date getCreatedTime() {
         return createdTime;
     }
@@ -106,6 +121,14 @@ public class SessionContext implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
     }
 
 }

@@ -38,7 +38,6 @@ public class I18NRequestFilter implements ContainerRequestFilter {
             session.setAttribute(Constants.I18N_LOCALE_ATTRIBUTE, language);
             LOGGER.info("current language is " + language);
         }
-        LOGGER.warn("put language into session failed");
     }
 
 }
