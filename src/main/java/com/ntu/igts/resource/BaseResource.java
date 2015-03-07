@@ -52,6 +52,8 @@ public class BaseResource {
                     return true;
                 }
             }
+        } else if (RoleEnum.ALL.equals(allowedRole)) {
+            return true;
         }
         throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
     }

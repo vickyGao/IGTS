@@ -85,7 +85,7 @@ public class TagResource extends BaseResource {
     public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         filterSessionContext(token, RoleEnum.ADMIN);
         Tag pojo = JsonUtil.getPojoFromJsonString(inString, Tag.class);
-        checkTagAvailibility(pojo.getId());
+        checkTagAvailability(pojo.getId());
         Tag updatedTag = tagService.update(pojo);
         if (updatedTag == null) {
             String[] param = { pojo.getName() };
@@ -100,7 +100,7 @@ public class TagResource extends BaseResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String delete(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @PathParam("tagid") String tagId) {
         filterSessionContext(token, RoleEnum.ADMIN);
-        checkTagAvailibility(tagId);
+        checkTagAvailability(tagId);
         boolean flag = tagService.delete(tagId);
         String[] param = { tagId };
         if (flag) {
@@ -132,7 +132,7 @@ public class TagResource extends BaseResource {
         return JsonUtil.getJsonStringFromPojo(tagService.getById(tagId));
     }
 
-    private Tag checkTagAvailibility(String tagId) {
+    private Tag checkTagAvailability(String tagId) {
         Tag existingTag = tagService.getById(tagId);
         if (existingTag == null) {
             String[] param = { tagId };

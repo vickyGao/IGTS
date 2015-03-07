@@ -113,7 +113,7 @@ public class CommodityServiceTest extends TestBase {
     @Order(50)
     public void testGetCommoditiesBySearchTerm() {
         Query query = new Query();
-        query.setSearchTerm("app");
+        query.setSearchTerm("apple");
         query.setPage(0);
         query.setSize(2);
         CommodityQueryResult result = commodityService.getCommoditiesBySearchTerm(query);
