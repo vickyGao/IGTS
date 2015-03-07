@@ -58,9 +58,9 @@ public class CommodityServiceImpl implements CommodityService {
     public boolean delete(String commodityId) {
         List<CommodityTag> commodityTags = commodityTagRepository.getCommodityTagsForCommodityId(commodityId);
         for (CommodityTag commodityTag : commodityTags) {
-            commodityTagRepository.delete(commodityTag.getId());
+            commodityTagRepository.delete(commodityTag.getId(), false);
         }
-        commodityRepository.delete(commodityId);
+        commodityRepository.delete(commodityId, false);
         Commodity commodity = commodityRepository.findById(commodityId);
         if (commodity == null) {
             return true;

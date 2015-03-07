@@ -105,7 +105,5 @@ public class UserResourceTest extends TestBase {
     public void testDelete() {
         Response response = doDelete(BASE_PATH + "entity/" + user.getId(), adminToken);
         assertEquals("Delete user fail", Status.OK.getStatusCode(), response.getStatus());
-        String returnJson = response.readEntity(String.class);
-        assertNotNull("Delete user fail", returnJson);
     }
 }

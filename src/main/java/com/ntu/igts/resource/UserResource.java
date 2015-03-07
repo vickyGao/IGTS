@@ -85,7 +85,7 @@ public class UserResource extends BaseResource {
     public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         filterSessionContext(token, RoleEnum.USER);
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
-        User existingUser = checkUserAvailibility(pojo.getId());
+        User existingUser = checkUserAvailability(pojo.getId());
         if (!existingUser.getPassword().equals(pojo.getPassword())) {
             existingUser.setPassword(pojo.getPassword());
             User updatedUser = userService.updatePassword(pojo.getId(), pojo.getPassword());
@@ -116,7 +116,7 @@ public class UserResource extends BaseResource {
     public String updateDetail(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         filterSessionContext(token, RoleEnum.USER);
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
-        User existingUser = checkUserAvailibility(pojo.getId());
+        User existingUser = checkUserAvailability(pojo.getId());
         if (StringUtil.isEmpty(pojo.getPassword())) {
             pojo.setPassword(existingUser.getPassword());
         }
@@ -141,7 +141,7 @@ public class UserResource extends BaseResource {
     public String updateUserActiveYnState(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("activeyn") ActiveStateEnum activeStateEnum, @PathParam("userid") String userId) {
         filterSessionContext(token, RoleEnum.ADMIN);
-        User existingUser = checkUserAvailibility(userId);
+        User existingUser = checkUserAvailability(userId);
         existingUser.setActiveYN(activeStateEnum.value());
         User returnUser = userService.update(existingUser);
         return JsonUtil.getJsonStringFromPojo(returnUser);
@@ -161,7 +161,7 @@ public class UserResource extends BaseResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String delete(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @PathParam("userid") String userId) {
         filterSessionContext(token, RoleEnum.ADMIN);
-        checkUserAvailibility(userId);
+        checkUserAvailability(userId);
         boolean flag = userService.delete(userId);
         String[] param = { userId };
         if (flag) {
@@ -202,11 +202,11 @@ public class UserResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("userid") String userId) {
-        checkUserAvailibility(userId);
+        checkUserAvailability(userId);
         return JsonUtil.getJsonStringFromPojo(userService.getUserById(userId));
     }
 
-    private User checkUserAvailibility(String userId) {
+    private User checkUserAvailability(String userId) {
         User existingUser = userService.getUserById(userId);
         if (existingUser == null) {
             String[] param = { userId };

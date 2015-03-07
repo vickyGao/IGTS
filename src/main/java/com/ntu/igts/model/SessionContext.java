@@ -40,8 +40,10 @@ public class SessionContext implements Serializable {
     @JsonIgnore
     private Date expireTime;
     @Column(name = "user_id")
-    @JsonIgnore
     private String userId;
+    @Transient
+    @JsonProperty("username")
+    private String userName;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_time", insertable = false, updatable = false, columnDefinition = "DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP")
     @JsonIgnore
@@ -87,6 +89,14 @@ public class SessionContext implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Date getCreatedTime() {

@@ -27,4 +27,10 @@ public class MessageKeys {
     public static final String DELETE_USER_FOR_ID_SUCCESS = "delete.user.for.id.success";
     public static final String DELETE_USER_FOR_ID_FAIL = "delete.user.for.id.fail";
 
+    /** Commodity */
+    public static final String CREATE_COMMODITY_FAIL = "create.commodity.fail";
+    public static final String UPDATE_COMMODITY_FAIL = "update.commodity.fail";
+    public static final String COMMODITY_NOT_FOUND_FOR_ID = "commodity.not.found.for.id";
+    public static final String DELETE_COMMODITY_SUCCESS = "delete.commodity.success";
+    public static final String DELETE_COMMODITY_FAIL = "delete.commodity.fail";
 }

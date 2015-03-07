@@ -42,6 +42,7 @@ public class Login {
         if (user != null) {
             if (user.getPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
                 SessionContext sessionContext = sessionContextService.create(user.getId());
+                sessionContext.setUserName(user.getUserName());
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
             }
         }
@@ -58,6 +59,7 @@ public class Login {
         if (admin != null) {
             if (admin.getAdminPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
                 SessionContext sessionContext = sessionContextService.create(admin.getId());
+                sessionContext.setUserName(admin.getAdminName());
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
             }
         }
