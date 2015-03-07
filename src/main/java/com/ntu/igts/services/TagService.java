@@ -24,5 +24,5 @@ public interface TagService {
 
     public List<Tag> getAllTopLevelTags();
 
-    public List<Tag> getAllTags();
+    public List<Tag> getAllTagsWithSubTags();
 }

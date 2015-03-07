@@ -120,8 +120,9 @@ public class TagResource extends BaseResource {
     @GET
     @Path("entity")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAllTags() {
-        return JsonUtil.getJsonStringFromPojo(new TagList(tagService.getAllTags()));
+    public String getAllTagsWithSubTags(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ALL);
+        return JsonUtil.getJsonStringFromPojo(new TagList(tagService.getAllTagsWithSubTags()));
     }
 
     @GET
