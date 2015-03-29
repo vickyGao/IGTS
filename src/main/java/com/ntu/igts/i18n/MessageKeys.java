@@ -33,4 +33,10 @@ public class MessageKeys {
     public static final String COMMODITY_NOT_FOUND_FOR_ID = "commodity.not.found.for.id";
     public static final String DELETE_COMMODITY_SUCCESS = "delete.commodity.success";
     public static final String DELETE_COMMODITY_FAIL = "delete.commodity.fail";
+
+    /** Image */
+    public static final String CREATE_IMAGE_FAIL = "create.image.fail";
+    public static final String UPDATE_IMAGE_FAIL = "update.image.fail";
+    public static final String DELETE_IMAGE_SUCCESS = "delete.image.success";
+    public static final String DELETE_IMAGE_FAIL = "delete.image.fail";
 }

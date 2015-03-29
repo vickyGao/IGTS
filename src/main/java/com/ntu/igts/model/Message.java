@@ -1,10 +1,13 @@
 package com.ntu.igts.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -20,7 +23,7 @@ public class Message extends BaseModel implements Serializable {
 
     @Column(name = "commodity_id", columnDefinition = "VARCHAR(36)")
     @JsonProperty("commodityid")
-    private String CommodityId;
+    private String commodityId;
     @Column(name = "content")
     @JsonProperty("content")
     private String content;
@@ -36,13 +39,16 @@ public class Message extends BaseModel implements Serializable {
     @Column(name = "user_name")
     @JsonProperty("username")
     private String userName;
+    @Transient
+    @JsonProperty("messages")
+    private List<Message> messages = new ArrayList<Message>();
 
     public String getCommodityId() {
-        return CommodityId;
+        return commodityId;
     }
 
     public void setCommodityId(String commodityId) {
-        CommodityId = commodityId;
+        this.commodityId = commodityId;
     }
 
     public String getContent() {
@@ -83,6 +89,14 @@ public class Message extends BaseModel implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 
 }

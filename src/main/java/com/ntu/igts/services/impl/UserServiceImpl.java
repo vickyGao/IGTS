@@ -16,9 +16,9 @@ import com.ntu.igts.model.Role;
 import com.ntu.igts.model.User;
 import com.ntu.igts.model.UserRole;
 import com.ntu.igts.model.container.Query;
-import com.ntu.igts.repository.RoleRepository;
 import com.ntu.igts.repository.UserRepository;
 import com.ntu.igts.repository.UserRoleRepository;
+import com.ntu.igts.services.RoleService;
 import com.ntu.igts.services.UserService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.MD5Util;
@@ -32,17 +32,17 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserRoleRepository userRoleRepository;
     @Resource
-    private RoleRepository roleRepository;
+    private RoleService roleService;
 
     @Override
     @Transactional
     public User create(User user) {
-        user.setPassword(MD5Util.getMd5(user.getPassword()));
+        user.setPassword(MD5Util.getMd5ForString(user.getPassword()));
         User insertedUser = userRepository.create(user);
         if (insertedUser != null) {
             UserRole userRole = new UserRole();
             userRole.setUserId(insertedUser.getId());
-            List<Role> roles = roleRepository.findAll();
+            List<Role> roles = roleService.getRoles();
             String roleId = CommonUtil.getRequiredRoleIdFromRoles(roles, RoleEnum.USER);
             userRole.setRoleId(roleId);
             userRoleRepository.create(userRole);
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updatePassword(String userId, String password) {
-        int count = userRepository.updatePassword(userId, MD5Util.getMd5(password));
+        int count = userRepository.updatePassword(userId, MD5Util.getMd5ForString(password));
         if (count > 0) {
             return getUserById(userId);
         } else {
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
             List<UserRole> userRoles = userRoleRepository.getUserRolesByUserId(userId);
             List<Role> roles = new ArrayList<Role>();
             for (UserRole userRole : userRoles) {
-                roles.add(roleRepository.findById(userRole.getRoleId()));
+                roles.add(roleService.getById(userRole.getRoleId()));
             }
             user.setRoles(roles);
         }
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
             query.setSize(10);
         }
         if (query.getSortBy() == null) {
-            query.setSortBy(SortByEnum.USERNAME);
+            query.setSortBy(SortByEnum.USER_NAME);
         }
         if (query.getOrderBy() == null) {
             query.setOrderBy(OrderByEnum.ASC);

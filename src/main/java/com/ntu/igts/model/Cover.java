@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -33,6 +34,9 @@ public class Cover extends BaseModel implements Serializable {
     @Column(name = "display_sequence")
     @JsonProperty("displaysequence")
     private int displaySequence;
+    @Transient
+    @JsonProperty("image")
+    private Image image;
 
     public String getCommodityId() {
         return commodityId;
@@ -72,6 +76,14 @@ public class Cover extends BaseModel implements Serializable {
 
     public void setDisplaySequence(int displaySequence) {
         this.displaySequence = displaySequence;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
 }

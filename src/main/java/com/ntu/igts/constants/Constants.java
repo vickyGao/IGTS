@@ -9,6 +9,9 @@ public class Constants {
     /** Field name deletedYN used in BaseModel */
     public static String FIELD_DELETED_YN = "deletedYN";
 
+    /** Filed name userId */
+    public static String FIELD_USERID = "userId";
+
     /** I18N */
     public static final String I18N_LOCALE_ATTRIBUTE = "request-locale";
     public static final String I18N_USER_LOCALE = "i18n.user.locale";
@@ -25,4 +28,8 @@ public class Constants {
 
     /** Time format */
     public static final String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    /** Configuration file */
+    public static final String MGMT_PROPS_FILE = "igts.properties";
+    public static final String IMAGE_STORAGE_BASE_PATH = "igts.image.location";
 }

@@ -8,16 +8,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ntu.igts.enums.OrderByEnum;
+import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.CommodityTag;
+import com.ntu.igts.model.Cover;
 import com.ntu.igts.model.Tag;
 import com.ntu.igts.model.container.CommodityQueryResult;
 import com.ntu.igts.model.container.Query;
 import com.ntu.igts.repository.CommodityRepository;
 import com.ntu.igts.repository.CommodityTagRepository;
-import com.ntu.igts.repository.TagRepository;
 import com.ntu.igts.services.CommodityService;
+import com.ntu.igts.services.CoverService;
+import com.ntu.igts.services.ImageService;
 import com.ntu.igts.services.TagService;
+import com.ntu.igts.utils.StringUtil;
 
 @Service
 public class CommodityServiceImpl implements CommodityService {
@@ -29,7 +34,9 @@ public class CommodityServiceImpl implements CommodityService {
     @Resource
     private CommodityTagRepository commodityTagRepository;
     @Resource
-    private TagRepository tagRepository;
+    private ImageService imageService;
+    @Resource
+    private CoverService coverService;
 
     @Override
     @Transactional
@@ -73,11 +80,13 @@ public class CommodityServiceImpl implements CommodityService {
     public Commodity getById(String commodityId) {
         Commodity commodity = commodityRepository.findById(commodityId);
         if (commodity != null) {
-            List<Tag> tags = tagRepository.getTopLevelTagsForCommodityId(commodityId);
+            List<Tag> tags = tagService.getTopLevelTagsForCommodityId(commodityId);
             for (Tag tag : tags) {
                 tag.setTags(tagService.getTagsWithSubTagsForParentId(tag.getId()));
             }
             commodity.setTags(tags);
+            List<Cover> covers = coverService.getCoversByCommodityId(commodity.getId());
+            commodity.setCovers(covers);
             return commodity;
         } else {
             return null;
@@ -91,12 +100,25 @@ public class CommodityServiceImpl implements CommodityService {
 
     @Override
     public Page<Commodity> getByPage(Query query) {
+        if (query.getSearchTerm() == null) {
+            query.setSearchTerm(StringUtil.EMPTY);
+        }
+        if (query.getSortBy() == null) {
+            query.setSortBy(SortByEnum.COMMODITY_TITILE);
+        }
+        if (query.getOrderBy() == null) {
+            query.setOrderBy(OrderByEnum.ASC);
+        }
         return commodityRepository.findByPage(query);
     }
 
     @Override
     public CommodityQueryResult getCommoditiesBySearchTerm(Query query) {
-        return commodityRepository.getItemsBySearchTerm(query);
+        CommodityQueryResult result = commodityRepository.getItemsBySearchTerm(query);
+        for (Commodity commodity : result.getContent()) {
+            commodity = getById(commodity.getId());
+        }
+        return result;
     }
 
 }

@@ -3,6 +3,8 @@ package com.ntu.igts.repository.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -23,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ntu.igts.annotations.QueryField;
 import com.ntu.igts.constants.Constants;
+import com.ntu.igts.enums.OrderByEnum;
+import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.BaseModel;
 import com.ntu.igts.model.container.Query;
 import com.ntu.igts.repository.MyRepository;
@@ -157,7 +161,6 @@ public class MyRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepos
             } else {
                 return super.findAll(pageable);
             }
-
         } else {
             if (!StringUtil.isEmpty(searchTerm)) {
                 return super.findAll(new Specification<T>() {
@@ -169,8 +172,8 @@ public class MyRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepos
                             predicateList.add(cb.like(queryPath, "%" + StringUtils.trim(searchTerm) + "%"));
                         }
                         Path<String> deletedYN = root.get(Constants.FIELD_DELETED_YN);
-                        query.where(cb.or(predicateList.toArray(new Predicate[predicateList.size()])),
-                                        cb.equal(deletedYN, "N"));
+                        query.where(cb.and(cb.or(predicateList.toArray(new Predicate[predicateList.size()])),
+                                        cb.equal(deletedYN, "N")));
                         return null;
                     }
                 }, pageable);
@@ -187,6 +190,73 @@ public class MyRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepos
             }
 
         }
+    }
+
+    @Override
+    public List<T> findAll(SortByEnum sortByEnum, OrderByEnum orderByEnum) {
+        return findAll(sortByEnum, orderByEnum, null, false);
+    }
+
+    @Override
+    public List<T> findAll(SortByEnum sortByEnum, OrderByEnum orderByEnum, boolean isIncludeDeleted) {
+        return findAll(sortByEnum, orderByEnum, null, isIncludeDeleted);
+    }
+
+    @Override
+    public List<T> findAll(SortByEnum sortByEnum, OrderByEnum orderByEnum, Map<String, String> criteriaMap) {
+        return findAll(sortByEnum, orderByEnum, criteriaMap, false);
+    }
+
+    @Override
+    public List<T> findAll(SortByEnum sortByEnum, OrderByEnum orderByEnum, Map<String, String> criteriaMap,
+                    boolean isIncludeDeleted) {
+        final String soryBy = sortByEnum.value();
+        final String orderBy = orderByEnum.value();
+        final Map<String, String> queryCriteriaMap = criteriaMap;
+        if (isIncludeDeleted) {
+            return super.findAll(new Specification<T>() {
+                @Override
+                public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicateList = getPredicateListByCriteriaMap(root, cb, queryCriteriaMap);
+                    if (OrderByEnum.ASC.equals(orderBy)) {
+                        query.where(cb.and(predicateList.toArray(new Predicate[predicateList.size()]))).orderBy(
+                                        cb.asc(root.get(soryBy)));
+                    } else {
+                        query.where(cb.and(predicateList.toArray(new Predicate[predicateList.size()]))).orderBy(
+                                        cb.desc(root.get(soryBy)));
+                    }
+                    return null;
+                }
+            });
+        } else {
+            return super.findAll(new Specification<T>() {
+                @Override
+                public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicateList = getPredicateListByCriteriaMap(root, cb, queryCriteriaMap);
+                    Path<String> deletedYN = root.get(Constants.FIELD_DELETED_YN);
+                    if (OrderByEnum.ASC.equals(orderBy)) {
+                        query.where(cb.and(cb.and(predicateList.toArray(new Predicate[predicateList.size()])),
+                                        cb.equal(deletedYN, "N"))).orderBy(cb.asc(root.get(soryBy)));
+                    } else {
+                        query.where(cb.and(cb.and(predicateList.toArray(new Predicate[predicateList.size()])),
+                                        cb.equal(deletedYN, "N"))).orderBy(cb.desc(root.get(soryBy)));
+                    }
+                    return null;
+                }
+            });
+        }
+    }
+
+    private List<Predicate> getPredicateListByCriteriaMap(Root<T> root, CriteriaBuilder cb,
+                    final Map<String, String> criteriaMap) {
+        List<Predicate> predicateList = new ArrayList<Predicate>();
+        if (criteriaMap != null) {
+            for (Entry<String, String> entry : criteriaMap.entrySet()) {
+                Path<String> queryPath = root.get(entry.getKey());
+                predicateList.add(cb.equal(queryPath, entry.getValue()));
+            }
+        }
+        return predicateList;
     }
 
 }

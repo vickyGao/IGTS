@@ -17,6 +17,7 @@ import org.hibernate.search.annotations.Indexed;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.ntu.igts.annotations.QueryField;
+import com.ntu.igts.enums.CommodityStatusEnum;
 
 @Entity
 @Indexed
@@ -59,9 +60,16 @@ public class Commodity extends BaseModel implements Serializable {
     @Column(name = "user_id", columnDefinition = "VARCHAR(36)")
     @JsonProperty("userid")
     private String userId;
+    @Field(analyze = Analyze.NO)
+    @Column(name = "status")
+    @JsonProperty("status")
+    private String status = CommodityStatusEnum.NORMAL.name();
     @Transient
     @JsonProperty("tags")
     private List<Tag> tags = new ArrayList<Tag>();
+    @Transient
+    @JsonProperty("covers")
+    public List<Cover> covers = new ArrayList<Cover>();
 
     public String getTitle() {
         return title;
@@ -135,12 +143,28 @@ public class Commodity extends BaseModel implements Serializable {
         this.userId = userId;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public List<Tag> getTags() {
         return tags;
     }
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public List<Cover> getCovers() {
+        return covers;
+    }
+
+    public void setCovers(List<Cover> covers) {
+        this.covers = covers;
     }
 
 }

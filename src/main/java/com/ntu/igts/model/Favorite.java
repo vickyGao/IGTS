@@ -11,10 +11,10 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.ntu.igts.annotations.QueryField;
 
 @Entity
-@Table(name = "favorites")
-@JsonRootName("favorites")
+@Table(name = "favorite")
+@JsonRootName("favorite")
 @QueryField({})
-public class Favorites extends BaseModel implements Serializable {
+public class Favorite extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -8876661467254356108L;
 

@@ -38,7 +38,7 @@ public class AdminServiceTest extends TestBase {
         admin.setAdminPassword("password2");
         Admin updatedAdmin = adminService.update(admin);
         assertNotNull("Update admin fail", updatedAdmin);
-        assertEquals("Update admin fail", MD5Util.getMd5("password2"), updatedAdmin.getAdminPassword());
+        assertEquals("Update admin fail", MD5Util.getMd5ForString("password2"), updatedAdmin.getAdminPassword());
     }
 
     @Test

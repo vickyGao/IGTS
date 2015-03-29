@@ -11,8 +11,6 @@ import javax.annotation.Resource;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
 
-import com.ntu.igts.enums.OrderByEnum;
-import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.Tag;
 import com.ntu.igts.model.container.CommodityQueryResult;
@@ -25,47 +23,29 @@ public class CommodityServiceTest extends TestBase {
     private CommodityService commodityService;
     @Resource
     private TagService tagService;
+
     private static Commodity commodity;
+    private static Tag tag;
 
     @Test
     @Order(0)
     public void testCreate() {
-        String randomNumber = UUID.randomUUID().toString().replace("-", "");
-
-        Tag TopLevelTag = new Tag();
-        TopLevelTag.setName("top tag");
-        TopLevelTag.setStandardName("TOP_TAG" + randomNumber);
-        Tag insertedTopLevelTag = tagService.create(TopLevelTag);
-        assertNotNull("Create top tag failed", insertedTopLevelTag);
-
-        Tag subTag1 = new Tag();
-        subTag1.setName("sub tag1");
-        subTag1.setStandardName("SUB_TAG_1" + randomNumber);
-        subTag1.setParentId(insertedTopLevelTag.getId());
-        Tag insertedSubTag1 = tagService.create(subTag1);
-        assertNotNull("Create sub-tag1 failed", insertedSubTag1);
-
-        Tag subTag2 = new Tag();
-        subTag2.setName("sub tag2");
-        subTag2.setStandardName("SUB_TAG_2" + randomNumber);
-        subTag2.setParentId(insertedTopLevelTag.getId());
-        Tag insertedSubTag2 = tagService.create(subTag2);
-        assertNotNull("Create sub-tag2 failed", insertedSubTag2);
+        mockUpUser();
+        mockUpTag();
 
         Commodity testCommodity = new Commodity();
-        testCommodity.setTitle("apple");
-        testCommodity.setDescription("a good apple");
-        testCommodity.setPrice(20.6);
-        testCommodity.setCarriage(20);
-        testCommodity.setCollectionNumber(5);
-        testCommodity.setDistrict("China");
+        testCommodity.setTitle("瑞特斯波德 进口巧克力 rittersport运动巧克力7口味进口食品零食");
+        testCommodity.setDescription("瑞特斯波德 进口巧克力 rittersport运动巧克力7口味进口食品零食");
+        testCommodity.setPrice(68.6);
+        testCommodity.setCarriage(3);
+        testCommodity.setCollectionNumber(34);
+        testCommodity.setDistrict("浙江衢州");
+        testCommodity.setUserId(user.getId());
         List<Tag> tags = new ArrayList<Tag>();
-        tags.add(insertedTopLevelTag);
-        tags.add(insertedSubTag1);
-        tags.add(insertedSubTag2);
+        tags.add(tag);
         testCommodity.setTags(tags);
         Commodity insertedCommodity = commodityService.create(testCommodity);
-        assertNotNull("Create item failed", insertedCommodity);
+        assertNotNull("Create commodity failed", insertedCommodity);
 
         commodity = insertedCommodity;
     }
@@ -73,10 +53,9 @@ public class CommodityServiceTest extends TestBase {
     @Test
     @Order(10)
     public void testUpdate() {
-        commodity.setDescription("after update");
+        commodity.setDescription(commodity.getDescription() + " update");
         Commodity updatedCommodity = commodityService.update(commodity);
         assertNotNull("Update commodity failed", updatedCommodity);
-        assertEquals("Update commodity failed", "after update", updatedCommodity.getDescription());
     }
 
     @Test
@@ -84,7 +63,6 @@ public class CommodityServiceTest extends TestBase {
     public void testGetById() {
         Commodity returnCommodity = commodityService.getById(commodity.getId());
         assertNotNull("Get commodity by id failed", returnCommodity);
-        assertEquals("Get commodity by id failed", commodity.getId(), returnCommodity.getId());
     }
 
     @Test
@@ -102,29 +80,34 @@ public class CommodityServiceTest extends TestBase {
         query.setSearchTerm(commodity.getTitle());
         query.setPage(0);
         query.setSize(5);
-        query.setSortBy(SortByEnum.COMMODITY_TITILE);
-        query.setOrderBy(OrderByEnum.ASC);
-        Page<Commodity> commodities = commodityService.getByPage(query);
-        assertNotNull("Get commodities by page failed", commodities);
-        assertTrue("Get commodities by page failed", commodities.getContent().size() > 0);
+        Page<Commodity> commodityPage = commodityService.getByPage(query);
+        assertNotNull("Get commodities by page failed", commodityPage);
+        assertTrue("Get commodities by page failed", commodityPage.getContent().size() > 0);
     }
 
     @Test
     @Order(50)
     public void testGetCommoditiesBySearchTerm() {
         Query query = new Query();
-        query.setSearchTerm("apple");
+        query.setSearchTerm(commodity.getTitle());
         query.setPage(0);
-        query.setSize(2);
+        query.setSize(5);
         CommodityQueryResult result = commodityService.getCommoditiesBySearchTerm(query);
-        assertNotNull("Get commodities failed", result);
-        assertTrue("Get commodities failed", result.getContent().size() > 0);
+        assertNotNull("Get commodities by search term failed", result);
+        assertTrue("Get commodities by search term failed", result.getContent().size() > 0);
     }
 
-    @Test
-    @Order(60)
-    public void testDelete() {
-        boolean flag = commodityService.delete(commodity.getId());
-        assertTrue("Delete commodity failed", flag);
+    private void mockUpTag() {
+        if (tag == null) {
+            String randomNumber = UUID.randomUUID().toString().replace("-", "");
+
+            Tag testTag = new Tag();
+            testTag.setName("食品");
+            testTag.setStandardName("FOOD" + randomNumber);
+            Tag insertedTag = tagService.create(testTag);
+            assertNotNull("Create tag failed", insertedTag);
+
+            tag = insertedTag;
+        }
     }
 }

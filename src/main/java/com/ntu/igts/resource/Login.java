@@ -40,9 +40,10 @@ public class Login {
         LoginForm loginForm = JsonUtil.getPojoFromJsonString(inString, LoginForm.class);
         User user = userService.getUserByUserName(loginForm.getUserName());
         if (user != null) {
-            if (user.getPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
+            if (user.getPassword().equals(MD5Util.getMd5ForString(loginForm.getPassword()))) {
                 SessionContext sessionContext = sessionContextService.create(user.getId());
                 sessionContext.setUserName(user.getUserName());
+                System.out.println(MD5Util.getMd5ForString("password"));
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
             }
         }
@@ -57,7 +58,7 @@ public class Login {
         LoginForm loginForm = JsonUtil.getPojoFromJsonString(inString, LoginForm.class);
         Admin admin = adminService.getAdminByAdminName(loginForm.getUserName());
         if (admin != null) {
-            if (admin.getAdminPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
+            if (admin.getAdminPassword().equals(MD5Util.getMd5ForString(loginForm.getPassword()))) {
                 SessionContext sessionContext = sessionContextService.create(admin.getId());
                 sessionContext.setUserName(admin.getAdminName());
                 return JsonUtil.getJsonStringFromPojo(sessionContext);

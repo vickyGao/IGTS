@@ -14,8 +14,8 @@ import com.ntu.igts.model.AdminRole;
 import com.ntu.igts.model.Role;
 import com.ntu.igts.repository.AdminRepository;
 import com.ntu.igts.repository.AdminRoleRepository;
-import com.ntu.igts.repository.RoleRepository;
 import com.ntu.igts.services.AdminService;
+import com.ntu.igts.services.RoleService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.MD5Util;
 
@@ -27,17 +27,17 @@ public class AdminServiceImpl implements AdminService {
     @Resource
     private AdminRoleRepository adminRoleRepository;
     @Resource
-    private RoleRepository roleRepository;
+    private RoleService roleService;
 
     @Override
     @Transactional
     public Admin create(Admin admin) {
-        admin.setAdminPassword(MD5Util.getMd5(admin.getAdminPassword()));
+        admin.setAdminPassword(MD5Util.getMd5ForString(admin.getAdminPassword()));
         Admin insertedAdmin = adminRepository.create(admin);
         if (insertedAdmin != null) {
             AdminRole adminRole = new AdminRole();
             adminRole.setAdminId(insertedAdmin.getId());
-            List<Role> roles = roleRepository.findAll();
+            List<Role> roles = roleService.getRoles();
             String roleId = CommonUtil.getRequiredRoleIdFromRoles(roles, RoleEnum.USER);
             adminRole.setRoleId(roleId);
             adminRoleRepository.create(adminRole);
@@ -50,7 +50,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public Admin update(Admin admin) {
-        admin.setAdminPassword(MD5Util.getMd5(admin.getAdminPassword()));
+        admin.setAdminPassword(MD5Util.getMd5ForString(admin.getAdminPassword()));
         return adminRepository.update(admin);
     }
 
@@ -79,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
             List<AdminRole> adminRoles = adminRoleRepository.getAdminRolesByAdminId(admin.getId());
             List<Role> roles = new ArrayList<Role>();
             for (AdminRole adminRole : adminRoles) {
-                roles.add(roleRepository.findById(adminRole.getRoleId()));
+                roles.add(roleService.getById(adminRole.getRoleId()));
                 admin.setRoles(roles);
             }
         }

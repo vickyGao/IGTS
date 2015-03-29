@@ -43,7 +43,7 @@ public class UserServiceTest extends TestBase {
     public void testUpdatePassword() {
         User updatedUser = userService.updatePassword(user.getId(), "password2");
         assertNotNull("Update user failed", updatedUser);
-        assertEquals("Update user failed", MD5Util.getMd5("password2"), updatedUser.getPassword());
+        assertEquals("Update user failed", MD5Util.getMd5ForString("password2"), updatedUser.getPassword());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class UserServiceTest extends TestBase {
         query.setSearchTerm(user.getUserName());
         query.setPage(0);
         query.setSize(5);
-        query.setSortBy(SortByEnum.USERNAME);
+        query.setSortBy(SortByEnum.USER_NAME);
         query.setOrderBy(OrderByEnum.ASC);
         Page<User> userPage = userService.getByPage(query);
         assertNotNull("Get users by page failed", userPage);

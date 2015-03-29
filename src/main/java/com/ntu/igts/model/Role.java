@@ -21,7 +21,7 @@ public class Role extends BaseModel implements Serializable {
     @Column(name = "role_name")
     @JsonProperty("rolename")
     private String roleName;
-    @Column(name = "role_standard_name")
+    @Column(name = "role_standard_name", unique = true, updatable = false)
     @JsonProperty("rolestandardname")
     private String roleStandardName;
 

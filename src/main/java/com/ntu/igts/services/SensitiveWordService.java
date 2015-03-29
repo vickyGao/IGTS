@@ -10,6 +10,8 @@ public interface SensitiveWordService {
 
     public SensitiveWord update(SensitiveWord sensitiveWord);
 
+    public boolean delete(String sensitiveWordId);
+
     public SensitiveWord getById(String sensitiveWordId);
 
     public List<SensitiveWord> getAll();
