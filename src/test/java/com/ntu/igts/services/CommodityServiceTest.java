@@ -89,12 +89,25 @@ public class CommodityServiceTest extends TestBase {
     @Order(50)
     public void testGetCommoditiesBySearchTerm() {
         Query query = new Query();
-        query.setSearchTerm(commodity.getTitle());
+        query.setSearchTerm("瑞特斯波德 进口巧克力 rittersport运动巧克力7口味进口食品零食");
         query.setPage(0);
         query.setSize(5);
         CommodityQueryResult result = commodityService.getCommoditiesBySearchTerm(query);
         assertNotNull("Get commodities by search term failed", result);
         assertTrue("Get commodities by search term failed", result.getContent().size() > 0);
+    }
+
+    @Test
+    @Order(60)
+    public void testDelete() {
+        boolean tagDeleteFlag = tagService.delete(tag.getId());
+        assertTrue("Delete tag failed", tagDeleteFlag);
+
+        boolean userDeleteFlag = userService.delete(user.getId());
+        assertTrue("Delete user failed", userDeleteFlag);
+
+        boolean commodityDeleteFlag = commodityService.delete(commodity.getId());
+        assertTrue("Delete commodity failed", commodityDeleteFlag);
     }
 
     private void mockUpTag() {

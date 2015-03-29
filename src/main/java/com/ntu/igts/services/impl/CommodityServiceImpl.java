@@ -78,19 +78,14 @@ public class CommodityServiceImpl implements CommodityService {
 
     @Override
     public Commodity getById(String commodityId) {
+        return commodityRepository.findById(commodityId);
+
+    }
+
+    @Override
+    public Commodity getCommodityWithDetailById(String commodityId) {
         Commodity commodity = commodityRepository.findById(commodityId);
-        if (commodity != null) {
-            List<Tag> tags = tagService.getTopLevelTagsForCommodityId(commodityId);
-            for (Tag tag : tags) {
-                tag.setTags(tagService.getTagsWithSubTagsForParentId(tag.getId()));
-            }
-            commodity.setTags(tags);
-            List<Cover> covers = coverService.getCoversByCommodityId(commodity.getId());
-            commodity.setCovers(covers);
-            return commodity;
-        } else {
-            return null;
-        }
+        return getCommodityDetailForCommodity(commodity);
     }
 
     @Override
@@ -116,9 +111,24 @@ public class CommodityServiceImpl implements CommodityService {
     public CommodityQueryResult getCommoditiesBySearchTerm(Query query) {
         CommodityQueryResult result = commodityRepository.getItemsBySearchTerm(query);
         for (Commodity commodity : result.getContent()) {
-            commodity = getById(commodity.getId());
+            commodity = getCommodityDetailForCommodity(commodity);
         }
         return result;
+    }
+
+    private Commodity getCommodityDetailForCommodity(Commodity commodity) {
+        if (commodity != null) {
+            List<Tag> tags = tagService.getTopLevelTagsForCommodityId(commodity.getId());
+            for (Tag tag : tags) {
+                tag.setTags(tagService.getTagsWithSubTagsForParentId(tag.getId()));
+            }
+            commodity.setTags(tags);
+            List<Cover> covers = coverService.getCoversByCommodityId(commodity.getId());
+            commodity.setCovers(covers);
+            return commodity;
+        } else {
+            return null;
+        }
     }
 
 }

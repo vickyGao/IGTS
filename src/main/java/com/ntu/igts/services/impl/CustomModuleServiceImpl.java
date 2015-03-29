@@ -63,7 +63,6 @@ public class CustomModuleServiceImpl implements CustomModuleService {
             query.setSearchTerm(customModule.getKeyword());
             query.setSortBy(null);
             query.setOrderBy(OrderByEnum.ASC);
-            query.setPage(1);
             query.setPage(0);
             query.setSize(customModule.getDisplayAmount());
             CommodityQueryResult result = commodityService.getCommoditiesBySearchTerm(query);

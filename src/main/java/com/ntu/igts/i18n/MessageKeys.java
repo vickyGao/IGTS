@@ -27,6 +27,13 @@ public class MessageKeys {
     public static final String DELETE_USER_FOR_ID_SUCCESS = "delete.user.for.id.success";
     public static final String DELETE_USER_FOR_ID_FAIL = "delete.user.for.id.fail";
 
+    /** Admin */
+    public static final String ADMIN_NOT_FOUND_FOR_ID = "admin.not.found.for.id";
+    public static final String CREATE_ADMIN_FAILED = "create.admin.failed";
+    public static final String UPDATE_ADMIN_FAILED = "update.admin,failed";
+    public static final String DELETE_ADMIN_FOR_ID_SUCCESS = "delete.admin.for.id.success";
+    public static final String DELETE_ADMIN_FOR_ID_FAIL = "delete.admin.for.id.fail";
+
     /** Commodity */
     public static final String CREATE_COMMODITY_FAIL = "create.commodity.fail";
     public static final String UPDATE_COMMODITY_FAIL = "update.commodity.fail";
@@ -39,4 +46,46 @@ public class MessageKeys {
     public static final String UPDATE_IMAGE_FAIL = "update.image.fail";
     public static final String DELETE_IMAGE_SUCCESS = "delete.image.success";
     public static final String DELETE_IMAGE_FAIL = "delete.image.fail";
+
+    /** Slice */
+    public static final String SLICE_NOT_FOUND_FOR_ID = "slice.not.found.for.id";
+    public static final String CREATE_SLICE_FAIL = "create.slice.fail";
+    public static final String UPDATE_SLICE_FAIL = "update.slice.fail";
+    public static final String DELETE_SLICE_SUCCESS = "delete.slice.success";
+    public static final String DELETE_SLICE_FAIL = "delete.slice.fail";
+
+    /** Hot */
+    public static final String HOT_NOT_FOUND_FOR_ID = "hot.not.found.for.id";
+    public static final String CREATE_HOT_FAIL = "create.hot.fail";
+    public static final String UPDATE_HOT_FAIL = "update.hot.fail";
+    public static final String DELETE_HOT_SUCCESS = "delete.hot.success";
+    public static final String DELETE_HOT_FAIL = "delete.hot.fail";
+
+    /** CustomModule */
+    public static final String CUSTOMMODULE_NOT_FOUND_FOR_ID = "custommodule.not.found.for.id";
+    public static final String CREATE_CUSTOMMODULE_FAIL = "create.custommodule.fail";
+    public static final String UPDATE_CUSTOMMODULET_FAIL = "update.custommodule.fail";
+    public static final String DELETE_CUSTOMMODULE_SUCCESS = "delete.custommodule.success";
+    public static final String DELETE_CUSTOMMODULET_FAIL = "delete.custommodule.fail";
+
+    /** Address */
+    public static final String ADDRESS_NOT_FOUND_FOR_ID = "address.not.found.for.id";
+    public static final String CREATE_ADDRESS_FAIL = "create.address.fail";
+    public static final String UPDATE_ADDRESS_FAIL = "update.address.fail";
+    public static final String DELETE_ADDRESS_SUCCESS = "delete.address.success";
+    public static final String DELETE_ADDRESS_FAIL = "delete.address.fail";
+
+    /** Bill */
+    public static final String BILL_NOT_FOUND_FOR_ID = "bill.not.found.for.id";
+    public static final String CREATE_BILL_FAIL = "create.bill.fail";
+    public static final String UPDATE_BILL_FAIL = "update.bill.fail";
+    public static final String DELETE_BILL_SUCCESS = "delete.bill.success";
+    public static final String DELETE_BILL_FAIL = "delete.bill.fail";
+
+    /** Favorite */
+    public static final String FAVORITE_NOT_FOUND_FOR_ID = "favorite.not.found.for.id";
+    public static final String CREATE_FAVORITE_FAIL = "create.favorite.fail";
+    public static final String UPDATE_FAVORITE_FAIL = "update.favorite.fail";
+    public static final String DELETE_FAVORITE_SUCCESS = "delete.favorite.success";
+    public static final String DELETE_FAVORITE_FAIL = "delete.favorite.fail";
 }
