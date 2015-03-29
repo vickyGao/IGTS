@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User create(User user) {
-        user.setPassword(MD5Util.getMd5ForString(user.getPassword()));
+        user.setPassword(MD5Util.getMd5(user.getPassword()));
         User insertedUser = userRepository.create(user);
         if (insertedUser != null) {
             UserRole userRole = new UserRole();
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updatePassword(String userId, String password) {
-        int count = userRepository.updatePassword(userId, MD5Util.getMd5ForString(password));
+        int count = userRepository.updatePassword(userId, MD5Util.getMd5(password));
         if (count > 0) {
             return getUserById(userId);
         } else {

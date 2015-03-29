@@ -18,7 +18,7 @@ public class MD5Util {
      *            The source string
      * @return The MD5 of the string
      */
-    public static String getMd5ForString(String source) {
+    public static String getMd5(String source) {
 
         byte[] btInput = source.getBytes();
         return getMd5(btInput);
@@ -31,7 +31,7 @@ public class MD5Util {
      *            The source input stream
      * @return The MD5 of the input stream
      */
-    public static String getMd5ForInputStream(InputStream inputStream) {
+    public static String getMd5(InputStream inputStream) {
         byte[] btInput = toByteArray(inputStream);
         return getMd5(btInput);
     }
@@ -44,14 +44,14 @@ public class MD5Util {
      * @return The byte array of input stream
      */
     public static byte[] toByteArray(InputStream inputStream) {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
         int n = 0;
         try {
-            while (-1 != (n = inputStream.read(buffer))) {
-                output.write(buffer, 0, n);
+            while ((n = inputStream.read()) != -1) {
+                outputStream.write(n);
             }
-            return output.toByteArray();
+            return outputStream.toByteArray();
         } catch (IOException e) {
             LOGGER.error("Get MD5 for inputStream fail", e);
             return buffer;

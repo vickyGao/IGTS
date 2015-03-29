@@ -43,7 +43,7 @@ public class UserServiceTest extends TestBase {
     public void testUpdatePassword() {
         User updatedUser = userService.updatePassword(user.getId(), "password2");
         assertNotNull("Update user failed", updatedUser);
-        assertEquals("Update user failed", MD5Util.getMd5ForString("password2"), updatedUser.getPassword());
+        assertEquals("Update user failed", MD5Util.getMd5("password2"), updatedUser.getPassword());
     }
 
     @Test

@@ -32,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public Admin create(Admin admin) {
-        admin.setAdminPassword(MD5Util.getMd5ForString(admin.getAdminPassword()));
+        admin.setAdminPassword(MD5Util.getMd5(admin.getAdminPassword()));
         Admin insertedAdmin = adminRepository.create(admin);
         if (insertedAdmin != null) {
             AdminRole adminRole = new AdminRole();
@@ -50,7 +50,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public Admin update(Admin admin) {
-        admin.setAdminPassword(MD5Util.getMd5ForString(admin.getAdminPassword()));
+        admin.setAdminPassword(MD5Util.getMd5(admin.getAdminPassword()));
         return adminRepository.update(admin);
     }
 
