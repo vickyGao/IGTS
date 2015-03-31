@@ -109,4 +109,18 @@ public class MessageKeys {
     public static final String DELETE_INDENT_FAIL = "delete.indent.fail";
     public static final String CANNOT_UPDATE_INDENT_OF_OTHER_USER = "cannot.update.indent.of.other.user";
     public static final String MONEY_NUMBER_ILLEGAL = "money.number.illegal";
+
+    /** Message */
+    public static final String MESSAGE_NOT_FOUND_FOR_ID = "message.not.found.for.id";
+    public static final String CREATE_MESSAGE_FAIL = "create.message.fail";
+    public static final String UPDATE_MESSAGE_FAIL = "update.message.fail";
+    public static final String DELETE_MESSAGE_SUCCESS = "delete.message.success";
+    public static final String DELETE_MESSAGE_FAIL = "delete.message.fail";
+
+    /** SensitiveWord */
+    public static final String SENSITIVE_WORD_NOT_FOUND_FOR_ID = "sensitive.word.not.found.for.id";
+    public static final String CREATE_SENSITIVE_WORD_FAIL = "create.sensitive.word.fail";
+    public static final String UPDATE_SENSITIVE_WORD_FAIL = "update.sensitive.word.fail";
+    public static final String DELETE_SENSITIVE_WORD_SUCCESS = "delete.sensitive.word.success";
+    public static final String DELETE_SENSITIVE_WORD_FAIL = "delete.sensitive.word.fail";
 }
