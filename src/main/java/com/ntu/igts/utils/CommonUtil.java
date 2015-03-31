@@ -1,5 +1,6 @@
 package com.ntu.igts.utils;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -71,5 +72,16 @@ public class CommonUtil {
             LOGGER.error("Stop thread for generating indent number failed", e);
         }
         return indentNumber;
+    }
+
+    public static boolean isLegalMoneyNumber(double money) {
+        if (money > 0) {
+            BigDecimal bigDecimal = new BigDecimal(money);
+            double formattedMondy = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            if (formattedMondy == money) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -88,4 +88,25 @@ public class MessageKeys {
     public static final String UPDATE_FAVORITE_FAIL = "update.favorite.fail";
     public static final String DELETE_FAVORITE_SUCCESS = "delete.favorite.success";
     public static final String DELETE_FAVORITE_FAIL = "delete.favorite.fail";
+
+    /** Indent Status */
+    public static final String STATUS_UNPAID = "status.unpaid";
+    public static final String STATUS_PAID = "status.paid";
+    public static final String STATUS_DELIVERED = "status.delivered";
+    public static final String STATUS_RETURNING = "status.returning";
+    public static final String STATUS_COMPLETE = "status.complete";
+    public static final String STATUS_CANCELLED = "status.cancelled";
+
+    /** Commodity Status */
+    public static final String STATUS_INFORMED = "status.informed";
+    public static final String STATUS_NORMAL = "status.normal";
+
+    /** Indent */
+    public static final String INDENT_NOT_FOUND_FOR_ID = "indent.not.found.for.id";
+    public static final String CREATE_INDENT_FAIL = "create.indent.fail";
+    public static final String UPDATE_INDENT_FAIL = "update.indent.fail";
+    public static final String DELETE_INDENT_SUCCESS = "delete.indent.success";
+    public static final String DELETE_INDENT_FAIL = "delete.indent.fail";
+    public static final String CANNOT_UPDATE_INDENT_OF_OTHER_USER = "cannot.update.indent.of.other.user";
+    public static final String MONEY_NUMBER_ILLEGAL = "money.number.illegal";
 }
