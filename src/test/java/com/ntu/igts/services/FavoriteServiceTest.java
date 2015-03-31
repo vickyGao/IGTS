@@ -66,7 +66,7 @@ public class FavoriteServiceTest extends TestBase {
     }
 
     @Test
-    @Order(40)
+    @Order(31)
     public void testGetPaginatedFavoritesByUserId() {
         Page<Favorite> page = favoriteService.getPaginatedFavoritesByUserId(0, 10, user.getId());
         assertNotNull("Get paginated favorite by user id failed", page);

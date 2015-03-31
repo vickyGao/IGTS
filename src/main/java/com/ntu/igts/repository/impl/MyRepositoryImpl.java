@@ -141,7 +141,8 @@ public class MyRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepos
     @Override
     public Page<T> findByPage(Query query, boolean isIncludeDeleted) {
         final String searchTerm = query.getSearchTerm();
-        final String[] queryFields = this.domainClass.getAnnotation(QueryField.class).value();
+        QueryField queryFieldAnnotation = this.domainClass.getAnnotation(QueryField.class);
+        final String[] queryFields = queryFieldAnnotation == null ? new String[0] : queryFieldAnnotation.value();
         Sort sort = new Sort(query.getOrderBy().toDirectionEnum(), query.getSortBy().value());
         Pageable pageable = new PageRequest(query.getPage(), query.getSize(), sort);
         if (isIncludeDeleted) {

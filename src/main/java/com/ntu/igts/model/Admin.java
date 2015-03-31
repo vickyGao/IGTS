@@ -11,10 +11,12 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.ntu.igts.annotations.QueryField;
 
 @Entity
 @Table(name = "admin")
 @JsonRootName("admin")
+@QueryField({ "adminName" })
 public class Admin extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -2592865393997208669L;

@@ -2,8 +2,8 @@ package com.ntu.igts.enums;
 
 public enum SortByEnum {
 
-    USER_NAME("userName"), CREATED_TIME("createdTime"), LAST_UPDATED_TIME("lastUpdatedTime"), COMMODITY_TITILE("title"), PRICE(
-                    "price"), COLLECTION_NUMBER("collectionNumber"), DISPLAY_SEQUENCE("displaySequence");
+    USER_NAME("userName"), ADMIN_NAME("adminName"), CREATED_TIME("createdTime"), LAST_UPDATED_TIME("lastUpdatedTime"), COMMODITY_TITILE(
+                    "title"), PRICE("price"), COLLECTION_NUMBER("collectionNumber"), DISPLAY_SEQUENCE("displaySequence");
 
     private String value;
 
