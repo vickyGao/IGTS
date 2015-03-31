@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +57,14 @@ public class FavoriteServiceImpl implements FavoriteService {
         Map<String, String> criteriaMap = new HashMap<String, String>();
         criteriaMap.put(Constants.FIELD_USERID, userId);
         return favoriteRepository.findAll(SortByEnum.CREATED_TIME, OrderByEnum.DESC, criteriaMap);
+    }
+
+    @Override
+    public Page<Favorite> getPaginatedFavoritesByUserId(int currentPage, int pageSize, String userId) {
+        Map<String, String> criteriaMap = new HashMap<String, String>();
+        criteriaMap.put(Constants.FIELD_USERID, userId);
+        return favoriteRepository.findByPage(currentPage, pageSize, SortByEnum.CREATED_TIME, OrderByEnum.DESC,
+                        criteriaMap);
     }
 
 }

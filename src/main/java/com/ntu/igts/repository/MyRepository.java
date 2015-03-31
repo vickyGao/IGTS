@@ -71,4 +71,25 @@ public interface MyRepository<T, ID extends Serializable> extends JpaRepository<
 
     public List<T> findAll(SortByEnum sortByEnum, OrderByEnum orderByEnum, Map<String, String> criteriaMap,
                     boolean isIncludeDeleted);
+
+    /**
+     * Get with criteria with pagination
+     * 
+     * @param currentPage
+     *            The page number (start from 0)
+     * @param pageSize
+     *            The size of each page
+     * @param sortByEnum
+     *            The sort field
+     * @param orderByEnum
+     *            Order by (ASC, DESC)
+     * @param criteriaMap
+     *            The key-value collections will be transfered to "key=value" in SQL
+     * @return The result list of the query with criteria with specify order
+     */
+    public Page<T> findByPage(int currentPage, int pageSize, SortByEnum sortByEnum, OrderByEnum orderByEnum,
+                    Map<String, String> criteriaMap);
+
+    public Page<T> findByPage(int currentPage, int pageSize, SortByEnum sortByEnum, OrderByEnum orderByEnum,
+                    Map<String, String> criteriaMap, boolean isIncludeDeleted);
 }

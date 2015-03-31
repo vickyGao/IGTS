@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.springframework.data.domain.Page;
 
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.Favorite;
@@ -60,8 +61,16 @@ public class FavoriteServiceTest extends TestBase {
     @Order(30)
     public void testGetByUserId() {
         List<Favorite> favoriteList = favoriteService.getByUserId(user.getId());
-        assertNotNull("Get favorite by user id failed", favoriteList);
-        assertTrue("Get favorite by user id failed", favoriteList.size() > 0);
+        assertNotNull("Get favorite list by user id failed", favoriteList);
+        assertTrue("Get favorite list by user id failed", favoriteList.size() > 0);
+    }
+
+    @Test
+    @Order(40)
+    public void testGetPaginatedFavoritesByUserId() {
+        Page<Favorite> page = favoriteService.getPaginatedFavoritesByUserId(0, 10, user.getId());
+        assertNotNull("Get paginated favorite by user id failed", page);
+        assertTrue("Get paginated favorite by user id failed", page.getContent().size() > 0);
     }
 
     @Test

@@ -45,6 +45,14 @@ public class BaseException extends RuntimeException {
         this.param = param;
     }
 
+    public BaseException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public BaseException(Throwable cause) {
+        super(cause);
+    }
+
     public String getCode() {
         return code;
     }

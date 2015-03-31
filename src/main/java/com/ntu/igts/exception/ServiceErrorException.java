@@ -36,4 +36,14 @@ public class ServiceErrorException extends BaseException {
         // TODO Auto-generated constructor stub
     }
 
+    public ServiceErrorException(String message, Throwable cause) {
+        super(message, cause);
+        // TODO Auto-generated constructor stub
+    }
+
+    public ServiceErrorException(Throwable cause) {
+        super(cause);
+        // TODO Auto-generated constructor stub
+    }
+
 }

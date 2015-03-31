@@ -36,4 +36,14 @@ public class ServiceWarningException extends BaseException {
         // TODO Auto-generated constructor stub
     }
 
+    public ServiceWarningException(String message, Throwable cause) {
+        super(message, cause);
+        // TODO Auto-generated constructor stub
+    }
+
+    public ServiceWarningException(Throwable cause) {
+        super(cause);
+        // TODO Auto-generated constructor stub
+    }
+
 }

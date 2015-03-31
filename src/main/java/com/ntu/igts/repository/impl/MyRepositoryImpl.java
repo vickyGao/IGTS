@@ -259,4 +259,42 @@ public class MyRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepos
         return predicateList;
     }
 
+    @Override
+    public Page<T> findByPage(int currentPage, int pageSize, SortByEnum sortByEnum, OrderByEnum orderByEnum,
+                    Map<String, String> criteriaMap) {
+        return findByPage(currentPage, pageSize, sortByEnum, orderByEnum, criteriaMap, false);
+    }
+
+    @Override
+    public Page<T> findByPage(int currentPage, int pageSize, SortByEnum sortByEnum, OrderByEnum orderByEnum,
+                    Map<String, String> criteriaMap, boolean isIncludeDeleted) {
+        if (orderByEnum == null) {
+            orderByEnum = OrderByEnum.DESC;
+        }
+        final Map<String, String> queryCriteriaMap = criteriaMap;
+        Sort sort = new Sort(orderByEnum.toDirectionEnum(), sortByEnum.value());
+        Pageable pageable = new PageRequest(currentPage, pageSize, sort);
+        if (isIncludeDeleted) {
+            return super.findAll(new Specification<T>() {
+                @Override
+                public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicateList = getPredicateListByCriteriaMap(root, cb, queryCriteriaMap);
+                    query.where(cb.and(predicateList.toArray(new Predicate[predicateList.size()])));
+                    return null;
+                }
+            }, pageable);
+        } else {
+            return super.findAll(new Specification<T>() {
+                @Override
+                public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicateList = getPredicateListByCriteriaMap(root, cb, queryCriteriaMap);
+                    Path<String> deletedYN = root.get(Constants.FIELD_DELETED_YN);
+                    query.where(cb.and(cb.and(predicateList.toArray(new Predicate[predicateList.size()])),
+                                    cb.equal(deletedYN, "N")));
+                    return null;
+                }
+            }, pageable);
+        }
+    }
+
 }
