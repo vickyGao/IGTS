@@ -2,7 +2,7 @@ package com.ntu.igts.enums;
 
 public enum RoleEnum {
 
-    ADMIN("ADMIN"), USER("ADMIN"), ALL("ALL");
+    ADMIN("ADMIN"), USER("USER"), ALL("ALL");
     private String value;
 
     private RoleEnum(String value) {

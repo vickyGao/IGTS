@@ -7,8 +7,12 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.springframework.data.domain.Page;
 
+import com.ntu.igts.enums.OrderByEnum;
+import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Admin;
+import com.ntu.igts.model.container.Query;
 import com.ntu.igts.test.Order;
 import com.ntu.igts.utils.MD5Util;
 
@@ -47,6 +51,20 @@ public class AdminServiceTest extends TestBase {
         Admin returnAdmin = adminService.getAdminByAdminName(admin.getAdminName());
         assertNotNull("Get admin by admin name fail", returnAdmin);
         assertEquals("Get admin by admin name fail", admin.getId(), returnAdmin.getId());
+    }
+
+    @Test
+    @Order(21)
+    public void testGetPaginatedAdmins() {
+        Query query = new Query();
+        query.setSearchTerm(admin.getAdminName());
+        query.setPage(0);
+        query.setSize(5);
+        query.setSortBy(SortByEnum.ADMIN_NAME);
+        query.setOrderBy(OrderByEnum.ASC);
+        Page<Admin> page = adminService.getPaginatedAdmins(query);
+        assertNotNull("Get users by page failed", page);
+        assertTrue("Get users failed", page.getContent().size() > 0);
     }
 
     @Test

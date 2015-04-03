@@ -16,10 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.ActiveStateEnum;
 import com.ntu.igts.enums.RoleEnum;
@@ -79,7 +76,6 @@ public class UserResource extends BaseResource {
      */
     @PUT
     @Path("entity")
-    @ResponseStatus(HttpStatus.OK)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
@@ -198,7 +194,7 @@ public class UserResource extends BaseResource {
     }
 
     @GET
-    @Path("entity/userid")
+    @Path("entity/{userid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("userid") String userId) {

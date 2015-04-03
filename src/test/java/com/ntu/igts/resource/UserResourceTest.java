@@ -89,7 +89,7 @@ public class UserResourceTest extends TestBase {
         queryParam.put("search_term", "");
         queryParam.put("page", "0");
         queryParam.put("size", "10");
-        queryParam.put("sortby", SortByEnum.USERNAME.toString());
+        queryParam.put("sortby", SortByEnum.USER_NAME.toString());
         queryParam.put("orderby", OrderByEnum.ASC.toString());
         Response response = doGetWithQueryParam(BASE_PATH + "entity/search_term", adminToken, queryParam);
         assertEquals("Get users by page fail", Status.OK.getStatusCode(), response.getStatus());

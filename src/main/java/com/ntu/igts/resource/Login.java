@@ -43,6 +43,7 @@ public class Login {
             if (user.getPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
                 SessionContext sessionContext = sessionContextService.create(user.getId());
                 sessionContext.setUserName(user.getUserName());
+                System.out.println(MD5Util.getMd5("password"));
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
             }
         }

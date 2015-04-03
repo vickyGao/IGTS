@@ -34,4 +34,15 @@ public class JsonTransferException extends BaseException {
         super(message, code, param);
         // TODO Auto-generated constructor stub
     }
+
+    public JsonTransferException(String message, Throwable cause) {
+        super(message, cause);
+        // TODO Auto-generated constructor stub
+    }
+
+    public JsonTransferException(Throwable cause) {
+        super(cause);
+        // TODO Auto-generated constructor stub
+    }
+
 }

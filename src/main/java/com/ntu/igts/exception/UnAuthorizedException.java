@@ -40,4 +40,14 @@ public class UnAuthorizedException extends BaseException {
         // TODO Auto-generated constructor stub
     }
 
+    public UnAuthorizedException(String message, Throwable cause) {
+        super(message, cause);
+        // TODO Auto-generated constructor stub
+    }
+
+    public UnAuthorizedException(Throwable cause) {
+        super(cause);
+        // TODO Auto-generated constructor stub
+    }
+
 }

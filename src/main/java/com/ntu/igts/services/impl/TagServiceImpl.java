@@ -85,7 +85,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> getAllTags() {
+    public List<Tag> getAllTagsWithSubTags() {
         List<Tag> topLevelTags = tagRepository.getAllTopLevelTags();
         for (Tag topLevelTag : topLevelTags) {
             List<Tag> subTags = getTagsWithSubTagsForParentId(topLevelTag.getId());

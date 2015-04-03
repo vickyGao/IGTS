@@ -112,7 +112,7 @@ public class TagServiceTest extends TestBase {
     @Test
     @Order(42)
     public void testGetAllTags() {
-        List<Tag> returnTags = tagService.getAllTags();
+        List<Tag> returnTags = tagService.getAllTagsWithSubTags();
         assertNotNull("Get all tags failed", returnTags);
         assertTrue("Get all tags failed", returnTags.size() > 0);
     }

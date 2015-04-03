@@ -122,6 +122,7 @@ public class CommodityResource extends BaseResource {
     public String deleteCommodity(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("commodityid") String commodityId) {
         filterSessionContext(token, RoleEnum.USER);
+        checkCommodityAvailability(commodityId);
         boolean flag = commodityService.delete(commodityId);
         if (flag) {
             return messageBuilder.buildMessage(MessageKeys.DELETE_COMMODITY_SUCCESS, "Delete commodity success",

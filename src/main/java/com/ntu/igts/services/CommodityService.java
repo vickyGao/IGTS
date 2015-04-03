@@ -18,6 +18,8 @@ public interface CommodityService {
 
     public Commodity getById(String commodityId);
 
+    public Commodity getCommodityWithDetailById(String commodityId);
+
     public List<Commodity> getCommodities();
 
     public Page<Commodity> getByPage(Query query);

@@ -33,27 +33,36 @@ public class BaseResource {
      *            Roles which are allowed to access
      * @return If the user has the exact role and its session is not expired, return sessionContext, or throw exception
      */
-    protected boolean filterSessionContext(String token, RoleEnum allowedRole) {
+    protected SessionContext filterSessionContext(String token, RoleEnum allowedRole) {
         SessionContext sessionContext = sessionContextService.getByToken(token);
-        if (sessionContext != null) {
-            if (!isSessionContextExpired(sessionContext)) {
-                if (RoleEnum.USER.equals(allowedRole)) {
-                    User user = userService.getUserDetailById(sessionContext.getUserId());
-                    if (CommonUtil.isRoleAllowed(user.getRoles(), allowedRole)) {
-                        return true;
+        if (sessionContext != null) { // If the session exists
+            if (RoleEnum.ALL.equals(allowedRole)) { // If the session exits and all roles are allowed
+                flushSessionContext(token);
+                return null;
+            } else {
+                if (!isSessionContextExpired(sessionContext)) { // If the session exists, but only specify user is
+                                                                // allowed
+                    if (RoleEnum.USER.equals(allowedRole)) { // Only allow user
+                        User user = userService.getUserDetailById(sessionContext.getUserId());
+                        if (CommonUtil.isRoleAllowed(user.getRoles(), allowedRole)) {
+                            flushSessionContext(token);
+                            sessionContext.setUserId(user.getId());
+                            sessionContext.setUserName(user.getUserName());
+                            return sessionContext;
+                        }
+                    } else if (RoleEnum.ADMIN.equals(allowedRole)) { // Only allow admin
+                        Admin admin = adminService.getAdminDetailtById(sessionContext.getUserId());
+                        if (CommonUtil.isRoleAllowed(admin.getRoles(), allowedRole)) {
+                            flushSessionContext(token);
+                            sessionContext.setUserId(admin.getId());
+                            sessionContext.setUserName(admin.getAdminName());
+                            return sessionContext;
+                        }
                     }
-                } else if (RoleEnum.ADMIN.equals(allowedRole)) {
-                    Admin admin = adminService.getAdminDetailtById(sessionContext.getUserId());
-                    if (CommonUtil.isRoleAllowed(admin.getRoles(), allowedRole)) {
-                        return true;
-                    }
-                } else {
-                    flushSessionContext(token);
-                    return true;
                 }
             }
-        } else if (RoleEnum.ALL.equals(allowedRole)) {
-            return true;
+        } else if (RoleEnum.ALL.equals(allowedRole)) { // If the session does not exist and all roles are allowed
+            return null;
         }
         throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
     }

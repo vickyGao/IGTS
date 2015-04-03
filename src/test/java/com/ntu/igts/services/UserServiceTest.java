@@ -78,7 +78,7 @@ public class UserServiceTest extends TestBase {
         query.setSearchTerm(user.getUserName());
         query.setPage(0);
         query.setSize(5);
-        query.setSortBy(SortByEnum.USERNAME);
+        query.setSortBy(SortByEnum.USER_NAME);
         query.setOrderBy(OrderByEnum.ASC);
         Page<User> userPage = userService.getByPage(query);
         assertNotNull("Get users by page failed", userPage);

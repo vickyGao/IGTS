@@ -24,12 +24,18 @@ public class CustomModule extends BaseModel implements Serializable {
     @Column(name = "title")
     @JsonProperty("title")
     private String title;
-    @Column(name = "commodity_id", columnDefinition = "VARCHAR(36)")
-    @JsonProperty("commodityid")
-    private String commodityId;
+    @Column(name = "display_sequence")
+    @JsonProperty("displaysequence")
+    private int displaySequence;
+    @Column(name = "keyword")
+    @JsonProperty("keyword")
+    private String keyword;
+    @Column(name = "display_amount")
+    @JsonProperty("displayamount")
+    private int displayAmount;
     @Transient
-    @JsonProperty("images")
-    private List<Image> images = new ArrayList<Image>();
+    @JsonProperty("commodities")
+    private List<Commodity> commodities = new ArrayList<Commodity>();
 
     public String getTitle() {
         return title;
@@ -39,20 +45,36 @@ public class CustomModule extends BaseModel implements Serializable {
         this.title = title;
     }
 
-    public String getCommodityId() {
-        return commodityId;
+    public int getDisplaySequence() {
+        return displaySequence;
     }
 
-    public void setCommodityId(String commodityId) {
-        this.commodityId = commodityId;
+    public void setDisplaySequence(int displaySequence) {
+        this.displaySequence = displaySequence;
     }
 
-    public List<Image> getImages() {
-        return images;
+    public String getKeyword() {
+        return keyword;
     }
 
-    public void setImages(List<Image> images) {
-        this.images = images;
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public int getDisplayAmount() {
+        return displayAmount;
+    }
+
+    public void setDisplayAmount(int displayAmount) {
+        this.displayAmount = displayAmount;
+    }
+
+    public List<Commodity> getCommodities() {
+        return commodities;
+    }
+
+    public void setCommodities(List<Commodity> commodities) {
+        this.commodities = commodities;
     }
 
 }
