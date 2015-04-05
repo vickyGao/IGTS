@@ -1,12 +1,18 @@
 package com.ntu.igts.services.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ntu.igts.constants.Constants;
+import com.ntu.igts.enums.OrderByEnum;
+import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Message;
 import com.ntu.igts.repository.MessageRepository;
 import com.ntu.igts.services.MessageService;
@@ -54,6 +60,22 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Message getById(String messageId) {
         return messageRepository.findById(messageId);
+    }
+
+    @Override
+    public Page<Message> getPaginatedMessagesByCommodity(int currentPage, int pageSize, String commodityId) {
+        Map<String, String> criteriaMap = new HashMap<String, String>();
+        criteriaMap.put(Constants.FIELD_COMMODITYID, commodityId);
+        criteriaMap.put(Constants.FIELD_PARENTID, null);
+        Page<Message> topMessagesPage = messageRepository.findByPage(currentPage, pageSize, SortByEnum.CREATED_TIME,
+                        OrderByEnum.DESC, criteriaMap);
+        if (topMessagesPage != null) {
+            for (Message topMessage : topMessagesPage.getContent()) {
+                List<Message> childrenMessages = messageRepository.getChildrenMessagesByParentId(topMessage.getId());
+                topMessage.setMessages(childrenMessages);
+            }
+        }
+        return topMessagesPage;
     }
 
 }

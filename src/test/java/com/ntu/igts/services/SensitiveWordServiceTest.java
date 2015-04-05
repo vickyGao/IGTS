@@ -7,8 +7,10 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.springframework.data.domain.Page;
 
 import com.ntu.igts.model.SensitiveWord;
+import com.ntu.igts.model.container.Query;
 import com.ntu.igts.test.Order;
 
 public class SensitiveWordServiceTest extends TestBase {
@@ -56,6 +58,18 @@ public class SensitiveWordServiceTest extends TestBase {
     public void testIsSensitiveWord() {
         boolean flag = sensitiveWordService.isSensitiveWord(sensitiveWord.getWord());
         assertTrue("Check whether is sensitive word failed", flag);
+    }
+
+    @Test
+    @Order(41)
+    public void testGetPaginatedSensitiveWord() {
+        Query query = new Query();
+        query.setSearchTerm(sensitiveWord.getWord());
+        query.setPage(0);
+        query.setSize(5);
+        Page<SensitiveWord> page = sensitiveWordService.getPaginatedSensitiveWord(query);
+        assertNotNull("Get paginated sensitive words failed", page);
+        assertTrue("Get paginated sensitive words failed", page.getContent().size() > 0);
     }
 
     @Test

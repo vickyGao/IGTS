@@ -10,8 +10,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.search.annotations.Field;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -24,7 +22,6 @@ public class BaseModel {
     @Column(name = "id", columnDefinition = "VARCHAR(36)")
     @JsonProperty("id")
     private String id;
-    @Field
     @Column(name = "deleted_yn", insertable = false, columnDefinition = "VARCHAR(2) NOT NULL DEFAULT 'N'")
     @JsonIgnore
     private String deletedYN = "N";

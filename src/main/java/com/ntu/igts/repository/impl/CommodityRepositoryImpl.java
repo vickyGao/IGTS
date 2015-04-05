@@ -14,7 +14,6 @@ import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Commodity;
@@ -43,51 +42,60 @@ public class CommodityRepositoryImpl implements CommodityCustomizeRepository {
         QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
                         .forEntity(Commodity.class).get();
 
+        // Set default max value for the price
         if (query.getEndPrice() == 0) {
             query.setEndPrice(Double.MAX_VALUE);
         }
+
+        // Build lucene query for search term and price search
         org.apache.lucene.search.Query luceneQuery = null;
-        if (StringUtil.isEmpty(query.getDistrict())) {
-            luceneQuery = queryBuilder
-                            .bool()
-                            .must(queryBuilder.range().onField("price").from(query.getStartPrice())
-                                            .to(query.getEndPrice()).createQuery())
-                            .must(queryBuilder.keyword().onField(Constants.FIELD_DELETED_YN).matching("N")
-                                            .createQuery())
-                            .must(queryBuilder.keyword().fuzzy().onFields("title", "description")
-                                            .matching(query.getSearchTerm()).createQuery()).createQuery();
+        if (StringUtil.isEmpty(query.getSearchTerm())) {
+            luceneQuery = queryBuilder.range().onField("price").from(query.getStartPrice()).to(query.getEndPrice())
+                            .createQuery();
         } else {
             luceneQuery = queryBuilder
                             .bool()
+                            .must(queryBuilder.keyword().fuzzy().onFields("title", "description", "tags.name")
+                                            .matching(query.getSearchTerm()).createQuery())
                             .must(queryBuilder.range().onField("price").from(query.getStartPrice())
-                                            .to(query.getEndPrice()).createQuery())
-                            .must(queryBuilder.keyword().onField("district").matching(query.getDistrict())
-                                            .createQuery())
-                            .must(queryBuilder.keyword().onField(Constants.FIELD_DELETED_YN).matching("N")
-                                            .createQuery())
-                            .must(queryBuilder.keyword().fuzzy().onFields("title", "description")
-                                            .matching(query.getSearchTerm()).createQuery()).createQuery();
+                                            .to(query.getEndPrice()).createQuery()).createQuery();
         }
-        ;
 
-        int page = query.getPage() > 0 ? query.getPage() - 1 : 0;
-        // wrap Lucene query in a javax.persistence.Query
-        javax.persistence.Query persistenceQuery = fullTextEntityManager.createFullTextQuery(luceneQuery,
-                        Commodity.class);
-        int resultSize = ((FullTextQuery) persistenceQuery).getResultSize();
+        // Set the start page for pagination
+        int page = query.getPage() < 0 ? 0 : query.getPage();
+        // Transfer lucene query to full text query
+        FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Commodity.class);
+
+        // If the district is not empty, add filter for district
+        if (!StringUtil.isEmpty(query.getDistrict())) {
+            fullTextQuery.enableFullTextFilter("districtFilter").setParameter("district", query.getDistrict());
+        }
+        // If the status is not empty, add filter for status
+        if (query.getStatus() != null) {
+            fullTextQuery.enableFullTextFilter("statusFilter").setParameter("status", query.getStatus().value());
+        }
+        // If the tag id is not empty, add filter for tag
+        if (!StringUtil.isEmpty(query.getTagId())) {
+            fullTextQuery.enableFullTextFilter("tagFilter").setParameter("tagId", query.getTagId());
+        }
+
+        // Get the total count for the search
+        int resultSize = fullTextQuery.getResultSize();
         if (resultSize == 0) {
             return getItemQueryResult(query, new ArrayList<Commodity>(), 0, 0);
         } else {
             if (query.getSortBy() == null) {
-                persistenceQuery.setFirstResult(page * query.getSize()).setMaxResults(query.getSize());
-                List<Commodity> result = persistenceQuery.getResultList();
-                return getItemQueryResult(query, result, resultSize, resultSize / query.getSize() + 1);
+                fullTextQuery.setFirstResult(page * query.getSize()).setMaxResults(query.getSize());
+                List<Commodity> result = fullTextQuery.getResultList();
+                return getItemQueryResult(query, result, resultSize,
+                                getTotalPagesByTotalCountAndPageSize(resultSize, query.getSize()));
             } else {
                 Sort sort = getSortForQuery(query);
-                ((FullTextQuery) persistenceQuery).setSort(sort);
-                persistenceQuery.setFirstResult(page * query.getSize()).setMaxResults(query.getSize());
-                List<Commodity> result = persistenceQuery.getResultList();
-                return getItemQueryResult(query, result, resultSize, resultSize / query.getSize() + 1);
+                fullTextQuery.setSort(sort);
+                fullTextQuery.setFirstResult(page * query.getSize()).setMaxResults(query.getSize());
+                List<Commodity> result = fullTextQuery.getResultList();
+                return getItemQueryResult(query, result, resultSize,
+                                getTotalPagesByTotalCountAndPageSize(resultSize, query.getSize()));
             }
         }
     }
@@ -120,6 +128,13 @@ public class CommodityRepositoryImpl implements CommodityCustomizeRepository {
         return itemQueryResult;
     }
 
+    /**
+     * Get sort for search by query object
+     * 
+     * @param query
+     *            The query object
+     * @return org.apache.lucene.search.Sort
+     */
     private Sort getSortForQuery(Query query) {
         if (SortByEnum.COLLECTION_NUMBER.equals(query.getSortBy())) {
             return new Sort(new SortField(query.getSortBy().value(), SortField.Type.INT, OrderByEnum.ASC.equals(query
@@ -128,9 +143,20 @@ public class CommodityRepositoryImpl implements CommodityCustomizeRepository {
             return new Sort(new SortField(query.getSortBy().value(), SortField.Type.DOUBLE,
                             OrderByEnum.ASC.equals(query.getOrderBy()) ? false : true));
         } else {
-            return new Sort(new SortField(query.getSortBy().value(), SortField.Type.STRING,
-                            OrderByEnum.ASC.equals(query.getOrderBy()) ? false : true));
+            return new Sort(new SortField(SortByEnum.RELEASE_DATE.value(), SortField.Type.STRING, true));
         }
     }
 
+    /**
+     * Get total page number from total count and page size
+     * 
+     * @param toalCount
+     *            The total count of search result
+     * @param pageSize
+     *            The size of each page
+     * @return The number of total pages
+     */
+    private int getTotalPagesByTotalCountAndPageSize(int toalCount, int pageSize) {
+        return (toalCount - 1) / pageSize + 1;
+    }
 }

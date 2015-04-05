@@ -2,6 +2,8 @@ package com.ntu.igts.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.ntu.igts.model.Message;
 
 public interface MessageService {
@@ -15,4 +17,6 @@ public interface MessageService {
     public List<Message> getByCommodityId(String commodityId);
 
     public Message getById(String messageId);
+
+    public Page<Message> getPaginatedMessagesByCommodity(int currentPage, int pageSize, String commodityId);
 }

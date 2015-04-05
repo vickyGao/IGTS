@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.springframework.data.domain.Page;
 
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.Message;
@@ -66,6 +67,14 @@ public class MessageServiceTest extends TestBase {
         List<Message> messages = messageService.getByCommodityId(commodity.getId());
         assertNotNull("Get messages by commodity id failed", messages);
         assertTrue("Get messages by commodity id failed", messages.size() > 0);
+    }
+
+    @Test
+    @Order(31)
+    public void testGetPaginatedMessagesByCommodity() {
+        Page<Message> page = messageService.getPaginatedMessagesByCommodity(0, 5, commodity.getId());
+        assertNotNull("Get paginated messages by commodity id failed", page);
+        assertTrue("Get paginated messages by commodity id failed", page.getContent().size() > 0);
     }
 
     @Test

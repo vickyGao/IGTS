@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.ntu.igts.utils.StringUtil;
 
 @JsonRootName("pagination")
 public class Pagination<T> implements Serializable {
@@ -13,7 +14,7 @@ public class Pagination<T> implements Serializable {
     private static final long serialVersionUID = 550812073885725806L;
 
     @JsonProperty("searchterm")
-    private String searchTerm;
+    private String searchTerm = StringUtil.EMPTY;
     @JsonProperty("totalcount")
     private int totalCount;
     @JsonProperty("currentpage")

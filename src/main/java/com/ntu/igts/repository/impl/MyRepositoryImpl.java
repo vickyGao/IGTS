@@ -253,8 +253,12 @@ public class MyRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepos
         List<Predicate> predicateList = new ArrayList<Predicate>();
         if (criteriaMap != null) {
             for (Entry<String, String> entry : criteriaMap.entrySet()) {
-                Path<String> queryPath = root.get(entry.getKey());
-                predicateList.add(cb.equal(queryPath, entry.getValue()));
+                if (StringUtil.isEmpty(entry.getValue())) {
+                    predicateList.add(cb.isNull(root.get(entry.getKey())));
+                } else {
+                    Path<String> queryPath = root.get(entry.getKey());
+                    predicateList.add(cb.equal(queryPath, entry.getValue()));
+                }
             }
         }
         return predicateList;

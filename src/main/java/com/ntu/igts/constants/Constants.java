@@ -11,6 +11,13 @@ public class Constants {
 
     /** Filed name userId */
     public static String FIELD_USERID = "userId";
+    /** Filed name commodityId */
+    public static String FIELD_COMMODITYID = "commodityId";
+    /** Filed name parentId */
+    public static String FIELD_PARENTID = "parentId";
+
+    /** The vale which represents the entity is logic deleted */
+    public static String LOGIC_DELETED = "Y";
 
     /** I18N */
     public static final String I18N_LOCALE_ATTRIBUTE = "request-locale";

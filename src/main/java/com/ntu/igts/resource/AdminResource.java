@@ -2,6 +2,7 @@ package com.ntu.igts.resource;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,7 +15,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceErrorException;
@@ -22,6 +25,8 @@ import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Admin;
+import com.ntu.igts.model.container.Pagination;
+import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.AdminService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
@@ -126,6 +131,19 @@ public class AdminResource extends BaseResource {
                     @PathParam("adminid") String adminId) {
         filterSessionContext(token, RoleEnum.ADMIN);
         return JsonUtil.getJsonStringFromPojo(adminService.getById(adminId));
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getPaginatedAdmins(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @BeanParam Query query) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        Page<Admin> page = adminService.getPaginatedAdmins(query);
+        Pagination<Admin> pagination = new Pagination<Admin>();
+        pagination.setContent(page.getContent());
+        pagination.setCurrentPage(page.getNumber());
+        pagination.setPageCount(page.getTotalPages());
+        pagination.setTotalCount(page.getNumberOfElements());
+        return JsonUtil.getJsonStringFromPojo(pagination);
     }
 
     private Admin checkAdminAvailability(String adminId) {

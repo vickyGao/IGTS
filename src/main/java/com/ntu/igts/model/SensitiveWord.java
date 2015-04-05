@@ -13,7 +13,7 @@ import com.ntu.igts.annotations.QueryField;
 @Entity
 @Table(name = "sensitive_word")
 @JsonRootName("sensitiveword")
-@QueryField({})
+@QueryField({ "word" })
 public class SensitiveWord extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 1181080028496268314L;

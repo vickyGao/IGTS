@@ -94,4 +94,18 @@ public class TagServiceImpl implements TagService {
         return topLevelTags;
     }
 
+    @Override
+    public List<Tag> getTagsByCommodityId(String commodityId) {
+        List<Tag> topLevelTags = getTopLevelTagsForCommodityId(commodityId);
+        for (Tag topLevelTag : topLevelTags) {
+            topLevelTag.setTags(getTagsWithSubTagsForParentId(topLevelTag.getId()));
+        }
+        return topLevelTags;
+    }
+
+    @Override
+    public List<Tag> getTagsHorizontalByCommodityId(String commodityId) {
+        return tagRepository.getTagsHorizontalByCommodityId(commodityId);
+    }
+
 }

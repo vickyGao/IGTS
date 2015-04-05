@@ -3,6 +3,7 @@ package com.ntu.igts.model.container;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 
+import com.ntu.igts.enums.CommodityStatusEnum;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.utils.StringUtil;
@@ -30,6 +31,12 @@ public class Query {
     @QueryParam("district")
     @DefaultValue(StringUtil.EMPTY)
     private String district;
+    @QueryParam("status")
+    @DefaultValue(StringUtil.EMPTY)
+    private CommodityStatusEnum status;
+    @QueryParam("tagid")
+    @DefaultValue(StringUtil.EMPTY)
+    private String tagId;
 
     public String getSearchTerm() {
         return searchTerm;
@@ -93,6 +100,22 @@ public class Query {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    public CommodityStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(CommodityStatusEnum status) {
+        this.status = status;
+    }
+
+    public String getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
     }
 
 }

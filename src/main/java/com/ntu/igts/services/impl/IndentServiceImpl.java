@@ -1,12 +1,18 @@
 package com.ntu.igts.services.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ntu.igts.constants.Constants;
+import com.ntu.igts.enums.OrderByEnum;
+import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Indent;
 import com.ntu.igts.repository.IndentRepository;
 import com.ntu.igts.services.IndentService;
@@ -49,6 +55,14 @@ public class IndentServiceImpl implements IndentService {
     @Override
     public Indent getById(String indentId) {
         return indentRepository.findById(indentId);
+    }
+
+    @Override
+    public Page<Indent> getPaginatedIndentByUserId(int currentPage, int pageSize, String userId) {
+        Map<String, String> criteriaMap = new HashMap<String, String>();
+        criteriaMap.put(Constants.FIELD_USERID, userId);
+        return indentRepository.findByPage(currentPage, pageSize, SortByEnum.CREATED_TIME, OrderByEnum.DESC,
+                        criteriaMap);
     }
 
 }

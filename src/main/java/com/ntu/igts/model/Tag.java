@@ -5,14 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.search.annotations.Boost;
+import org.hibernate.search.annotations.Field;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.ntu.igts.annotations.QueryField;
 
+@Embeddable
 @Entity
 @Table(name = "tag")
 @JsonRootName("tag")
@@ -21,6 +26,8 @@ public class Tag extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -2616479631469825693L;
 
+    @Field
+    @Boost(1.2f)
     @Column(name = "name")
     @JsonProperty("name")
     private String name;

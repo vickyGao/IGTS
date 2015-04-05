@@ -117,7 +117,7 @@ public class MessageKeys {
     public static final String DELETE_MESSAGE_SUCCESS = "delete.message.success";
     public static final String DELETE_MESSAGE_FAIL = "delete.message.fail";
 
-    /** SensitiveWord */
+    /** Sensitive word */
     public static final String SENSITIVE_WORD_NOT_FOUND_FOR_ID = "sensitive.word.not.found.for.id";
     public static final String CREATE_SENSITIVE_WORD_FAIL = "create.sensitive.word.fail";
     public static final String UPDATE_SENSITIVE_WORD_FAIL = "update.sensitive.word.fail";

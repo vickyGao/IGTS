@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.springframework.data.domain.Page;
 
 import com.ntu.igts.model.Indent;
 import com.ntu.igts.test.Order;
@@ -63,6 +64,14 @@ public class IndentServiceTest extends TestBase {
         List<Indent> indentList = indentService.getByUserId(user.getId());
         assertNotNull("Get indent by user id failed", indentList);
         assertTrue("Get indent by user id failed", indentList.size() > 0);
+    }
+
+    @Test
+    @Order(31)
+    public void testGetPaginatedIndentByUserId() {
+        Page<Indent> page = indentService.getPaginatedIndentByUserId(0, 5, user.getId());
+        assertNotNull("Get paginated indent by user id failed", page);
+        assertTrue("Get paginated indent by user id failed", page.getContent().size() > 0);
     }
 
     @Test

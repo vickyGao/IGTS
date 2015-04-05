@@ -30,6 +30,7 @@ import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.CommodityService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
+import com.ntu.igts.utils.StringUtil;
 
 @Component
 @Path("commodity")
@@ -58,6 +59,9 @@ public class CommodityResource extends BaseResource {
     public String createCommodity(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         filterSessionContext(token, RoleEnum.USER);
         Commodity pojo = JsonUtil.getPojoFromJsonString(inString, Commodity.class);
+        if (StringUtil.isEmpty(pojo.getStatus())) {
+            pojo.setStatus(messageBuilder.buildMessage(MessageKeys.STATUS_NORMAL, CommonUtil.getLocaleFromRequest(webRequest)));
+        }
         Commodity insertedCommodity = commodityService.create(pojo);
         if (insertedCommodity == null) {
             throw new ServiceErrorException("Create commodity failed.", MessageKeys.CREATE_COMMODITY_FAIL);

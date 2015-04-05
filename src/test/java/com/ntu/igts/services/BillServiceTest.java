@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.junit.Test;
+import org.springframework.data.domain.Page;
 
 import com.ntu.igts.model.Bill;
 import com.ntu.igts.test.Order;
@@ -56,6 +57,14 @@ public class BillServiceTest extends TestBase {
         List<Bill> billList = billService.getByUserId(user.getId());
         assertNotNull("Get bill list by user id failed", billList);
         assertTrue("Get bill list by user id failed", billList.size() > 0);
+    }
+
+    @Test
+    @Order(31)
+    public void testGetPaginatedBillsByUserId() {
+        Page<Bill> page = billService.getPaginatedBillsByUserId(0, 5, user.getId());
+        assertNotNull("Get paginated bill list by user id failed", page);
+        assertTrue("Get paginated bill list by user id failed", page.getContent().size() > 0);
     }
 
     @Test

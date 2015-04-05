@@ -2,6 +2,8 @@ package com.ntu.igts.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.ntu.igts.model.Indent;
 
 public interface IndentService {
@@ -15,4 +17,6 @@ public interface IndentService {
     public List<Indent> getByUserId(String userId);
 
     public Indent getById(String indentId);
+
+    public Page<Indent> getPaginatedIndentByUserId(int currentPage, int pageSize, String userId);
 }

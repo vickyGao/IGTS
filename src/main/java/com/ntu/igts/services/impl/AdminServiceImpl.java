@@ -43,7 +43,7 @@ public class AdminServiceImpl implements AdminService {
             AdminRole adminRole = new AdminRole();
             adminRole.setAdminId(insertedAdmin.getId());
             List<Role> roles = roleService.getRoles();
-            String roleId = CommonUtil.getRequiredRoleIdFromRoles(roles, RoleEnum.USER);
+            String roleId = CommonUtil.getRequiredRoleIdFromRoles(roles, RoleEnum.ADMIN);
             adminRole.setRoleId(roleId);
             adminRoleRepository.create(adminRole);
             return getAdminDetailtById(insertedAdmin.getId());

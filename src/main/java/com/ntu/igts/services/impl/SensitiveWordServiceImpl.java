@@ -4,12 +4,17 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ntu.igts.enums.OrderByEnum;
+import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.SensitiveWord;
+import com.ntu.igts.model.container.Query;
 import com.ntu.igts.repository.SensitiveWordRepository;
 import com.ntu.igts.services.SensitiveWordService;
+import com.ntu.igts.utils.StringUtil;
 
 @Service
 public class SensitiveWordServiceImpl implements SensitiveWordService {
@@ -59,6 +64,16 @@ public class SensitiveWordServiceImpl implements SensitiveWordService {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public Page<SensitiveWord> getPaginatedSensitiveWord(Query query) {
+        if (StringUtil.isEmpty(query.getSearchTerm())) {
+            query.setSearchTerm(StringUtil.EMPTY);
+        }
+        query.setSortBy(SortByEnum.WORD);
+        query.setOrderBy(OrderByEnum.ASC);
+        return sensitiveWordRepository.findByPage(query);
     }
 
 }

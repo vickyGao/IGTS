@@ -25,4 +25,8 @@ public interface TagService {
     public List<Tag> getAllTopLevelTags();
 
     public List<Tag> getAllTagsWithSubTags();
+
+    public List<Tag> getTagsByCommodityId(String commodityId);
+
+    public List<Tag> getTagsHorizontalByCommodityId(String commodityId);
 }

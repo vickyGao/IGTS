@@ -15,7 +15,6 @@ import javax.ws.rs.ext.Provider;
 
 import org.apache.log4j.Logger;
 
-import com.ntu.igts.exception.BaseException;
 import com.ntu.igts.exception.LoginException;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
@@ -83,8 +82,7 @@ public class ExceptionMapperSupport implements ExceptionMapper<Exception> {
             String message = messageBuilder.buildMessage(MessageKeys.INTERNAL_SERVER_ERROR, "Internal server error",
                             locale);
             Status status = Status.INTERNAL_SERVER_ERROR;
-            JSONObject responseJson = getResponseJson("error", message, ((BaseException) exception).getDetails(),
-                            exception);
+            JSONObject responseJson = getResponseJson("error", message, null, exception);
             LOGGER.error(exception.getMessage(), exception);
             return Response.ok(responseJson.toString(), MediaType.APPLICATION_JSON).status(status).build();
         }
@@ -96,7 +94,9 @@ public class ExceptionMapperSupport implements ExceptionMapper<Exception> {
         responseJson.put("message", message);
         JSONObject moreJson = new JSONObject();
         JSONArray detailJsonArray = new JSONArray();
-        detailJsonArray.addAll(details);
+        if (details != null && !details.isEmpty()) {
+            detailJsonArray.addAll(details);
+        }
         moreJson.put("detail", detailJsonArray);
         moreJson.put("cause", getExceptionStackTrace(exception));
         responseJson.put("more", moreJson);

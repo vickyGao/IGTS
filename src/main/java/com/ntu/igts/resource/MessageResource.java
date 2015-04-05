@@ -4,15 +4,18 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.ntu.igts.constants.Constants;
@@ -22,6 +25,7 @@ import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Message;
 import com.ntu.igts.model.SessionContext;
+import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.services.MessageService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
@@ -82,6 +86,20 @@ public class MessageResource extends BaseResource {
             return messageBuilder.buildMessage(MessageKeys.DELETE_MESSAGE_FAIL, "Delete message fail",
                             CommonUtil.getLocaleFromRequest(webRequest));
         }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getMessages(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @QueryParam("page") int currentPage, @QueryParam("size") int pageSize,
+                    @QueryParam("commodityid") String commodityId) {
+        Page<Message> page = messageService.getPaginatedMessagesByCommodity(currentPage, pageSize, commodityId);
+        Pagination<Message> pagination = new Pagination<Message>();
+        pagination.setContent(page.getContent());
+        pagination.setCurrentPage(page.getNumber());
+        pagination.setPageCount(page.getTotalPages());
+        pagination.setTotalCount(page.getNumberOfElements());
+        return JsonUtil.getJsonStringFromPojo(pagination);
     }
 
     private Message checkMessageAvailability(String messageId) {

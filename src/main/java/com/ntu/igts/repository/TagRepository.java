@@ -20,4 +20,7 @@ public interface TagRepository extends MyRepository<Tag, String> {
 
     @Query("from Tag t where t.parentId=null and t.deletedYN='N'")
     public List<Tag> getAllTopLevelTags();
+
+    @Query("select t from Tag t,CommodityTag e where t.id=e.tagId and e.commodityId=:commodityId and e.deletedYN='N' and t.deletedYN='N'")
+    public List<Tag> getTagsHorizontalByCommodityId(@Param("commodityId") String commodityId);
 }

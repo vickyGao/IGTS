@@ -12,7 +12,6 @@ import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.CommodityTag;
-import com.ntu.igts.model.Cover;
 import com.ntu.igts.model.Tag;
 import com.ntu.igts.model.container.CommodityQueryResult;
 import com.ntu.igts.model.container.Query;
@@ -45,13 +44,16 @@ public class CommodityServiceImpl implements CommodityService {
         if (insertedCommodity != null) {
             List<Tag> tags = commodity.getTags();
             for (Tag tag : tags) {
-                CommodityTag commodityTag = new CommodityTag();
-                commodityTag.setCommodityId(insertedCommodity.getId());
-                commodityTag.setTagId(tag.getId());
-                commodityTagRepository.create(commodityTag);
+                tag = tagService.getById(tag.getId());
+                if (tag != null) {
+                    CommodityTag commodityTag = new CommodityTag();
+                    commodityTag.setCommodityId(insertedCommodity.getId());
+                    commodityTag.setTagId(tag.getId());
+                    commodityTagRepository.create(commodityTag);
+                }
             }
         }
-        return insertedCommodity;
+        return getCommodityDetailForCommodity(insertedCommodity);
     }
 
     @Override
@@ -65,9 +67,9 @@ public class CommodityServiceImpl implements CommodityService {
     public boolean delete(String commodityId) {
         List<CommodityTag> commodityTags = commodityTagRepository.getCommodityTagsForCommodityId(commodityId);
         for (CommodityTag commodityTag : commodityTags) {
-            commodityTagRepository.delete(commodityTag.getId(), false);
+            commodityTagRepository.delete(commodityTag.getId());
         }
-        commodityRepository.delete(commodityId, false);
+        commodityRepository.delete(commodityId);
         Commodity commodity = commodityRepository.findById(commodityId);
         if (commodity == null) {
             return true;
@@ -118,13 +120,7 @@ public class CommodityServiceImpl implements CommodityService {
 
     private Commodity getCommodityDetailForCommodity(Commodity commodity) {
         if (commodity != null) {
-            List<Tag> tags = tagService.getTopLevelTagsForCommodityId(commodity.getId());
-            for (Tag tag : tags) {
-                tag.setTags(tagService.getTagsWithSubTagsForParentId(tag.getId()));
-            }
-            commodity.setTags(tags);
-            List<Cover> covers = coverService.getCoversByCommodityId(commodity.getId());
-            commodity.setCovers(covers);
+            commodity.setTags(tagService.getTagsHorizontalByCommodityId(commodity.getId()));
             return commodity;
         } else {
             return null;

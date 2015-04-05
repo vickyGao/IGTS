@@ -25,7 +25,8 @@ public class CommodityServiceTest extends TestBase {
     private TagService tagService;
 
     private static Commodity commodity;
-    private static Tag tag;
+    private static Tag tag1;
+    private static Tag tag2;
 
     @Test
     @Order(0)
@@ -42,7 +43,8 @@ public class CommodityServiceTest extends TestBase {
         testCommodity.setDistrict("浙江衢州");
         testCommodity.setUserId(user.getId());
         List<Tag> tags = new ArrayList<Tag>();
-        tags.add(tag);
+        tags.add(tag1);
+        tags.add(tag2);
         testCommodity.setTags(tags);
         Commodity insertedCommodity = commodityService.create(testCommodity);
         assertNotNull("Create commodity failed", insertedCommodity);
@@ -100,8 +102,11 @@ public class CommodityServiceTest extends TestBase {
     @Test
     @Order(60)
     public void testDelete() {
-        boolean tagDeleteFlag = tagService.delete(tag.getId());
-        assertTrue("Delete tag failed", tagDeleteFlag);
+        boolean tag1DeleteFlag = tagService.delete(tag1.getId());
+        assertTrue("Delete tag failed", tag1DeleteFlag);
+
+        boolean tag2DeleteFlag = tagService.delete(tag2.getId());
+        assertTrue("Delete tag failed", tag2DeleteFlag);
 
         boolean userDeleteFlag = userService.delete(user.getId());
         assertTrue("Delete user failed", userDeleteFlag);
@@ -111,7 +116,7 @@ public class CommodityServiceTest extends TestBase {
     }
 
     private void mockUpTag() {
-        if (tag == null) {
+        if (tag1 == null) {
             String randomNumber = UUID.randomUUID().toString().replace("-", "");
 
             Tag testTag = new Tag();
@@ -120,7 +125,19 @@ public class CommodityServiceTest extends TestBase {
             Tag insertedTag = tagService.create(testTag);
             assertNotNull("Create tag failed", insertedTag);
 
-            tag = insertedTag;
+            tag1 = insertedTag;
+        }
+
+        if (tag2 == null) {
+            String randomNumber = UUID.randomUUID().toString().replace("-", "");
+
+            Tag testTag = new Tag();
+            testTag.setName("巧克力");
+            testTag.setStandardName("CHOCOLATE" + randomNumber);
+            Tag insertedTag = tagService.create(testTag);
+            assertNotNull("Create tag failed", insertedTag);
+
+            tag2 = insertedTag;
         }
     }
 }

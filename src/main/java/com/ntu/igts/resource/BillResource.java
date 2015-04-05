@@ -10,9 +10,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.ntu.igts.constants.Constants;
@@ -22,7 +24,7 @@ import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Bill;
 import com.ntu.igts.model.SessionContext;
-import com.ntu.igts.model.container.BillList;
+import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.services.BillService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
@@ -70,9 +72,16 @@ public class BillResource extends BaseResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getBills(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+    public String getBills(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @QueryParam("page") int currentPage, @QueryParam("size") int pageSize) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
-        return JsonUtil.getJsonStringFromPojo(new BillList(billService.getByUserId(sessionContext.getUserId())));
+        Page<Bill> page = billService.getPaginatedBillsByUserId(currentPage, pageSize, sessionContext.getUserId());
+        Pagination<Bill> pagination = new Pagination<Bill>();
+        pagination.setContent(page.getContent());
+        pagination.setCurrentPage(page.getNumber());
+        pagination.setPageCount(page.getTotalPages());
+        pagination.setTotalCount(page.getNumberOfElements());
+        return JsonUtil.getJsonStringFromPojo(pagination);
     }
 
     private Bill checkBillAvailability(String billId) {
