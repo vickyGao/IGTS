@@ -22,9 +22,11 @@ import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
+import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.Favorite;
 import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.container.Pagination;
+import com.ntu.igts.services.CommodityService;
 import com.ntu.igts.services.FavoriteService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
@@ -40,6 +42,8 @@ public class FavoriteResource extends BaseResource {
     private MessageBuilder messageBuilder;
     @Resource
     private FavoriteService favoriteService;
+    @Resource
+    private CommodityService commodityService;
 
     @POST
     @Path("entity")
@@ -51,7 +55,13 @@ public class FavoriteResource extends BaseResource {
         if (StringUtil.isEmpty(pojo.getUserId())) {
             pojo.setUserId(sessionContext.getUserId());
         }
-        Favorite insertedFavorite = favoriteService.create(pojo);
+        Commodity existingCommodity = commodityService.getById(pojo.getCommodityId());
+        existingCommodity.setCollectionNumber(existingCommodity.getCollectionNumber() + 1);
+        Commodity updatedCommodity = commodityService.update(existingCommodity);
+        Favorite insertedFavorite = null;
+        if (updatedCommodity != null) {
+            insertedFavorite = favoriteService.create(pojo);
+        }
         return JsonUtil.getJsonStringFromPojo(insertedFavorite);
     }
 
@@ -73,8 +83,9 @@ public class FavoriteResource extends BaseResource {
     }
 
     @GET
+    @Path("entity")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getFavorites(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String getFavoritesForUser(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @QueryParam("page") int currentPage, @QueryParam("size") int pageSize) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         Page<Favorite> page = favoriteService.getPaginatedFavoritesByUserId(currentPage, pageSize,

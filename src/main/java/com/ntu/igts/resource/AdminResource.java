@@ -134,6 +134,7 @@ public class AdminResource extends BaseResource {
     }
 
     @GET
+    @Path("search_term")
     @Produces(MediaType.APPLICATION_JSON)
     public String getPaginatedAdmins(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @BeanParam Query query) {
         filterSessionContext(token, RoleEnum.ADMIN);

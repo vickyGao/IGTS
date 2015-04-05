@@ -2,8 +2,10 @@ package com.ntu.igts.resource;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -13,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.ntu.igts.constants.Constants;
@@ -22,6 +25,8 @@ import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.SensitiveWord;
+import com.ntu.igts.model.container.Pagination;
+import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.SensitiveWordService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
@@ -52,7 +57,7 @@ public class SensitiveWordResource extends BaseResource {
     @Path("status/{state}/{sensitivewordid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String updateSensitiveWordState(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("state") ActiveStateEnum activeStateEnum,
                     @PathParam("sensitivewordid") String sensitiveWordId) {
         filterSessionContext(token, RoleEnum.ADMIN);
@@ -77,6 +82,20 @@ public class SensitiveWordResource extends BaseResource {
             return messageBuilder.buildMessage(MessageKeys.DELETE_SENSITIVE_WORD_FAIL, "Delete sensitive word fail",
                             CommonUtil.getLocaleFromRequest(webRequest));
         }
+    }
+
+    @GET
+    @Path("search_term")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getBySearchTerm(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @BeanParam Query query) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        Page<SensitiveWord> page = sensitiveWordService.getPaginatedSensitiveWord(query);
+        Pagination<SensitiveWord> pagination = new Pagination<SensitiveWord>();
+        pagination.setContent(page.getContent());
+        pagination.setCurrentPage(page.getNumber());
+        pagination.setPageCount(page.getTotalPages());
+        pagination.setTotalCount(page.getNumberOfElements());
+        return JsonUtil.getJsonStringFromPojo(pagination);
     }
 
     private SensitiveWord checkSensitiveWordAvailability(String sensitiveWordId) {

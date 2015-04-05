@@ -100,8 +100,9 @@ public class AddressResource extends BaseResource {
     }
 
     @GET
+    @Path("entity")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAddressed(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+    public String getAddressesForUser(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         return JsonUtil.getJsonStringFromPojo(new AddressList(addressService.getByUserId(sessionContext.getUserId())));
     }

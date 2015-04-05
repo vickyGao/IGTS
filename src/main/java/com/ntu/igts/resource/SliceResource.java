@@ -94,6 +94,7 @@ public class SliceResource extends BaseResource {
     }
 
     @GET
+    @Path("entity")
     @Produces(MediaType.APPLICATION_JSON)
     public String getSlices(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ALL);

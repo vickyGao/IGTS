@@ -21,6 +21,7 @@ public class TagServiceTest extends TestBase {
     @Resource
     private CommodityService commodityService;
     private static Tag tag;
+    private static Commodity commodity;
 
     @Test
     @Order(0)
@@ -78,27 +79,12 @@ public class TagServiceTest extends TestBase {
     @Test
     @Order(40)
     public void testGetTopLevelTagsForCommodityId() {
-        Commodity testCommodity = new Commodity();
-        testCommodity.setTitle("apple");
-        testCommodity.setDescription("a good apple");
-        testCommodity.setPrice(20.6);
-        testCommodity.setCarriage(20);
-        testCommodity.setCollectionNumber(5);
-        testCommodity.setDistrict("China");
+        mockUpCommodity();
 
-        List<Tag> tags = new ArrayList<Tag>();
-        tags.add(tag);
-        testCommodity.setTags(tags);
-
-        Commodity insertedCommodity = commodityService.create(testCommodity);
-        assertNotNull("Create commodity failed", insertedCommodity);
-
-        List<Tag> topLevelTags = tagService.getTopLevelTagsForCommodityId(insertedCommodity.getId());
+        List<Tag> topLevelTags = tagService.getTopLevelTagsForCommodityId(commodity.getId());
         assertNotNull("Get top-level tags by commodityId failed", topLevelTags);
         assertTrue("Get top-level tags by commodityId failed", topLevelTags.size() > 0);
 
-        boolean flag = commodityService.delete(insertedCommodity.getId());
-        assertTrue("Delete commodity failed", flag);
     }
 
     @Test
@@ -118,17 +104,59 @@ public class TagServiceTest extends TestBase {
     }
 
     @Test
+    @Order(43)
+    public void testGetTagsByCommodityId() {
+        mockUpCommodity();
+
+        List<Tag> returnTags = tagService.getTagsByCommodityId(commodity.getId());
+        assertNotNull("Get tags by commodityId failed", returnTags);
+        assertTrue("Get tags by commodityId failed", returnTags.size() > 0);
+    }
+
+    @Test
+    @Order(44)
+    public void testGetTagsHorizontalByCommodityId() {
+        mockUpCommodity();
+        List<Tag> returnTags = tagService.getTagsHorizontalByCommodityId(commodity.getId());
+        assertNotNull("Get tags horizontal by commodityId failed", returnTags);
+        assertTrue("Get tags by horizontal commodityId failed", returnTags.size() > 0);
+    }
+
+    @Test
     @Order(50)
     public void testDelete() {
+        boolean commodityDeleteFlag = commodityService.delete(commodity.getId());
+        assertTrue("Delete commodity failed", commodityDeleteFlag);
+
         List<Tag> subTags = tagService.getTagsWithSubTagsForParentId(tag.getId());
         assertNotNull("Get tags by parentId failed", subTags);
         assertTrue("Get tags by parentId failed", subTags.size() > 0);
         for (Tag subTag : subTags) {
-            boolean subTagFlag = tagService.delete(subTag.getId());
-            assertTrue("Delete tag failed", subTagFlag);
+            boolean subTagDeleteFlag = tagService.delete(subTag.getId());
+            assertTrue("Delete tag failed", subTagDeleteFlag);
         }
-        boolean flag = tagService.delete(tag.getId());
-        assertTrue("Delete tag failed", flag);
+        boolean tagDeleteFlag = tagService.delete(tag.getId());
+        assertTrue("Delete tag failed", tagDeleteFlag);
     }
 
+    private void mockUpCommodity() {
+        if (commodity == null) {
+            Commodity testCommodity = new Commodity();
+            testCommodity.setTitle("apple");
+            testCommodity.setDescription("a good apple");
+            testCommodity.setPrice(20.6);
+            testCommodity.setCarriage(20);
+            testCommodity.setCollectionNumber(5);
+            testCommodity.setDistrict("China");
+
+            List<Tag> tags = new ArrayList<Tag>();
+            tags.add(tag);
+            testCommodity.setTags(tags);
+
+            Commodity insertedCommodity = commodityService.create(testCommodity);
+            assertNotNull("Create commodity failed", insertedCommodity);
+
+            commodity = insertedCommodity;
+        }
+    }
 }

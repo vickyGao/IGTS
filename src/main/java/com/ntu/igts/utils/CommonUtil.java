@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
@@ -83,5 +84,11 @@ public class CommonUtil {
             }
         }
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getEntityFromResponse(Response response, Class<?> clazz) {
+        String returnEntityJson = response.readEntity(String.class);
+        return (T) JsonUtil.getPojoFromJsonString(returnEntityJson, clazz);
     }
 }

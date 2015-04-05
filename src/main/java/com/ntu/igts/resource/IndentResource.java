@@ -82,6 +82,7 @@ public class IndentResource extends BaseResource {
     }
 
     @PUT
+    @Path("price")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String updateIndentPrice(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
@@ -181,8 +182,9 @@ public class IndentResource extends BaseResource {
     }
 
     @GET
+    @Path("entity")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getIndents(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String getIndentsForUser(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @QueryParam("page") int currentPage, @QueryParam("size") int pageSize) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         Page<Indent> page = indentService.getPaginatedIndentByUserId(currentPage, pageSize, sessionContext.getUserId());

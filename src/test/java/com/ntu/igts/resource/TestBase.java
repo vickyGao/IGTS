@@ -3,6 +3,7 @@ package com.ntu.igts.resource;
 import static org.junit.Assert.*;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import javax.annotation.Resource;
@@ -24,7 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.model.SessionContext;
-import com.ntu.igts.services.AdminService;
+import com.ntu.igts.model.User;
 import com.ntu.igts.services.UserService;
 import com.ntu.igts.test.OrderedRunner;
 import com.ntu.igts.utils.JsonUtil;
@@ -35,7 +36,13 @@ import com.ntu.igts.utils.StringUtil;
 public abstract class TestBase extends JerseyTest {
 
     private static final String CONTAINER_GRIZZLY = "org.glassfish.jersey.test.grizzly.GrizzlyTestContainerFactory";
+    @Resource
+    private UserService userService;
+
+    protected static User user;
     protected static String userToken;
+    protected static String userId;
+    protected static String userName;
     protected static String adminToken;
 
     @Override
@@ -43,11 +50,6 @@ public abstract class TestBase extends JerseyTest {
         set(TestProperties.CONTAINER_FACTORY, CONTAINER_GRIZZLY);
         return new ResourceConfig().packages("com.ntu.igts");
     }
-
-    @Resource
-    private UserService userService;
-    @Resource
-    private AdminService adminService;
 
     @Before
     public void Login() {
@@ -69,7 +71,30 @@ public abstract class TestBase extends JerseyTest {
         SessionContext adminSessionContext = JsonUtil.getPojoFromJsonString(adminLoginResponseJson,
                         SessionContext.class);
         userToken = userSessionContext.getToken();
+        userId = userSessionContext.getUserId();
+        userName = userSessionContext.getUserName();
         adminToken = adminSessionContext.getToken();
+    }
+
+    protected void mockUpUser() {
+        if (user == null) {
+            String randomNumber = UUID.randomUUID().toString().replace("-", "");
+
+            User testUser = new User();
+            testUser.setUserName("testUser" + randomNumber);
+            testUser.setPassword("password");
+            User insertedUser = userService.create(testUser);
+            assertNotNull("Create user failed", insertedUser);
+
+            user = insertedUser;
+        }
+    }
+
+    protected void tearDownUser() {
+        if (user != null) {
+            boolean flag = userService.delete(user.getId());
+            assertTrue("Delete user failed", flag);
+        }
     }
 
     protected Response doPost(String path, String token, String postBody) {

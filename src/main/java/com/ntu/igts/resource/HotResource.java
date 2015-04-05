@@ -94,6 +94,7 @@ public class HotResource extends BaseResource {
     }
 
     @GET
+    @Path("entity")
     @Produces(MediaType.APPLICATION_JSON)
     public String getHotCommodities(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ALL);

@@ -71,8 +71,9 @@ public class BillResource extends BaseResource {
     }
 
     @GET
+    @Path("entity")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getBills(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String getBillsForUser(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @QueryParam("page") int currentPage, @QueryParam("size") int pageSize) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         Page<Bill> page = billService.getPaginatedBillsByUserId(currentPage, pageSize, sessionContext.getUserId());

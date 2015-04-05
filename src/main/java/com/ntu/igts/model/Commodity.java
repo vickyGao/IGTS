@@ -28,7 +28,6 @@ import org.hibernate.search.annotations.Resolution;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.ntu.igts.annotations.QueryField;
-import com.ntu.igts.enums.CommodityStatusEnum;
 import com.ntu.igts.search.CommodityDistrictFilterFactory;
 import com.ntu.igts.search.CommodityStatusFilterFactory;
 import com.ntu.igts.search.CommodityTagFilterFactory;

@@ -60,7 +60,8 @@ public class CommodityResource extends BaseResource {
         filterSessionContext(token, RoleEnum.USER);
         Commodity pojo = JsonUtil.getPojoFromJsonString(inString, Commodity.class);
         if (StringUtil.isEmpty(pojo.getStatus())) {
-            pojo.setStatus(messageBuilder.buildMessage(MessageKeys.STATUS_NORMAL, CommonUtil.getLocaleFromRequest(webRequest)));
+            pojo.setStatus(messageBuilder.buildMessage(MessageKeys.STATUS_NORMAL,
+                            CommonUtil.getLocaleFromRequest(webRequest)));
         }
         Commodity insertedCommodity = commodityService.create(pojo);
         if (insertedCommodity == null) {

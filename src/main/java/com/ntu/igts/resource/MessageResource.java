@@ -89,10 +89,12 @@ public class MessageResource extends BaseResource {
     }
 
     @GET
+    @Path("entity")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getMessages(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String getMessagesForCommodity(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @QueryParam("page") int currentPage, @QueryParam("size") int pageSize,
                     @QueryParam("commodityid") String commodityId) {
+        filterSessionContext(token, RoleEnum.ALL);
         Page<Message> page = messageService.getPaginatedMessagesByCommodity(currentPage, pageSize, commodityId);
         Pagination<Message> pagination = new Pagination<Message>();
         pagination.setContent(page.getContent());

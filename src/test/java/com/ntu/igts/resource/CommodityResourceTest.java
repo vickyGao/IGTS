@@ -3,6 +3,7 @@ package com.ntu.igts.resource;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +34,14 @@ public class CommodityResourceTest extends TestBase {
     public void testCreate() {
         String randomNumber = UUID.randomUUID().toString().replace("-", "");
 
+        mockUpUser();
+
         Tag tag = new Tag();
         tag.setName("零食-test");
         tag.setStandardName("FOOD-" + randomNumber);
 
         Response createTagResponse = doPost("tag/entity", adminToken, JsonUtil.getJsonStringFromPojo(tag));
-        assertEquals("Create tag fail", Status.OK.getStatusCode(), createTagResponse.getStatus());
+        assertEquals("Create tag failed", Status.OK.getStatusCode(), createTagResponse.getStatus());
         String returnTagJson = createTagResponse.readEntity(String.class);
         Tag insertedTag = JsonUtil.getPojoFromJsonString(returnTagJson, Tag.class);
 
@@ -49,16 +52,19 @@ public class CommodityResourceTest extends TestBase {
         testCommodity.setCarriage(3);
         testCommodity.setCollectionNumber(34);
         testCommodity.setDistrict("浙江衢州");
+        testCommodity.setReleaseDate(new Date());
+        testCommodity.setStatus("正常");
+        testCommodity.setUserId(user.getId());
         List<Tag> tags = new ArrayList<Tag>();
         tags.add(insertedTag);
         testCommodity.setTags(tags);
 
         Response createCommodityResponse = doPost(BASE_PATH + "entity", userToken,
                         JsonUtil.getJsonStringFromPojo(testCommodity));
-        assertEquals("Create commodity fail", Status.OK.getStatusCode(), createCommodityResponse.getStatus());
+        assertEquals("Create commodity failed", Status.OK.getStatusCode(), createCommodityResponse.getStatus());
         String returnCommodityJson = createCommodityResponse.readEntity(String.class);
         Commodity insertedCommodity = JsonUtil.getPojoFromJsonString(returnCommodityJson, Commodity.class);
-        assertNotNull("Create commodity fail", insertedCommodity);
+        assertNotNull("Create commodity failed", insertedCommodity);
 
         commodity = insertedCommodity;
     }
@@ -71,7 +77,7 @@ public class CommodityResourceTest extends TestBase {
         assertEquals("Update commodity fail", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         Commodity updatedCommodity = JsonUtil.getPojoFromJsonString(returnJson, Commodity.class);
-        assertNotNull("Update commodity fail", updatedCommodity);
+        assertNotNull("Update commodity failed", updatedCommodity);
     }
 
     @Test
@@ -79,10 +85,10 @@ public class CommodityResourceTest extends TestBase {
     public void testUpdateActiveState() {
         String path = BASE_PATH + "activestate/" + ActiveStateEnum.ACTIVE.name() + "/" + commodity.getId();
         Response response = doPut(path, userToken);
-        assertEquals("Update commodity active state fail", Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("Update commodity active state failed", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         Commodity updatedCommodity = JsonUtil.getPojoFromJsonString(returnJson, Commodity.class);
-        assertNotNull("Update commodity active state fail", updatedCommodity);
+        assertNotNull("Update commodity active state failed", updatedCommodity);
     }
 
     @Test
@@ -90,10 +96,10 @@ public class CommodityResourceTest extends TestBase {
     public void testGetById() {
         String path = BASE_PATH + "entity/" + commodity.getId();
         Response response = doGet(path, userToken);
-        assertEquals("Get commodity by id fail", Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("Get commodity by id failed", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         Commodity returnCommodity = JsonUtil.getPojoFromJsonString(returnJson, Commodity.class);
-        assertNotNull("Get commodity by id fail", returnCommodity);
+        assertNotNull("Get commodity by id failed", returnCommodity);
     }
 
     @Test
@@ -106,19 +112,21 @@ public class CommodityResourceTest extends TestBase {
         queryParam.put("size", "10");
         queryParam.put("sortby", SortByEnum.COMMODITY_TITILE.name());
         Response response = doGetWithQueryParam(path, StringUtil.EMPTY, queryParam);
-        assertEquals("Get commodities by search term fail", Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("Get commodities by search term failed", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         CommodityQueryResult commodityQueryResult = JsonUtil.getPojoFromJsonString(returnJson,
                         CommodityQueryResult.class);
-        assertNotNull("Get commodities by search term fail", commodityQueryResult);
-        assertTrue("Get commodities by search term fail", commodityQueryResult.getContent().size() > 0);
+        assertNotNull("Get commodities by search term failed", commodityQueryResult);
+        assertTrue("Get commodities by search term failed", commodityQueryResult.getContent().size() > 0);
     }
 
     @Test
     @Order(50)
     public void testDelete() {
+        tearDownUser();
+
         String path = BASE_PATH + "entity/" + commodity.getId();
         Response response = doDelete(path, userToken);
-        assertEquals("Delete commodity fail", Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("Delete commodity failed", Status.OK.getStatusCode(), response.getStatus());
     }
 }

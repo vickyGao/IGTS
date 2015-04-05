@@ -95,6 +95,7 @@ public class CustomModuleResource extends BaseResource {
     }
 
     @GET
+    @Path("detail")
     @Produces(MediaType.APPLICATION_JSON)
     public String getCustomModules(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ALL);
