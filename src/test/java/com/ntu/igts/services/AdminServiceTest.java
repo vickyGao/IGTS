@@ -1,7 +1,5 @@
 package com.ntu.igts.services;
 
-import static org.junit.Assert.*;
-
 import java.util.UUID;
 
 import javax.annotation.Resource;

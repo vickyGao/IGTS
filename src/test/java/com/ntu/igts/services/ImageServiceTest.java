@@ -1,7 +1,5 @@
 package com.ntu.igts.services;
 
-import static org.junit.Assert.*;
-
 import javax.annotation.Resource;
 
 import org.junit.Test;
