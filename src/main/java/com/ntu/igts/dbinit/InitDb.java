@@ -13,7 +13,21 @@ public class InitDb {
     private static Logger logger = Logger.getLogger(InitDb.class);
 
     public static void main(String[] args) {
+        deleteDatabase();
         createDatabase();
+    }
+
+    private static void deleteDatabase() {
+        String sql = "DROP DATABASE `idle_goods_trading_system`";
+        try {
+            Connection conn = JdbcUtil.getConnection();
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            stmt.close();
+            logger.info("Deleted database idle_goods_trading_system");
+        } catch (SQLException e) {
+            logger.error("Delete database idle_goods_trading_system failed", e);
+        }
     }
 
     private static void createDatabase() {
@@ -25,7 +39,7 @@ public class InitDb {
             stmt.close();
             logger.info("Created database idle_goods_trading_system");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Create database idle_goods_trading_system failed", e);
         }
     }
 }
