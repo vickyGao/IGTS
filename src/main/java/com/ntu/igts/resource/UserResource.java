@@ -179,7 +179,7 @@ public class UserResource extends BaseResource {
      * @return The pagination of users
      */
     @GET
-    @Path("entity/search_term")
+    @Path("search_term")
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserByPage(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @BeanParam Query query) {
         filterSessionContext(token, RoleEnum.ADMIN);
