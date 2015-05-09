@@ -18,7 +18,7 @@ import com.ntu.igts.utils.CommonUtil;
 public class BaseResource {
 
     @Resource
-    private SessionContextService sessionContextService;
+    protected SessionContextService sessionContextService;
     @Resource
     private UserService userService;
     @Resource

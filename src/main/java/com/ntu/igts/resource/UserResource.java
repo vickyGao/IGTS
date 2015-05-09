@@ -17,13 +17,16 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.ActiveStateEnum;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
+import com.ntu.igts.exception.UnAuthorizedException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
+import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.User;
 import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.model.container.Query;
@@ -194,12 +197,25 @@ public class UserResource extends BaseResource {
     }
 
     @GET
-    @Path("entity/{userid}")
+    @Path("detail/{userid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUserById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String getUserDetailById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("userid") String userId) {
-        checkUserAvailability(userId);
-        return JsonUtil.getJsonStringFromPojo(userService.getUserById(userId));
+        filterSessionContext(token, RoleEnum.USER);
+        return JsonUtil.getJsonStringFromPojo(userService.getUserDetailById(userId));
+    }
+
+    @GET
+    @Path("detail/token")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getUserByToken(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        SessionContext sessionContext = sessionContextService.getByToken(token);
+        User user = userService.getUserDetailById(sessionContext.getUserId());
+        if (user != null) {
+            return JsonUtil.getJsonStringFromPojo(user);
+        } else {
+            throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
+        }
     }
 
     private User checkUserAvailability(String userId) {

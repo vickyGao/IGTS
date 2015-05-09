@@ -91,13 +91,29 @@ public class UserResourceTest extends TestBase {
         queryParam.put("size", "10");
         queryParam.put("sortby", SortByEnum.USER_NAME.toString());
         queryParam.put("orderby", OrderByEnum.ASC.toString());
-        Response response = doGetWithQueryParam(BASE_PATH + "entity/search_term", adminToken, queryParam);
+        Response response = doGetWithQueryParam(BASE_PATH + "search_term", adminToken, queryParam);
         assertEquals("Get users by page fail", Status.OK.getStatusCode(), response.getStatus());
         String returnJson = response.readEntity(String.class);
         @SuppressWarnings("unchecked")
         Pagination<User> pagination = JsonUtil.getPojoFromJsonString(returnJson, Pagination.class);
         assertNotNull("Get users by page fail", pagination);
         assertTrue("Get users by page fail", pagination.getContent().size() > 0);
+    }
+
+    @Test
+    @Order(41)
+    public void testGetDetailById() {
+        String userId = user.getId();
+        String path = BASE_PATH + "detail/" + userId;
+        Response response = doGet(path, userToken);
+        assertEquals("Get user detail by id fail", Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    @Order(42)
+    public void testGetByToken() {
+        Response response = doGet(BASE_PATH + "detail/token", userToken);
+        assertEquals("Get user by token fail", Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test
