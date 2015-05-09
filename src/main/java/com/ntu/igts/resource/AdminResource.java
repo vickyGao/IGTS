@@ -22,9 +22,11 @@ import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
+import com.ntu.igts.exception.UnAuthorizedException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Admin;
+import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.AdminService;
@@ -125,12 +127,12 @@ public class AdminResource extends BaseResource {
     }
 
     @GET
-    @Path("entity/{adminid}")
+    @Path("detail/{adminid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAdminById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("adminid") String adminId) {
         filterSessionContext(token, RoleEnum.ADMIN);
-        return JsonUtil.getJsonStringFromPojo(adminService.getById(adminId));
+        return JsonUtil.getJsonStringFromPojo(adminService.getAdminDetailtById(adminId));
     }
 
     @GET
@@ -145,6 +147,19 @@ public class AdminResource extends BaseResource {
         pagination.setPageCount(page.getTotalPages());
         pagination.setTotalCount(page.getNumberOfElements());
         return JsonUtil.getJsonStringFromPojo(pagination);
+    }
+
+    @GET
+    @Path("detail/token")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAdminById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        SessionContext sessionContext = sessionContextService.getByToken(token);
+        Admin admin = adminService.getAdminDetailtById(sessionContext.getUserId());
+        if (admin != null) {
+            return JsonUtil.getJsonStringFromPojo(admin);
+        } else {
+            throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
+        }
     }
 
     private Admin checkAdminAvailability(String adminId) {

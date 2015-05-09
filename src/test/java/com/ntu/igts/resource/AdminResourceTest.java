@@ -47,7 +47,7 @@ public class AdminResourceTest extends TestBase {
     @Test
     @Order(20)
     public void testGetAdminById() {
-        String path = BASE_PATH + "entity/" + admin.getId();
+        String path = BASE_PATH + "detail/" + admin.getId();
         Response response = doGet(path, adminToken);
         assertEquals("Get admin by id failed", Status.OK.getStatusCode(), response.getStatus());
     }
@@ -64,6 +64,13 @@ public class AdminResourceTest extends TestBase {
         queryParam.put("orderby", OrderByEnum.ASC.name());
         Response response = doGetWithQueryParam(path, adminToken, queryParam);
         assertEquals("Get paginated admins failed", Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    @Order(31)
+    public void testGetAdminByToken() {
+        Response response = doGet(BASE_PATH + "detail/token", adminToken);
+        assertEquals("Get admin by token fail", Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test
