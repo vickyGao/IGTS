@@ -74,6 +74,7 @@ public class AuthorizationResource {
 
     @GET
     @Path("logout")
+    @Produces(MediaType.APPLICATION_JSON)
     public void logout(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         if (sessionContextService.delete(token)) {
             throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
