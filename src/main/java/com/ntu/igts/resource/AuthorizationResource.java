@@ -2,10 +2,14 @@ package com.ntu.igts.resource;
 
 import javax.annotation.Resource;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -48,7 +52,6 @@ public class AuthorizationResource {
             if (user.getPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
                 SessionContext sessionContext = sessionContextService.create(user.getId());
                 sessionContext.setUserName(user.getUserName());
-                System.out.println(MD5Util.getMd5("password"));
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
             }
         }
@@ -72,9 +75,8 @@ public class AuthorizationResource {
         throw new LoginException("User name or password is wrong.", MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
     }
 
-    @GET
+    @DELETE
     @Path("logout")
-    @Produces(MediaType.APPLICATION_JSON)
     public void logout(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         if (sessionContextService.delete(token)) {
             throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);

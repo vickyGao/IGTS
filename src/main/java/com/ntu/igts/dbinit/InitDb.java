@@ -26,7 +26,7 @@ public class InitDb {
             stmt.close();
             logger.info("Deleted database idle_goods_trading_system");
         } catch (SQLException e) {
-            logger.error("Delete database idle_goods_trading_system failed", e);
+            logger.warn("Delete database idle_goods_trading_system failed", e);
         }
     }
 

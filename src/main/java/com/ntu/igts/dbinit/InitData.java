@@ -91,41 +91,113 @@ public class InitData {
     }
 
     private void createSampleTags() {
+        List<Tag> subTags = new ArrayList<Tag>();
+        // Generate Food Tag with sub-Tags
         Tag foodTag = new Tag();
         foodTag.setName("零食");
         foodTag.setStandardName("FOOD");
         foodTag.setParentId(null);
-        categoryTags.add(tagService.create(foodTag));
+        Tag insertedFoodTag = tagService.create(foodTag);
 
+        Tag chocolateTag = new Tag();
+        chocolateTag.setName("巧克力");
+        chocolateTag.setStandardName("CHOCOLATE");
+        chocolateTag.setParentId(insertedFoodTag.getId());
+        subTags.add(tagService.create(chocolateTag));
+
+        Tag cakeTag = new Tag();
+        cakeTag.setName("蛋糕");
+        cakeTag.setStandardName("CAKE");
+        cakeTag.setParentId(insertedFoodTag.getId());
+        subTags.add(tagService.create(cakeTag));
+
+        insertedFoodTag.setTags(subTags);
+        categoryTags.add(insertedFoodTag);
+
+        subTags.clear();
+        // Generate application Tag with sub-Tags
         Tag applicationTag = new Tag();
         applicationTag.setName("家电");
         applicationTag.setStandardName("APPLICATION");
         applicationTag.setParentId(null);
-        categoryTags.add(tagService.create(applicationTag));
+        Tag insertedApplicationTag = tagService.create(applicationTag);
 
+        Tag tvTag = new Tag();
+        tvTag.setName("电视机");
+        tvTag.setStandardName("TV");
+        tvTag.setParentId(insertedApplicationTag.getId());
+        subTags.add(tagService.create(tvTag));
+
+        insertedApplicationTag.setTags(subTags);
+        categoryTags.add(insertedApplicationTag);
+
+        subTags.clear();
+        // Generate clothing Tag with sub-Tags
         Tag clothingTag = new Tag();
         clothingTag.setName("服装");
         clothingTag.setStandardName("CLOTHING");
         clothingTag.setParentId(null);
-        categoryTags.add(tagService.create(clothingTag));
+        Tag insertedClothingTag = tagService.create(clothingTag);
 
+        Tag shirtTag = new Tag();
+        shirtTag.setName("衬衫");
+        shirtTag.setStandardName("HIRT");
+        shirtTag.setParentId(insertedClothingTag.getId());
+        subTags.add(tagService.create(shirtTag));
+
+        insertedClothingTag.setTags(subTags);
+        categoryTags.add(insertedClothingTag);
+
+        subTags.clear();
+        // Generate shoe Tag with sub-Tags
         Tag shoesTag = new Tag();
         shoesTag.setName("鞋子");
         shoesTag.setStandardName("SHOE");
         shoesTag.setParentId(null);
-        categoryTags.add(tagService.create(shoesTag));
+        Tag insertedShoesTag = tagService.create(shoesTag);
 
+        Tag slippersTag = new Tag();
+        slippersTag.setName("拖鞋");
+        slippersTag.setStandardName("SLIPPER");
+        slippersTag.setParentId(insertedShoesTag.getId());
+        subTags.add(tagService.create(slippersTag));
+
+        insertedShoesTag.setTags(subTags);
+        categoryTags.add(insertedShoesTag);
+
+        subTags.clear();
+        // Generate bag Tag with sub-Tags
         Tag bagTag = new Tag();
         bagTag.setName("箱包");
         bagTag.setStandardName("BAG");
         bagTag.setParentId(null);
-        categoryTags.add(tagService.create(bagTag));
+        Tag insertedBagTag = tagService.create(bagTag);
 
+        Tag lvTag = new Tag();
+        lvTag.setName("LV");
+        lvTag.setStandardName("LV");
+        lvTag.setParentId(insertedBagTag.getId());
+        subTags.add(tagService.create(lvTag));
+
+        insertedBagTag.setTags(subTags);
+        categoryTags.add(insertedBagTag);
+
+        subTags.clear();
+        // Generate book Tag with sub-Tags
         Tag bookTag = new Tag();
         bookTag.setName("图书影像");
         bookTag.setStandardName("BOOK");
         bookTag.setParentId(null);
-        categoryTags.add(tagService.create(bookTag));
+        Tag insertedBookTag = tagService.create(bookTag);
+
+        Tag storyTag = new Tag();
+        storyTag.setName("故事书");
+        storyTag.setStandardName("STORY");
+        storyTag.setParentId(insertedBookTag.getId());
+        subTags.add(tagService.create(storyTag));
+
+        insertedBookTag.setTags(subTags);
+        categoryTags.add(insertedBookTag);
     }
 
     private void createSampleCommodities() {

@@ -210,7 +210,10 @@ public class UserResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserByToken(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         SessionContext sessionContext = sessionContextService.getByToken(token);
-        User user = userService.getUserDetailById(sessionContext.getUserId());
+        User user = null;
+        if (sessionContext != null) {
+            user = userService.getUserDetailById(sessionContext.getUserId());
+        }
         if (user != null) {
             return JsonUtil.getJsonStringFromPojo(user);
         } else {

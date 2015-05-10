@@ -154,7 +154,10 @@ public class AdminResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getAdminById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         SessionContext sessionContext = sessionContextService.getByToken(token);
-        Admin admin = adminService.getAdminDetailtById(sessionContext.getUserId());
+        Admin admin = null;
+        if (sessionContext != null) {
+            admin = adminService.getAdminDetailtById(sessionContext.getUserId());
+        }
         if (admin != null) {
             return JsonUtil.getJsonStringFromPojo(admin);
         } else {
