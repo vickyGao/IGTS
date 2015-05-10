@@ -2,6 +2,8 @@ package com.ntu.igts.resource;
 
 import javax.annotation.Resource;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -9,7 +11,10 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.stereotype.Component;
 
+import com.ntu.igts.constants.Constants;
 import com.ntu.igts.exception.LoginException;
+import com.ntu.igts.exception.ServiceErrorException;
+import com.ntu.igts.exception.UnAuthorizedException;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Admin;
 import com.ntu.igts.model.SessionContext;
@@ -22,8 +27,8 @@ import com.ntu.igts.utils.JsonUtil;
 import com.ntu.igts.utils.MD5Util;
 
 @Component
-@Path("login")
-public class Login {
+@Path("authorization")
+public class AuthorizationResource {
 
     @Resource
     private UserService userService;
@@ -67,4 +72,13 @@ public class Login {
         throw new LoginException("User name or password is wrong.", MessageKeys.USER_NAME_OR_PASSWORD_IS_WRONG);
     }
 
+    @GET
+    @Path("logout")
+    public void logout(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        if (sessionContextService.delete(token)) {
+            throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
+        } else {
+            throw new ServiceErrorException("Logout failed", MessageKeys.LOGOUT_FAIL);
+        }
+    }
 }

@@ -10,6 +10,7 @@ public class MessageKeys {
     public static final String FORBIDDEN = "forbidden";
     public static final String ILLEGAL_ROLE = "illegal.role";
     public static final String UNAUTHORIZED = "unauthorized";
+    public static final String LOGOUT_FAIL = "logout.fail";
 
     /** Tag */
     public static final String CANNOT_CREATE_TAG_WITH_EXISTING_STANDARD_NAME = "cannot.create.tag.with.existing.standard.name";

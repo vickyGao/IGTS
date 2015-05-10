@@ -19,6 +19,7 @@ import net.sf.json.JSONObject;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -61,8 +62,8 @@ public abstract class TestBase extends JerseyTest {
         postBody.append("       \"password\": \"password\"");
         postBody.append("   }");
         postBody.append("}");
-        Response userLoginResponse = doPost("login/user", StringUtil.EMPTY, postBody.toString());
-        Response adminLoginResponse = doPost("login/admin", StringUtil.EMPTY, postBody.toString());
+        Response userLoginResponse = doPost("authorization/user", StringUtil.EMPTY, postBody.toString());
+        Response adminLoginResponse = doPost("authorization/admin", StringUtil.EMPTY, postBody.toString());
         assertEquals("Login fail", Status.OK.getStatusCode(), userLoginResponse.getStatus());
         assertEquals("Login fail", Status.OK.getStatusCode(), adminLoginResponse.getStatus());
         String userLoginResponseJson = userLoginResponse.readEntity(String.class);
@@ -74,6 +75,14 @@ public abstract class TestBase extends JerseyTest {
         userId = userSessionContext.getUserId();
         userName = userSessionContext.getUserName();
         adminToken = adminSessionContext.getToken();
+    }
+
+    @After
+    public void logout() {
+        Response userLogoutResponse = doGet("authorization/logout", userToken);
+        assertEquals("User logout fail", Status.UNAUTHORIZED.getStatusCode(), userLogoutResponse.getStatus());
+        Response adminLogoutResponse = doGet("authorization/logout", adminToken);
+        assertEquals("Admin logout fail", Status.UNAUTHORIZED.getStatusCode(), adminLogoutResponse.getStatus());
     }
 
     protected void mockUpUser() {

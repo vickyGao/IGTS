@@ -64,7 +64,7 @@ public class ExceptionMapperSupport implements ExceptionMapper<Exception> {
             return Response.ok(responseJson.toString(), MediaType.APPLICATION_JSON).status(status).build();
         } else if (exception instanceof UnAuthorizedException) {
             UnAuthorizedException unAuthorizedException = (UnAuthorizedException) exception;
-            String message = messageBuilder.buildMessage(MessageKeys.FORBIDDEN, "403 Forbidden", locale);
+            String message = messageBuilder.buildMessage(MessageKeys.UNAUTHORIZED, "Error 401 Unauthorized", locale);
             Status status = Status.UNAUTHORIZED;
             JSONObject responseJson = getResponseJson("error", message, unAuthorizedException.getDetails(),
                             unAuthorizedException);
