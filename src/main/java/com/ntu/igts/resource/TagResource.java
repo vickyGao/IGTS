@@ -118,7 +118,7 @@ public class TagResource extends BaseResource {
      * @return All tags with sub-tags
      */
     @GET
-    @Path("entity")
+    @Path("detail")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllTagsWithSubTags(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ALL);
