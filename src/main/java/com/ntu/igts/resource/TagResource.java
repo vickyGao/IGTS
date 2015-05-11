@@ -126,6 +126,14 @@ public class TagResource extends BaseResource {
     }
 
     @GET
+    @Path("entity")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllTopLevelTags(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return JsonUtil.getJsonStringFromPojo(new TagList(tagService.getAllTopLevelTags()));
+    }
+
+    @GET
     @Path("entity/{tagid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getTagById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @PathParam("tagid") String tagId) {
