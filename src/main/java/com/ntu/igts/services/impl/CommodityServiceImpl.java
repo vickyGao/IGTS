@@ -1,6 +1,5 @@
 package com.ntu.igts.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -13,7 +12,6 @@ import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.CommodityTag;
-import com.ntu.igts.model.Cover;
 import com.ntu.igts.model.Tag;
 import com.ntu.igts.model.container.CommodityQueryResult;
 import com.ntu.igts.model.container.Query;

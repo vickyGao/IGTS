@@ -189,7 +189,7 @@ public class CommodityResource extends BaseResource {
     @GET
     @Path("search_term")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getCommoditiesBySearchTermForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String getCommoditiesBySearchTerm(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @BeanParam Query query) {
         filterSessionContext(token, RoleEnum.ALL);
         CommodityQueryResult commodityQueryResult = commodityService.getCommoditiesBySearchTerm(query);
@@ -199,7 +199,7 @@ public class CommodityResource extends BaseResource {
     @GET
     @Path("admin/search_term")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getCommoditiesBySearchTerm(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String getCommoditiesBySearchTermForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @BeanParam Query query) {
         filterSessionContext(token, RoleEnum.ADMIN);
         CommodityQueryResult commodityQueryResult = commodityService.getCommoditiesBySearchTerm(query);
