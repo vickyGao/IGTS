@@ -32,6 +32,7 @@ import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.AdminService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
+import com.ntu.igts.utils.MD5Util;
 
 @Component
 @Path("admin")
@@ -86,8 +87,11 @@ public class AdminResource extends BaseResource {
         filterSessionContext(token, RoleEnum.ADMIN);
         Admin pojo = JsonUtil.getPojoFromJsonString(inString, Admin.class);
         Admin existingAdmin = checkAdminAvailability(pojo.getId());
-        if (!existingAdmin.getAdminPassword().equals(pojo.getAdminPassword())) {
-            existingAdmin.setAdminPassword(pojo.getAdminPassword());
+        if (!existingAdmin.getAdminPassword().equals(MD5Util.getMd5(pojo.getAdminPassword()))) {
+            throw new ServiceWarningException("Origin password is not correct", MessageKeys.ORIGIN_PASSWORD_WRONG);
+        }
+        if (!existingAdmin.getAdminPassword().equals(MD5Util.getMd5(pojo.getNewPassword()))) {
+            existingAdmin.setAdminPassword(pojo.getNewPassword());
             Admin updatedAdmin = adminService.update(existingAdmin);
             if (updatedAdmin == null) {
                 String[] param = { existingAdmin.getAdminName() };

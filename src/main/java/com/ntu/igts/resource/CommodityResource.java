@@ -122,12 +122,13 @@ public class CommodityResource extends BaseResource {
     }
 
     @PUT
-    @Path("commodityid/{commodityid}")
-    public String underCarriageCommodity(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    @Path("admin/activestate/{requeststate}/{commodityid}")
+    public String updateCommodityActiveStateForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("requeststate") ActiveStateEnum requestActiveState,
                     @PathParam("commodityid") String commodityId) {
         filterSessionContext(token, RoleEnum.ADMIN);
         Commodity existingCommodity = checkCommodityAvailability(commodityId);
-        existingCommodity.setActiveYN(ActiveStateEnum.NEGATIVE.value());
+        existingCommodity.setActiveYN(requestActiveState.value());
         Commodity updatedCommodity = commodityService.update(existingCommodity);
         if (updatedCommodity == null) {
             throw new ServiceErrorException("Update commodity failed.", MessageKeys.UPDATE_COMMODITY_FAIL);

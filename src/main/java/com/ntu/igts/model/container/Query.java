@@ -3,6 +3,7 @@ package com.ntu.igts.model.container;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 
+import com.ntu.igts.enums.ActiveStateEnum;
 import com.ntu.igts.enums.CommodityStatusEnum;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
@@ -37,6 +38,8 @@ public class Query {
     @QueryParam("tagid")
     @DefaultValue(StringUtil.EMPTY)
     private String tagId;
+    @QueryParam("activeyn")
+    private ActiveStateEnum activeYN;
 
     public String getSearchTerm() {
         return searchTerm;
@@ -116,6 +119,14 @@ public class Query {
 
     public void setTagId(String tagId) {
         this.tagId = tagId;
+    }
+
+    public ActiveStateEnum getActiveYN() {
+        return activeYN;
+    }
+
+    public void setActiveYN(ActiveStateEnum activeYN) {
+        this.activeYN = activeYN;
     }
 
 }

@@ -4,6 +4,7 @@ public class MessageKeys {
 
     /** Common */
     public static final String INTERNAL_SERVER_ERROR = "internal.server.error";
+    public static final String ORIGIN_PASSWORD_WRONG = "origin.password.wrong";
 
     /** Authentication */
     public static final String USER_NAME_OR_PASSWORD_IS_WRONG = "user.name.or.password.is.wrong";

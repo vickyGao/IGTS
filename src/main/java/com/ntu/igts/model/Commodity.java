@@ -28,6 +28,7 @@ import org.hibernate.search.annotations.Resolution;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.ntu.igts.annotations.QueryField;
+import com.ntu.igts.search.CommodityActiveYnFilterFactory;
 import com.ntu.igts.search.CommodityDistrictFilterFactory;
 import com.ntu.igts.search.CommodityStatusFilterFactory;
 import com.ntu.igts.search.CommodityTagFilterFactory;
@@ -36,7 +37,8 @@ import com.ntu.igts.utils.StringUtil;
 
 @FullTextFilterDefs({ @FullTextFilterDef(name = "districtFilter", impl = CommodityDistrictFilterFactory.class),
                 @FullTextFilterDef(name = "statusFilter", impl = CommodityStatusFilterFactory.class),
-                @FullTextFilterDef(name = "tagFilter", impl = CommodityTagFilterFactory.class) })
+                @FullTextFilterDef(name = "tagFilter", impl = CommodityTagFilterFactory.class),
+                @FullTextFilterDef(name = "activeYnFilter", impl = CommodityActiveYnFilterFactory.class) })
 @Entity
 @Indexed(interceptor = IndexWhenNotDeletedInterceptor.class)
 @Table(name = "commodity")

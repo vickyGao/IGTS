@@ -66,6 +66,11 @@ public class CommodityRepositoryImpl implements CommodityCustomizeRepository {
         // Transfer lucene query to full text query
         FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Commodity.class);
 
+        // If the activeYN is not null, add filter for activeYN
+        if (query.getActiveYN() != null) {
+            fullTextQuery.enableFullTextFilter("activeYnFilter").setParameter("activeYN", query.getActiveYN().value());
+        }
+
         // If the district is not empty, add filter for district
         if (!StringUtil.isEmpty(query.getDistrict())) {
             fullTextQuery.enableFullTextFilter("districtFilter").setParameter("district", query.getDistrict());
@@ -82,26 +87,26 @@ public class CommodityRepositoryImpl implements CommodityCustomizeRepository {
         // Get the total count for the search
         int resultSize = fullTextQuery.getResultSize();
         if (resultSize == 0) {
-            return getItemQueryResult(query, new ArrayList<Commodity>(), 0, 0);
+            return getCommodityQueryResult(query, new ArrayList<Commodity>(), 0, 0);
         } else {
             if (query.getSortBy() == null) {
                 fullTextQuery.setFirstResult(page * query.getSize()).setMaxResults(query.getSize());
                 List<Commodity> result = fullTextQuery.getResultList();
-                return getItemQueryResult(query, result, resultSize,
+                return getCommodityQueryResult(query, result, resultSize,
                                 getTotalPagesByTotalCountAndPageSize(resultSize, query.getSize()));
             } else {
                 Sort sort = getSortForQuery(query);
                 fullTextQuery.setSort(sort);
                 fullTextQuery.setFirstResult(page * query.getSize()).setMaxResults(query.getSize());
                 List<Commodity> result = fullTextQuery.getResultList();
-                return getItemQueryResult(query, result, resultSize,
+                return getCommodityQueryResult(query, result, resultSize,
                                 getTotalPagesByTotalCountAndPageSize(resultSize, query.getSize()));
             }
         }
     }
 
     /**
-     * Get the ItemQueryResult object
+     * Get the CommodityQueryResult object
      * 
      * @param query
      *            The query object, including the parameters which are used for query
@@ -113,10 +118,11 @@ public class CommodityRepositoryImpl implements CommodityCustomizeRepository {
      *            The total page number of the pagination result
      * @return The ItemQueryResult object
      */
-    private CommodityQueryResult getItemQueryResult(Query query, List<Commodity> items, int totalCount, int totalPages) {
+    private CommodityQueryResult getCommodityQueryResult(Query query, List<Commodity> items, int totalCount,
+                    int totalPages) {
         CommodityQueryResult itemQueryResult = new CommodityQueryResult();
         itemQueryResult.setSearchTerm(query.getSearchTerm());
-        itemQueryResult.setCurrentPage(query.getPage() > 0 ? query.getPage() - 1 : 0);
+        itemQueryResult.setCurrentPage(query.getPage() < 0 ? 0 : query.getPage());
         itemQueryResult.setTotalCount(totalCount);
         itemQueryResult.setTotalPages(totalPages);
         itemQueryResult.setSortBy(query.getSortBy());
