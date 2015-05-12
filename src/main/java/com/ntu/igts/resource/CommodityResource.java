@@ -89,7 +89,7 @@ public class CommodityResource extends BaseResource {
         checkCommodityAvailability(pojo.getId());
         Commodity updatedCommodity = commodityService.update(pojo);
         if (updatedCommodity == null) {
-            throw new ServiceErrorException("Create commodity failed.", MessageKeys.UPDATE_COMMODITY_FAIL);
+            throw new ServiceErrorException("Update commodity failed.", MessageKeys.UPDATE_COMMODITY_FAIL);
         }
         return JsonUtil.getJsonStringFromPojo(updatedCommodity);
     }
@@ -116,7 +116,21 @@ public class CommodityResource extends BaseResource {
         existingCommodity.setActiveYN(requestActiveState.value());
         Commodity updatedCommodity = commodityService.update(existingCommodity);
         if (updatedCommodity == null) {
-            throw new ServiceErrorException("Create commodity failed.", MessageKeys.UPDATE_COMMODITY_FAIL);
+            throw new ServiceErrorException("Update commodity failed.", MessageKeys.UPDATE_COMMODITY_FAIL);
+        }
+        return JsonUtil.getJsonStringFromPojo(updatedCommodity);
+    }
+
+    @PUT
+    @Path("commodityid/{commodityid}")
+    public String underCarriageCommodity(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("commodityid") String commodityId) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        Commodity existingCommodity = checkCommodityAvailability(commodityId);
+        existingCommodity.setActiveYN(ActiveStateEnum.NEGATIVE.value());
+        Commodity updatedCommodity = commodityService.update(existingCommodity);
+        if (updatedCommodity == null) {
+            throw new ServiceErrorException("Update commodity failed.", MessageKeys.UPDATE_COMMODITY_FAIL);
         }
         return JsonUtil.getJsonStringFromPojo(updatedCommodity);
     }
@@ -138,6 +152,14 @@ public class CommodityResource extends BaseResource {
         }
     }
 
+    @GET
+    @Path("admin/detail/{commodityid}")
+    public String getCommodityByIdForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("commodityid") String commodityId) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return JsonUtil.getJsonStringFromPojo(commodityService.getCommodityWithDetailById(commodityId));
+    }
+
     /**
      * Get the commodity by id
      * 
@@ -148,11 +170,11 @@ public class CommodityResource extends BaseResource {
      * @return The commodity get by id
      */
     @GET
-    @Path("entity/{commodityid}")
+    @Path("detail/{commodityid}")
     public String getCommodityById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("commodityid") String commodityId) {
         filterSessionContext(token, RoleEnum.USER);
-        return JsonUtil.getJsonStringFromPojo(commodityService.getById(commodityId));
+        return JsonUtil.getJsonStringFromPojo(commodityService.getCommodityWithDetailById(commodityId));
     }
 
     /**
@@ -167,9 +189,19 @@ public class CommodityResource extends BaseResource {
     @GET
     @Path("search_term")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getCommoditiesBySearchTerm(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String getCommoditiesBySearchTermForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @BeanParam Query query) {
         filterSessionContext(token, RoleEnum.ALL);
+        CommodityQueryResult commodityQueryResult = commodityService.getCommoditiesBySearchTerm(query);
+        return JsonUtil.getJsonStringFromPojo(commodityQueryResult);
+    }
+
+    @GET
+    @Path("admin/search_term")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getCommoditiesBySearchTerm(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @BeanParam Query query) {
+        filterSessionContext(token, RoleEnum.ADMIN);
         CommodityQueryResult commodityQueryResult = commodityService.getCommoditiesBySearchTerm(query);
         return JsonUtil.getJsonStringFromPojo(commodityQueryResult);
     }
