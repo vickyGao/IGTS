@@ -85,19 +85,27 @@ public class SliceResource extends BaseResource {
     }
 
     @GET
-    @Path("entity/{sliceid}")
+    @Path("detail/{sliceid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getSliceById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("sliceid") String sliceId) {
         filterSessionContext(token, RoleEnum.ADMIN);
-        return JsonUtil.getJsonStringFromPojo(sliceService.getById(sliceId));
+        return JsonUtil.getJsonStringFromPojo(sliceService.getDetailById(sliceId));
     }
 
     @GET
-    @Path("entity")
+    @Path("detail")
     @Produces(MediaType.APPLICATION_JSON)
     public String getSlices(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ALL);
+        return JsonUtil.getJsonStringFromPojo(new SliceList(sliceService.getAll()));
+    }
+
+    @GET
+    @Path("admin/detail")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getSlicesForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
         return JsonUtil.getJsonStringFromPojo(new SliceList(sliceService.getAll()));
     }
 

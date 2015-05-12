@@ -206,6 +206,15 @@ public class UserResource extends BaseResource {
     }
 
     @GET
+    @Path("admin/detail/{userid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getUserDetailByIdForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("userid") String userId) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return JsonUtil.getJsonStringFromPojo(userService.getUserDetailById(userId));
+    }
+
+    @GET
     @Path("detail/token")
     @Produces(MediaType.APPLICATION_JSON)
     public String getUserByToken(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {

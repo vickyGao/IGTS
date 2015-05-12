@@ -6,6 +6,6 @@ import com.ntu.igts.model.Admin;
 
 public interface AdminRepository extends MyRepository<Admin, String> {
 
-    @Query("from Admin a where a.adminName=:adminName")
+    @Query("from Admin a where a.adminName=:adminName and a.deletedYN='N'")
     public Admin getAdminByAdminName(@Param("adminName") String adminName);
 }

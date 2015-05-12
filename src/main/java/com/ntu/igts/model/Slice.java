@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -30,6 +31,12 @@ public class Slice extends BaseModel implements Serializable {
     @Column(name = "commodity_id", columnDefinition = "VARCHAR(36)")
     @JsonProperty("commodityid")
     private String commodityId;
+    @Transient
+    @JsonProperty("image")
+    private Image image;
+    @Transient
+    @JsonProperty("commodity")
+    private Commodity commodity;
 
     public String getImageId() {
         return imageId;
@@ -61,6 +68,22 @@ public class Slice extends BaseModel implements Serializable {
 
     public void setCommodityId(String commodityId) {
         this.commodityId = commodityId;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public Commodity getCommodity() {
+        return commodity;
+    }
+
+    public void setCommodity(Commodity commodity) {
+        this.commodity = commodity;
     }
 
 }

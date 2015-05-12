@@ -5,6 +5,7 @@ public class MessageKeys {
     /** Common */
     public static final String INTERNAL_SERVER_ERROR = "internal.server.error";
     public static final String ORIGIN_PASSWORD_WRONG = "origin.password.wrong";
+    public static final String CANNOT_DELETE_YOURSELF = "cannot.delete.yourself";
 
     /** Authentication */
     public static final String USER_NAME_OR_PASSWORD_IS_WRONG = "user.name.or.password.is.wrong";
@@ -35,6 +36,7 @@ public class MessageKeys {
     public static final String UPDATE_ADMIN_FAILED = "update.admin,failed";
     public static final String DELETE_ADMIN_FOR_ID_SUCCESS = "delete.admin.for.id.success";
     public static final String DELETE_ADMIN_FOR_ID_FAIL = "delete.admin.for.id.fail";
+    public static final String ADMIN_NAME_EXIST = "admin.name.exist";
 
     /** Commodity */
     public static final String CREATE_COMMODITY_FAIL = "create.commodity.fail";

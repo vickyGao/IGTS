@@ -87,17 +87,24 @@ public class HotResource extends BaseResource {
     @GET
     @Path("entity/{hotid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSliceById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
-                    @PathParam("hotid") String hotId) {
+    public String getHotById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @PathParam("hotid") String hotId) {
         filterSessionContext(token, RoleEnum.ADMIN);
         return JsonUtil.getJsonStringFromPojo(hotService.getById(hotId));
     }
 
     @GET
-    @Path("entity")
+    @Path("detail")
     @Produces(MediaType.APPLICATION_JSON)
     public String getHotCommodities(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ALL);
+        return JsonUtil.getJsonStringFromPojo(new HotList(hotService.getHotCommodities()));
+    }
+
+    @GET
+    @Path("admin/detail")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getHotCommodityForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
         return JsonUtil.getJsonStringFromPojo(new HotList(hotService.getHotCommodities()));
     }
 

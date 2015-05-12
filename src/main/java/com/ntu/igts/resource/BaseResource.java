@@ -44,19 +44,23 @@ public class BaseResource {
                                                                 // allowed
                     if (RoleEnum.USER.equals(allowedRole)) { // Only allow user
                         User user = userService.getUserDetailById(sessionContext.getUserId());
-                        if (CommonUtil.isRoleAllowed(user.getRoles(), allowedRole)) {
-                            flushSessionContext(token);
-                            sessionContext.setUserId(user.getId());
-                            sessionContext.setUserName(user.getUserName());
-                            return sessionContext;
+                        if (user != null) {
+                            if (CommonUtil.isRoleAllowed(user.getRoles(), allowedRole)) {
+                                flushSessionContext(token);
+                                sessionContext.setUserId(user.getId());
+                                sessionContext.setUserName(user.getUserName());
+                                return sessionContext;
+                            }
                         }
                     } else if (RoleEnum.ADMIN.equals(allowedRole)) { // Only allow admin
                         Admin admin = adminService.getAdminDetailtById(sessionContext.getUserId());
-                        if (CommonUtil.isRoleAllowed(admin.getRoles(), allowedRole)) {
-                            flushSessionContext(token);
-                            sessionContext.setUserId(admin.getId());
-                            sessionContext.setUserName(admin.getAdminName());
-                            return sessionContext;
+                        if (admin != null) {
+                            if (CommonUtil.isRoleAllowed(admin.getRoles(), allowedRole)) {
+                                flushSessionContext(token);
+                                sessionContext.setUserId(admin.getId());
+                                sessionContext.setUserName(admin.getAdminName());
+                                return sessionContext;
+                            }
                         }
                     }
                 }

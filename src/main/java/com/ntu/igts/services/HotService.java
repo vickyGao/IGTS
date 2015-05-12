@@ -15,4 +15,6 @@ public interface HotService {
     public Hot getById(String hotId);
 
     public List<Hot> getHotCommodities();
+
+    public Hot getDetailById(String hotId);
 }

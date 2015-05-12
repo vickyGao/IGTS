@@ -21,7 +21,7 @@ public class Admin extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -2592865393997208669L;
 
-    @Column(name = "admin_name", unique = true, updatable = false)
+    @Column(name = "admin_name", updatable = false)
     @JsonProperty("adminname")
     private String adminName;
     @Column(name = "admin_password")

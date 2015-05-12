@@ -15,4 +15,6 @@ public interface SliceService {
     public Slice getById(String sliceId);
 
     public List<Slice> getAll();
+
+    public Slice getDetailById(String sliceId);
 }

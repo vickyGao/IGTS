@@ -9,7 +9,7 @@ import com.ntu.igts.model.User;
 
 public interface UserRepository extends MyRepository<User, String> {
 
-    @Query("from User u where u.userName=:userName")
+    @Query("from User u where u.userName=:userName and u.deletedYN='N'")
     public User getUserByUserName(@Param("userName") String userName);
 
     @Transactional

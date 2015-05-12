@@ -21,7 +21,7 @@ public class User extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 5852161501955587332L;
 
-    @Column(name = "user_name", unique = true, updatable = false)
+    @Column(name = "user_name", updatable = false)
     @JsonProperty("username")
     private String userName;
     @Column(name = "password")

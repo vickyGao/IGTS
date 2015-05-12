@@ -61,6 +61,10 @@ public class AdminResource extends BaseResource {
     public String create(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         filterSessionContext(token, RoleEnum.ADMIN);
         Admin pojo = JsonUtil.getPojoFromJsonString(inString, Admin.class);
+        Admin existingAdmin = adminService.getAdminByAdminName(pojo.getAdminName());
+        if (existingAdmin != null) {
+            throw new ServiceWarningException("Admin name already in use", MessageKeys.ADMIN_NAME_EXIST);
+        }
         Admin admin = adminService.create(pojo);
         if (admin == null) {
             String[] param = { pojo.getAdminName() };
@@ -116,8 +120,11 @@ public class AdminResource extends BaseResource {
     @Path("entity/{adminid}")
     @Produces(MediaType.TEXT_PLAIN)
     public String delete(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, @PathParam("adminid") String adminId) {
-        filterSessionContext(token, RoleEnum.ADMIN);
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.ADMIN);
         checkAdminAvailability(adminId);
+        if (adminId != null && adminId.equals(sessionContext.getUserId())) {
+            throw new ServiceWarningException("Cannot delete yourself", MessageKeys.CANNOT_DELETE_YOURSELF);
+        }
         boolean flag = adminService.delete(adminId);
         String[] param = { adminId };
         if (flag) {
