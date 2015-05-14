@@ -27,6 +27,9 @@ public class Image extends BaseModel implements Serializable {
     @Column(name = "uri")
     @JsonProperty("uri")
     private String uri;
+    @Column(name = "user_id", columnDefinition = "VARCHAR(36)")
+    @JsonProperty("userid")
+    private String userId;
 
     public String getTitle() {
         return title;
@@ -51,4 +54,13 @@ public class Image extends BaseModel implements Serializable {
     public void setUri(String uri) {
         this.uri = uri;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
 }

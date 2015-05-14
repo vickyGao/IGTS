@@ -163,7 +163,8 @@ public class AdminResource extends BaseResource {
     @GET
     @Path("detail/token")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAdminById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+    public String getAdminByToken(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        token = CommonUtil.getFormattedToken(token);
         SessionContext sessionContext = sessionContextService.getByToken(token);
         Admin admin = null;
         if (sessionContext != null) {

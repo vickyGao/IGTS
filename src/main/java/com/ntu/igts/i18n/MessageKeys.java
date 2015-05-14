@@ -50,6 +50,8 @@ public class MessageKeys {
     public static final String UPDATE_IMAGE_FAIL = "update.image.fail";
     public static final String DELETE_IMAGE_SUCCESS = "delete.image.success";
     public static final String DELETE_IMAGE_FAIL = "delete.image.fail";
+    public static final String IMAGE_NOT_FOUND_FOR_ID = "image.not.found.for.id";
+    public static final String FILE_NAME_OR_SUFFIX_IS_REQUIRED = "file.name.or.suffix.is.required";
 
     /** Slice */
     public static final String SLICE_NOT_FOUND_FOR_ID = "slice.not.found.for.id";

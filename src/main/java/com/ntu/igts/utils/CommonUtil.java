@@ -91,4 +91,13 @@ public class CommonUtil {
         String returnEntityJson = response.readEntity(String.class);
         return (T) JsonUtil.getPojoFromJsonString(returnEntityJson, clazz);
     }
+
+    public static String getFormattedToken(String token) {
+        if (!StringUtil.isEmpty(token)) {
+            if (token.length() > 36) {
+                token = token.replaceAll("\"", "");
+            }
+        }
+        return token;
+    }
 }

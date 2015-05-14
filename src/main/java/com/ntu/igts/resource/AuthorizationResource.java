@@ -46,6 +46,10 @@ public class AuthorizationResource {
         User user = userService.getUserByUserName(loginForm.getUserName());
         if (user != null) {
             if (user.getPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
+                SessionContext existingSessionContext = sessionContextService.getByUserId(user.getId());
+                if (existingSessionContext != null) {
+                    sessionContextService.delete(existingSessionContext.getToken());
+                }
                 SessionContext sessionContext = sessionContextService.create(user.getId());
                 sessionContext.setUserName(user.getUserName());
                 return JsonUtil.getJsonStringFromPojo(sessionContext);
@@ -63,6 +67,10 @@ public class AuthorizationResource {
         Admin admin = adminService.getAdminByAdminName(loginForm.getUserName());
         if (admin != null) {
             if (admin.getAdminPassword().equals(MD5Util.getMd5(loginForm.getPassword()))) {
+                SessionContext existingSessionContext = sessionContextService.getByUserId(admin.getId());
+                if (existingSessionContext != null) {
+                    sessionContextService.delete(existingSessionContext.getToken());
+                }
                 SessionContext sessionContext = sessionContextService.create(admin.getId());
                 sessionContext.setUserName(admin.getAdminName());
                 return JsonUtil.getJsonStringFromPojo(sessionContext);

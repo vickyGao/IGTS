@@ -1,5 +1,7 @@
 package com.ntu.igts.services;
 
+import java.util.List;
+
 import com.ntu.igts.model.Image;
 
 public interface ImageService {
@@ -11,4 +13,8 @@ public interface ImageService {
     public Image getById(String imageId);
 
     public boolean delete(String imageId);
+
+    public List<Image> getImagesByUserId(String userId);
+
+    public Image getImageByUri(String uri);
 }

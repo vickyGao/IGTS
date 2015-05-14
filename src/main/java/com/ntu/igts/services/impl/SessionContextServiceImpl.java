@@ -2,18 +2,23 @@ package com.ntu.igts.services.impl;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.repository.SessionContextRepository;
 import com.ntu.igts.services.SessionContextService;
+import com.ntu.igts.utils.CommonUtil;
 
 @Service
 public class SessionContextServiceImpl implements SessionContextService {
+
+    private static final Logger LOGGER = Logger.getLogger(SessionContextServiceImpl.class);
 
     @Resource
     private SessionContextRepository sessionContextRepository;
@@ -47,6 +52,7 @@ public class SessionContextServiceImpl implements SessionContextService {
 
     @Override
     public SessionContext getByToken(String token) {
+        token = CommonUtil.getFormattedToken(token);
         return sessionContextRepository.getByToken(token);
     }
 
@@ -70,12 +76,26 @@ public class SessionContextServiceImpl implements SessionContextService {
     @Override
     @Transactional
     public boolean delete(String token) {
+        token = CommonUtil.getFormattedToken(token);
         sessionContextRepository.delete(token, false);
         SessionContext sessionContext = sessionContextRepository.getByToken(token);
         if (sessionContext == null) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public SessionContext getByUserId(String userId) {
+        List<SessionContext> sessionContextList = sessionContextRepository.getByUserId(userId);
+        if (sessionContextList.size() == 0) {
+            return null;
+        } else if (sessionContextList.size() == 1) {
+            return sessionContextList.get(0);
+        } else {
+            LOGGER.warn("Duplicate session context exists");
+            return sessionContextList.get(0);
         }
     }
 
