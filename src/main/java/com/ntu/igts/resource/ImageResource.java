@@ -83,12 +83,17 @@ public class ImageResource extends BaseResource {
     public String updateImage(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         filterSessionContext(token, RoleEnum.USER);
         Image pojo = JsonUtil.getPojoFromJsonString(inString, Image.class);
-        checkImageAvailability(pojo.getId());
-        Image updatedImage = imageService.update(pojo);
-        if (updatedImage == null) {
-            throw new ServiceErrorException("Update image failed.", MessageKeys.UPDATE_IMAGE_FAIL);
+        if (pojo != null) {
+            Image existingImage = checkImageAvailability(pojo.getId());
+            existingImage.setTitle(pojo.getTitle());
+            existingImage.setDescription(pojo.getDescription());
+            Image updatedImage = imageService.update(existingImage);
+            if (updatedImage == null) {
+                throw new ServiceErrorException("Update image failed.", MessageKeys.UPDATE_IMAGE_FAIL);
+            }
+            return JsonUtil.getJsonStringFromPojo(updatedImage);
         }
-        return JsonUtil.getJsonStringFromPojo(updatedImage);
+        return JsonUtil.getJsonStringFromPojo(pojo);
     }
 
     @PUT
@@ -98,12 +103,17 @@ public class ImageResource extends BaseResource {
     public String updateImageForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
         filterSessionContext(token, RoleEnum.ADMIN);
         Image pojo = JsonUtil.getPojoFromJsonString(inString, Image.class);
-        checkImageAvailability(pojo.getId());
-        Image updatedImage = imageService.update(pojo);
-        if (updatedImage == null) {
-            throw new ServiceErrorException("Update image failed.", MessageKeys.UPDATE_IMAGE_FAIL);
+        if (pojo != null) {
+            Image existingImage = checkImageAvailability(pojo.getId());
+            existingImage.setTitle(pojo.getTitle());
+            existingImage.setDescription(pojo.getDescription());
+            Image updatedImage = imageService.update(existingImage);
+            if (updatedImage == null) {
+                throw new ServiceErrorException("Update image failed.", MessageKeys.UPDATE_IMAGE_FAIL);
+            }
+            return JsonUtil.getJsonStringFromPojo(updatedImage);
         }
-        return JsonUtil.getJsonStringFromPojo(updatedImage);
+        return JsonUtil.getJsonStringFromPojo(pojo);
     }
 
     @DELETE
@@ -209,7 +219,7 @@ public class ImageResource extends BaseResource {
 
     @GET
     @Path("entity/{imageid}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String getImageById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("imageid") String imageId) {
         filterSessionContext(token, RoleEnum.USER);
@@ -219,7 +229,7 @@ public class ImageResource extends BaseResource {
 
     @GET
     @Path("admin/entity/{imageid}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String getImageByIdForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("imageid") String imageId) {
         filterSessionContext(token, RoleEnum.ADMIN);
