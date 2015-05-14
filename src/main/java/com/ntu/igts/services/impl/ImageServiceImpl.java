@@ -67,4 +67,9 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Override
+    public int getTotalCount() {
+        return imageRepository.getTotalCouont();
+    }
+
 }

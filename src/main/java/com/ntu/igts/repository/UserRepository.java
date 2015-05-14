@@ -16,4 +16,7 @@ public interface UserRepository extends MyRepository<User, String> {
     @Modifying
     @Query("update User u set u.password=:password where u.id=:userId")
     public int updatePassword(@Param("userId") String userId, @Param("password") String password);
+
+    @Query("select count(*) from User t where t.deletedYN='N'")
+    public int getTotalCouont();
 }

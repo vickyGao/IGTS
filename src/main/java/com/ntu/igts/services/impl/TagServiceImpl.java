@@ -108,4 +108,9 @@ public class TagServiceImpl implements TagService {
         return tagRepository.getTagsHorizontalByCommodityId(commodityId);
     }
 
+    @Override
+    public int getTotalCount() {
+        return tagRepository.getTotalCouont();
+    }
+
 }

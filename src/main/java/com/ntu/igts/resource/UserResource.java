@@ -230,6 +230,14 @@ public class UserResource extends BaseResource {
         }
     }
 
+    @GET
+    @Path("totalcount")
+    @Produces(MediaType.TEXT_PLAIN)
+    public int getTotalCount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return userService.getTotalCount();
+    }
+
     private User checkUserAvailability(String userId) {
         User existingUser = userService.getUserById(userId);
         if (existingUser == null) {

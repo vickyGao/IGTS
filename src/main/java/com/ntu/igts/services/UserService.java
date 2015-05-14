@@ -26,4 +26,6 @@ public interface UserService {
     public Page<User> getByPage(Query query);
 
     public User getUserByUserName(String userName);
+
+    public int getTotalCount();
 }

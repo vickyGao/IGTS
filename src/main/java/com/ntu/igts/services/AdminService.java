@@ -20,4 +20,6 @@ public interface AdminService {
     public Admin getById(String adminId);
 
     public Page<Admin> getPaginatedAdmins(Query query);
+
+    public int getTotalCount();
 }

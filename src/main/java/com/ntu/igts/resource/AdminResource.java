@@ -177,6 +177,14 @@ public class AdminResource extends BaseResource {
         }
     }
 
+    @GET
+    @Path("totalcount")
+    @Produces(MediaType.TEXT_PLAIN)
+    public int getTotalCount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return adminService.getTotalCount();
+    }
+
     private Admin checkAdminAvailability(String adminId) {
         Admin existingAdmin = adminService.getById(adminId);
         if (existingAdmin == null) {

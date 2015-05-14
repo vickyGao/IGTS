@@ -25,4 +25,6 @@ public interface CommodityService {
     public Page<Commodity> getByPage(Query query);
 
     public CommodityQueryResult getCommoditiesBySearchTerm(Query query);
+
+    public int getTotalCount();
 }

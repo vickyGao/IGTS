@@ -237,6 +237,14 @@ public class ImageResource extends BaseResource {
         return JsonUtil.getJsonStringFromPojo(returnImage);
     }
 
+    @GET
+    @Path("managedamount")
+    @Produces(MediaType.TEXT_PLAIN)
+    public int getTotalManagedImageAmount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return imageService.getTotalCount();
+    }
+
     private Image checkImageAvailability(String imageid) {
         Image existingImage = imageService.getById(imageid);
         if (existingImage == null) {

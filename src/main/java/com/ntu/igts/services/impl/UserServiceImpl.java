@@ -128,4 +128,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.getUserByUserName(userName);
     }
 
+    @Override
+    public int getTotalCount() {
+        return userRepository.getTotalCouont();
+    }
+
 }

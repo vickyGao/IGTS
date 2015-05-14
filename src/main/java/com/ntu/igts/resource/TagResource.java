@@ -141,6 +141,14 @@ public class TagResource extends BaseResource {
         return JsonUtil.getJsonStringFromPojo(tagService.getById(tagId));
     }
 
+    @GET
+    @Path("totalcount")
+    @Produces(MediaType.TEXT_PLAIN)
+    public int getTotalCount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return tagService.getTotalCount();
+    }
+
     private Tag checkTagAvailability(String tagId) {
         Tag existingTag = tagService.getById(tagId);
         if (existingTag == null) {

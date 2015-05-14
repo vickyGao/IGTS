@@ -128,4 +128,9 @@ public class CommodityServiceImpl implements CommodityService {
         }
     }
 
+    @Override
+    public int getTotalCount() {
+        return commodityRepository.getTotalCouont();
+    }
+
 }

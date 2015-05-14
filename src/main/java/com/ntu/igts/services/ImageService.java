@@ -17,4 +17,6 @@ public interface ImageService {
     public List<Image> getImagesByUserId(String userId);
 
     public Image getImageByUri(String uri);
+
+    public int getTotalCount();
 }

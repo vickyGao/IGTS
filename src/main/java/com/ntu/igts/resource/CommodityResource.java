@@ -207,6 +207,14 @@ public class CommodityResource extends BaseResource {
         return JsonUtil.getJsonStringFromPojo(commodityQueryResult);
     }
 
+    @GET
+    @Path("totalcount")
+    @Produces(MediaType.TEXT_PLAIN)
+    public int getTotalCount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return commodityService.getTotalCount();
+    }
+
     private Commodity checkCommodityAvailability(String commodityId) {
         Commodity existingCommodity = commodityService.getById(commodityId);
         if (existingCommodity == null) {

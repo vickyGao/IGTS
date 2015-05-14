@@ -29,4 +29,6 @@ public interface TagService {
     public List<Tag> getTagsByCommodityId(String commodityId);
 
     public List<Tag> getTagsHorizontalByCommodityId(String commodityId);
+
+    public int getTotalCount();
 }

@@ -114,4 +114,9 @@ public class AdminServiceImpl implements AdminService {
         return adminRepository.findByPage(query);
     }
 
+    @Override
+    public int getTotalCount() {
+        return adminRepository.getTotalCouont();
+    }
+
 }

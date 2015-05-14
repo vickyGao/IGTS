@@ -10,8 +10,11 @@ import com.ntu.igts.model.Image;
 public interface ImageRepository extends MyRepository<Image, String> {
 
     @Query("from Image i where i.userId=:userId and i.deletedYN='N'")
-    List<Image> getImagesByUserId(@Param("userId") String userId);
+    public List<Image> getImagesByUserId(@Param("userId") String userId);
 
     @Query("from Image i where i.uri=:uri and i.deletedYN='N'")
-    List<Image> getImagesByUri(@Param("uri") String uri);
+    public List<Image> getImagesByUri(@Param("uri") String uri);
+
+    @Query("select count(*) from Image i where i.deletedYN='N'")
+    public int getTotalCouont();
 }

@@ -23,4 +23,7 @@ public interface TagRepository extends MyRepository<Tag, String> {
 
     @Query("select t from Tag t,CommodityTag e where t.id=e.tagId and e.commodityId=:commodityId and e.deletedYN='N' and t.deletedYN='N'")
     public List<Tag> getTagsHorizontalByCommodityId(@Param("commodityId") String commodityId);
+
+    @Query("select count(*) from Tag t where t.deletedYN='N'")
+    public int getTotalCouont();
 }
