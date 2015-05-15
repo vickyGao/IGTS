@@ -25,6 +25,7 @@ import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Commodity;
+import com.ntu.igts.model.container.CommodityList;
 import com.ntu.igts.model.container.CommodityQueryResult;
 import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.CommodityService;
@@ -213,6 +214,14 @@ public class CommodityResource extends BaseResource {
     public int getTotalCount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ALL);
         return commodityService.getTotalCount();
+    }
+
+    @GET
+    @Path("entity/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllCommodities(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        return JsonUtil.getJsonStringFromPojo(new CommodityList(commodityService.getAll()));
     }
 
     private Commodity checkCommodityAvailability(String commodityId) {

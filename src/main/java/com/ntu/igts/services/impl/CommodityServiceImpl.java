@@ -133,4 +133,9 @@ public class CommodityServiceImpl implements CommodityService {
         return commodityRepository.getTotalCouont();
     }
 
+    @Override
+    public List<Commodity> getAll() {
+        return commodityRepository.findAll();
+    }
+
 }
