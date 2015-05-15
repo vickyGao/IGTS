@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,6 @@ import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
-import com.ntu.igts.exception.UnAuthorizedException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Admin;
@@ -37,6 +37,8 @@ import com.ntu.igts.utils.MD5Util;
 @Component
 @Path("admin")
 public class AdminResource extends BaseResource {
+
+    private static final Logger LOGGER = Logger.getLogger(AdminResource.class);
 
     @Context
     private HttpServletRequest webRequest;
@@ -164,6 +166,7 @@ public class AdminResource extends BaseResource {
     @Path("detail/token")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAdminByToken(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        LOGGER.debug("Current token is " + token);
         token = CommonUtil.getFormattedToken(token);
         SessionContext sessionContext = sessionContextService.getByToken(token);
         Admin admin = null;
@@ -173,7 +176,7 @@ public class AdminResource extends BaseResource {
         if (admin != null) {
             return JsonUtil.getJsonStringFromPojo(admin);
         } else {
-            throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
+            return JsonUtil.getJsonStringFromPojo(new Admin());
         }
     }
 
@@ -181,7 +184,7 @@ public class AdminResource extends BaseResource {
     @Path("totalcount")
     @Produces(MediaType.TEXT_PLAIN)
     public int getTotalCount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
-        filterSessionContext(token, RoleEnum.ADMIN);
+        filterSessionContext(token, RoleEnum.ALL);
         return adminService.getTotalCount();
     }
 

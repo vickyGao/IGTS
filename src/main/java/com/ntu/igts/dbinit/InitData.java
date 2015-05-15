@@ -8,16 +8,29 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
+import com.ntu.igts.constants.Constants;
 import com.ntu.igts.model.Admin;
 import com.ntu.igts.model.Commodity;
+import com.ntu.igts.model.Cover;
+import com.ntu.igts.model.Hot;
+import com.ntu.igts.model.Image;
+import com.ntu.igts.model.Message;
 import com.ntu.igts.model.Role;
+import com.ntu.igts.model.Slice;
 import com.ntu.igts.model.Tag;
 import com.ntu.igts.model.User;
 import com.ntu.igts.services.AdminService;
 import com.ntu.igts.services.CommodityService;
+import com.ntu.igts.services.CoverService;
+import com.ntu.igts.services.HotService;
+import com.ntu.igts.services.ImageService;
+import com.ntu.igts.services.MessageService;
 import com.ntu.igts.services.RoleService;
+import com.ntu.igts.services.SensitiveWordService;
+import com.ntu.igts.services.SliceService;
 import com.ntu.igts.services.TagService;
 import com.ntu.igts.services.UserService;
+import com.ntu.igts.utils.ConfigManagmentUtil;
 
 @Component
 public class InitData {
@@ -26,7 +39,12 @@ public class InitData {
 
     private Role roleUser;
     private Role roleAdmin;
+    private User standardUser;
+    private Admin standardAdmin;
+
     private List<Tag> categoryTags = new ArrayList<Tag>();
+    private List<Image> sampleImageList = new ArrayList<Image>();
+    private List<Commodity> sampleCommodities = new ArrayList<Commodity>();
 
     @Resource
     private UserService userService;
@@ -38,6 +56,18 @@ public class InitData {
     private TagService tagService;
     @Resource
     private CommodityService commodityService;
+    @Resource
+    private ImageService imageService;
+    @Resource
+    private CoverService coverService;
+    @Resource
+    private MessageService messageService;
+    @Resource
+    private SensitiveWordService sensitiveWordService;
+    @Resource
+    private SliceService sliceService;
+    @Resource
+    private HotService hotService;
 
     public void createStandardData() {
         LOGGER.info("Start to init standard data");
@@ -49,8 +79,11 @@ public class InitData {
 
     public void createSampleData() {
         LOGGER.info("Start to init sample data");
+        createSampleImages();
         createSampleTags();
         createSampleCommodities();
+        createSampleSlices();
+        createSampleHots();
         LOGGER.info("Sample standard data finished");
     }
 
@@ -61,8 +94,8 @@ public class InitData {
         List<Role> roles = new ArrayList<Role>();
         roles.add(roleUser);
         user.setRoles(roles);
-        User insertedUser = userService.create(user);
-        LOGGER.info("Created user " + insertedUser.getUserName());
+        standardUser = userService.create(user);
+        LOGGER.info("Created user " + standardUser.getUserName());
     }
 
     private void createAdmin() {
@@ -72,8 +105,8 @@ public class InitData {
         List<Role> roles = new ArrayList<Role>();
         roles.add(roleAdmin);
         admin.setRoles(roles);
-        Admin insertedAdmin = adminService.create(admin);
-        LOGGER.info("Created admin " + insertedAdmin.getAdminName());
+        standardAdmin = adminService.create(admin);
+        LOGGER.info("Created admin " + standardAdmin.getAdminName());
     }
 
     private void createRole() {
@@ -212,7 +245,10 @@ public class InitData {
         List<Tag> foodItem01Tags = new ArrayList<Tag>();
         foodItem01Tags.add(categoryTags.get(0));
         foodItem01.setTags(foodItem01Tags);
-        commodityService.create(foodItem01);
+        foodItem01 = commodityService.create(foodItem01);
+        createCoversForCommodity(foodItem01.getId());
+        createSampleMessagesForCommodity(foodItem01.getId());
+        sampleCommodities.add(foodItem01);
 
         Commodity foodItem02 = new Commodity();
         foodItem02.setTitle("韩国进口零食品乐天红加纳牛奶巧克力块90g 情人节喜糖年货糖果");
@@ -224,7 +260,10 @@ public class InitData {
         List<Tag> foodItem02Tags = new ArrayList<Tag>();
         foodItem02Tags.add(categoryTags.get(0));
         foodItem02.setTags(foodItem02Tags);
-        commodityService.create(foodItem02);
+        foodItem02 = commodityService.create(foodItem02);
+        createCoversForCommodity(foodItem02.getId());
+        createSampleMessagesForCommodity(foodItem02.getId());
+        sampleCommodities.add(foodItem02);
 
         Commodity foodItem03 = new Commodity();
         foodItem03.setTitle("意大利费列罗巧克力威化果仁金莎巧克力礼盒装费雷罗进口零食24粒");
@@ -236,7 +275,10 @@ public class InitData {
         List<Tag> foodItem03Tags = new ArrayList<Tag>();
         foodItem03Tags.add(categoryTags.get(0));
         foodItem03.setTags(foodItem03Tags);
-        commodityService.create(foodItem03);
+        foodItem03 = commodityService.create(foodItem03);
+        createCoversForCommodity(foodItem03.getId());
+        createSampleMessagesForCommodity(foodItem03.getId());
+        sampleCommodities.add(foodItem03);
 
         Commodity foodItem04 = new Commodity();
         foodItem04.setTitle("泰国进口小老板即食海苔烤紫菜卷原味辣味套餐36g袋装9gX6条");
@@ -248,7 +290,10 @@ public class InitData {
         List<Tag> foodItem04Tags = new ArrayList<Tag>();
         foodItem04Tags.add(categoryTags.get(0));
         foodItem04.setTags(foodItem04Tags);
-        commodityService.create(foodItem04);
+        foodItem04 = commodityService.create(foodItem04);
+        createCoversForCommodity(foodItem04.getId());
+        createSampleMessagesForCommodity(foodItem04.getId());
+        sampleCommodities.add(foodItem04);
 
         Commodity foodItem05 = new Commodity();
         foodItem05.setTitle("意大利原装进口 可意奇 奶油圈饼干300g 营养健康 早餐必备");
@@ -260,7 +305,9 @@ public class InitData {
         List<Tag> foodItem05Tags = new ArrayList<Tag>();
         foodItem05Tags.add(categoryTags.get(0));
         foodItem05.setTags(foodItem05Tags);
-        commodityService.create(foodItem05);
+        foodItem05 = commodityService.create(foodItem05);
+        createCoversForCommodity(foodItem05.getId());
+        createSampleMessagesForCommodity(foodItem05.getId());
 
         Commodity foodItem06 = new Commodity();
         foodItem06.setTitle("进口乐事薯片 墨西哥原装 Lay's原味/咸酸味薯片163g罐装进口薯片");
@@ -272,7 +319,9 @@ public class InitData {
         List<Tag> foodItem06Tags = new ArrayList<Tag>();
         foodItem06Tags.add(categoryTags.get(0));
         foodItem06.setTags(foodItem06Tags);
-        commodityService.create(foodItem06);
+        foodItem06 = commodityService.create(foodItem06);
+        createCoversForCommodity(foodItem06.getId());
+        createSampleMessagesForCommodity(foodItem06.getId());
 
         // insert the application Commodity
         Commodity appItem01 = new Commodity();
@@ -285,7 +334,9 @@ public class InitData {
         List<Tag> appItem01Tags = new ArrayList<Tag>();
         appItem01Tags.add(categoryTags.get(1));
         appItem01.setTags(appItem01Tags);
-        commodityService.create(appItem01);
+        appItem01 = commodityService.create(appItem01);
+        createCoversForCommodity(appItem01.getId());
+        createSampleMessagesForCommodity(appItem01.getId());
 
         Commodity appItem02 = new Commodity();
         appItem02.setTitle("小米官方旗舰店MIUI/小米 小米手机4 小米4代 MI4智能4G手机包邮");
@@ -297,7 +348,9 @@ public class InitData {
         List<Tag> appItem02Tags = new ArrayList<Tag>();
         appItem02Tags.add(categoryTags.get(1));
         appItem02.setTags(appItem02Tags);
-        commodityService.create(appItem02);
+        appItem02 = commodityService.create(appItem02);
+        createCoversForCommodity(appItem02.getId());
+        createSampleMessagesForCommodity(appItem02.getId());
 
         Commodity appItem03 = new Commodity();
         appItem03.setTitle("小米官方旗舰店MIUI/小米 红米Note 4G增强版移动版大屏智能手机");
@@ -309,7 +362,9 @@ public class InitData {
         List<Tag> appItem03Tags = new ArrayList<Tag>();
         appItem03Tags.add(categoryTags.get(1));
         appItem03.setTags(appItem03Tags);
-        commodityService.create(appItem03);
+        appItem03 = commodityService.create(appItem03);
+        createCoversForCommodity(appItem03.getId());
+        createSampleMessagesForCommodity(appItem03.getId());
 
         Commodity appItem04 = new Commodity();
         appItem04.setTitle("【新品首发】skullcandy LOWRIDER 2.0 骷髅头潮流头戴式带麦耳机");
@@ -321,7 +376,9 @@ public class InitData {
         List<Tag> appItem04Tags = new ArrayList<Tag>();
         appItem04Tags.add(categoryTags.get(1));
         appItem04.setTags(appItem04Tags);
-        commodityService.create(appItem04);
+        appItem04 = commodityService.create(appItem04);
+        createCoversForCommodity(appItem04.getId());
+        createSampleMessagesForCommodity(appItem04.getId());
 
         Commodity appItem05 = new Commodity();
         appItem05.setTitle("Toshiba/东芝 48L3350C 48英寸3D网络WiFi高清液晶电视平板电视");
@@ -333,7 +390,9 @@ public class InitData {
         List<Tag> appItem05Tags = new ArrayList<Tag>();
         appItem05Tags.add(categoryTags.get(1));
         appItem05.setTags(appItem05Tags);
-        commodityService.create(appItem05);
+        appItem05 = commodityService.create(appItem05);
+        createCoversForCommodity(appItem05.getId());
+        createSampleMessagesForCommodity(appItem05.getId());
 
         Commodity appItem06 = new Commodity();
         appItem06.setTitle("Haier/海尔 BC/BD-102HT/家用小冰柜 冷柜/大冷冻/冷藏冷冻省电");
@@ -345,7 +404,9 @@ public class InitData {
         List<Tag> appItem06Tags = new ArrayList<Tag>();
         appItem06Tags.add(categoryTags.get(1));
         appItem06.setTags(appItem06Tags);
-        commodityService.create(appItem06);
+        appItem06 = commodityService.create(appItem06);
+        createCoversForCommodity(appItem06.getId());
+        createSampleMessagesForCommodity(appItem06.getId());
 
         // insert the clothing Commodity
         Commodity clothingItem01 = new Commodity();
@@ -358,7 +419,9 @@ public class InitData {
         List<Tag> clothingItem01Tags = new ArrayList<Tag>();
         clothingItem01Tags.add(categoryTags.get(2));
         clothingItem01.setTags(clothingItem01Tags);
-        commodityService.create(clothingItem01);
+        clothingItem01 = commodityService.create(clothingItem01);
+        createCoversForCommodity(clothingItem01.getId());
+        createSampleMessagesForCommodity(clothingItem01.getId());
 
         Commodity clothingItem02 = new Commodity();
         clothingItem02.setTitle("2014冬装新款羽绒服女卡伦艾莎中长款修身韩版加厚毛领女装外套潮");
@@ -370,7 +433,9 @@ public class InitData {
         List<Tag> clothingItem02Tags = new ArrayList<Tag>();
         clothingItem02Tags.add(categoryTags.get(2));
         clothingItem02.setTags(clothingItem02Tags);
-        commodityService.create(clothingItem02);
+        clothingItem02 = commodityService.create(clothingItem02);
+        createCoversForCommodity(clothingItem02.getId());
+        createSampleMessagesForCommodity(clothingItem02.getId());
 
         Commodity clothingItem03 = new Commodity();
         clothingItem03.setTitle("苏醒的乐园 羽绒服女中长款加厚2015新款韩范潮奢华羽绒衣YRF859");
@@ -382,7 +447,9 @@ public class InitData {
         List<Tag> clothingItem03Tags = new ArrayList<Tag>();
         clothingItem03Tags.add(categoryTags.get(2));
         clothingItem03.setTags(clothingItem03Tags);
-        commodityService.create(clothingItem03);
+        clothingItem03 = commodityService.create(clothingItem03);
+        createCoversForCommodity(clothingItem03.getId());
+        createSampleMessagesForCommodity(clothingItem03.getId());
 
         Commodity clothingItem04 = new Commodity();
         clothingItem04.setTitle("tune tune春装新款2015淑女波点提花圆领荷叶边A字裙九分袖连衣裙");
@@ -394,7 +461,9 @@ public class InitData {
         List<Tag> clothingItem04Tags = new ArrayList<Tag>();
         clothingItem04Tags.add(categoryTags.get(2));
         clothingItem04.setTags(clothingItem04Tags);
-        commodityService.create(clothingItem04);
+        clothingItem04 = commodityService.create(clothingItem04);
+        createCoversForCommodity(clothingItem04.getId());
+        createSampleMessagesForCommodity(clothingItem04.getId());
 
         Commodity clothingItem05 = new Commodity();
         clothingItem05.setTitle("逸阳女裤2015新款春季女士黑色牛仔裤女小脚裤大码铅笔裤长裤0680");
@@ -406,7 +475,9 @@ public class InitData {
         List<Tag> clothingItem05Tags = new ArrayList<Tag>();
         clothingItem05Tags.add(categoryTags.get(2));
         clothingItem05.setTags(clothingItem05Tags);
-        commodityService.create(clothingItem05);
+        clothingItem05 = commodityService.create(clothingItem05);
+        createCoversForCommodity(clothingItem05.getId());
+        createSampleMessagesForCommodity(clothingItem05.getId());
 
         Commodity clothingItem06 = new Commodity();
         clothingItem06.setTitle("布依美2015春季新款长袖衬衫韩版时尚宽松简约中长款白色衬衫女春");
@@ -418,7 +489,9 @@ public class InitData {
         List<Tag> clothingItem06Tags = new ArrayList<Tag>();
         clothingItem06Tags.add(categoryTags.get(2));
         clothingItem06.setTags(clothingItem06Tags);
-        commodityService.create(clothingItem06);
+        clothingItem06 = commodityService.create(clothingItem06);
+        createCoversForCommodity(clothingItem06.getId());
+        createSampleMessagesForCommodity(clothingItem06.getId());
 
         // insert the shoes Commodity
         Commodity shoesItem01 = new Commodity();
@@ -431,7 +504,9 @@ public class InitData {
         List<Tag> shoesItem01Tags = new ArrayList<Tag>();
         shoesItem01Tags.add(categoryTags.get(3));
         shoesItem01.setTags(shoesItem01Tags);
-        commodityService.create(shoesItem01);
+        shoesItem01 = commodityService.create(shoesItem01);
+        createCoversForCommodity(shoesItem01.getId());
+        createSampleMessagesForCommodity(shoesItem01.getId());
 
         Commodity shoesItem02 = new Commodity();
         shoesItem02.setTitle("康莉comely2014年秋季新款低跟水钻单鞋 时尚浅口金色休闲女鞋");
@@ -443,7 +518,9 @@ public class InitData {
         List<Tag> shoesItem02Tags = new ArrayList<Tag>();
         shoesItem02Tags.add(categoryTags.get(3));
         shoesItem02.setTags(shoesItem02Tags);
-        commodityService.create(shoesItem02);
+        shoesItem02 = commodityService.create(shoesItem02);
+        createCoversForCommodity(shoesItem02.getId());
+        createSampleMessagesForCommodity(shoesItem02.getId());
 
         Commodity shoesItem03 = new Commodity();
         shoesItem03.setTitle("exull依思q2015春季新款真皮拼色高跟内增高高帮鞋女鞋子15155144");
@@ -455,7 +532,9 @@ public class InitData {
         List<Tag> shoesItem03Tags = new ArrayList<Tag>();
         shoesItem03Tags.add(categoryTags.get(3));
         shoesItem03.setTags(shoesItem03Tags);
-        commodityService.create(shoesItem03);
+        shoesItem03 = commodityService.create(shoesItem03);
+        createCoversForCommodity(shoesItem03.getId());
+        createSampleMessagesForCommodity(shoesItem03.getId());
 
         Commodity shoesItem04 = new Commodity();
         shoesItem04.setTitle("低调女人2014秋季纯色休闲鞋女板鞋韩版潮流透气运动女鞋内增高鞋");
@@ -467,7 +546,9 @@ public class InitData {
         List<Tag> shoesItem04Tags = new ArrayList<Tag>();
         shoesItem04Tags.add(categoryTags.get(3));
         shoesItem04.setTags(shoesItem04Tags);
-        commodityService.create(shoesItem04);
+        shoesItem04 = commodityService.create(shoesItem04);
+        createCoversForCommodity(shoesItem04.getId());
+        createSampleMessagesForCommodity(shoesItem04.getId());
 
         Commodity shoesItem05 = new Commodity();
         shoesItem05.setTitle("2015春季新款honeyGIRL甜美女鞋蝴蝶结高跟鞋女细跟尖头浅口单鞋");
@@ -479,7 +560,9 @@ public class InitData {
         List<Tag> shoesItem05Tags = new ArrayList<Tag>();
         shoesItem05Tags.add(categoryTags.get(3));
         shoesItem05.setTags(shoesItem05Tags);
-        commodityService.create(shoesItem05);
+        shoesItem05 = commodityService.create(shoesItem05);
+        createCoversForCommodity(shoesItem05.getId());
+        createSampleMessagesForCommodity(shoesItem05.getId());
 
         Commodity shoesItem06 = new Commodity();
         shoesItem06.setTitle("2015春秋新款潮女鞋手工鞋子真皮休闲平底皮鞋英伦大头鞋平跟单鞋");
@@ -491,7 +574,9 @@ public class InitData {
         List<Tag> shoesItem06Tags = new ArrayList<Tag>();
         shoesItem06Tags.add(categoryTags.get(3));
         shoesItem06.setTags(shoesItem06Tags);
-        commodityService.create(shoesItem06);
+        shoesItem06 = commodityService.create(shoesItem06);
+        createCoversForCommodity(shoesItem06.getId());
+        createSampleMessagesForCommodity(shoesItem06.getId());
 
         // insert the bag Commodity
         Commodity bagItem01 = new Commodity();
@@ -504,7 +589,8 @@ public class InitData {
         List<Tag> bagItem01Tags = new ArrayList<Tag>();
         bagItem01Tags.add(categoryTags.get(4));
         bagItem01.setTags(bagItem01Tags);
-        commodityService.create(bagItem01);
+        bagItem01 = commodityService.create(bagItem01);
+        createCoversForCommodity(bagItem01.getId());
 
         Commodity bagItem02 = new Commodity();
         bagItem02.setTitle("朱尔原创新款包包手提包 女士时尚牛皮女包 波士顿枕头包单肩斜跨");
@@ -516,7 +602,9 @@ public class InitData {
         List<Tag> bagItem02Tags = new ArrayList<Tag>();
         bagItem02Tags.add(categoryTags.get(4));
         bagItem02.setTags(bagItem02Tags);
-        commodityService.create(bagItem02);
+        bagItem02 = commodityService.create(bagItem02);
+        createCoversForCommodity(bagItem02.getId());
+        createSampleMessagesForCommodity(bagItem02.getId());
 
         Commodity bagItem03 = new Commodity();
         bagItem03.setTitle("朱尔鳄鱼纹真皮女包大包 时尚头层牛皮女士包包 新款女单肩手提包");
@@ -528,7 +616,9 @@ public class InitData {
         List<Tag> bagItem03Tags = new ArrayList<Tag>();
         bagItem03Tags.add(categoryTags.get(4));
         bagItem03.setTags(bagItem03Tags);
-        commodityService.create(bagItem03);
+        bagItem03 = commodityService.create(bagItem03);
+        createCoversForCommodity(bagItem03.getId());
+        createSampleMessagesForCommodity(bagItem03.getId());
 
         Commodity bagItem04 = new Commodity();
         bagItem04.setTitle("袋黛安正品万向轮行李箱20/24/26拉杆箱包旅行箱28寸托运箱子男女");
@@ -540,7 +630,9 @@ public class InitData {
         List<Tag> bagItem04Tags = new ArrayList<Tag>();
         bagItem04Tags.add(categoryTags.get(4));
         bagItem04.setTags(bagItem04Tags);
-        commodityService.create(bagItem04);
+        bagItem04 = commodityService.create(bagItem04);
+        createCoversForCommodity(bagItem04.getId());
+        createSampleMessagesForCommodity(bagItem04.getId());
 
         Commodity bagItem05 = new Commodity();
         bagItem05.setTitle("袋黛安万向轮PC拉杆箱20寸旅行箱密码箱29寸行李箱包男女托运箱子");
@@ -552,7 +644,9 @@ public class InitData {
         List<Tag> bagItem05Tags = new ArrayList<Tag>();
         bagItem05Tags.add(categoryTags.get(4));
         bagItem05.setTags(bagItem05Tags);
-        commodityService.create(bagItem05);
+        bagItem05 = commodityService.create(bagItem05);
+        createCoversForCommodity(bagItem05.getId());
+        createSampleMessagesForCommodity(bagItem05.getId());
 
         Commodity bagItem06 = new Commodity();
         bagItem06.setTitle("F瑞士军刀威戈wenger双肩背包男女电脑背包商务背包旅行学生背包");
@@ -564,7 +658,9 @@ public class InitData {
         List<Tag> bagItem06Tags = new ArrayList<Tag>();
         bagItem06Tags.add(categoryTags.get(4));
         bagItem06.setTags(bagItem06Tags);
-        commodityService.create(bagItem06);
+        bagItem06 = commodityService.create(bagItem06);
+        createCoversForCommodity(bagItem06.getId());
+        createSampleMessagesForCommodity(bagItem06.getId());
 
         // insert the book Commodity
         Commodity bookItem01 = new Commodity();
@@ -577,7 +673,9 @@ public class InitData {
         List<Tag> bookItem01Tags = new ArrayList<Tag>();
         bookItem01Tags.add(categoryTags.get(5));
         bookItem01.setTags(bookItem01Tags);
-        commodityService.create(bookItem01);
+        bookItem01 = commodityService.create(bookItem01);
+        createCoversForCommodity(bookItem01.getId());
+        createSampleMessagesForCommodity(bookItem01.getId());
 
         Commodity bookItem02 = new Commodity();
         bookItem02.setTitle("【当当网】正版包邮 追风筝的人 胡塞尼 小说 首部中文畅销书籍 两千万读者口耳相传 快乐大本营 高圆圆力荐 当当网旗舰店");
@@ -589,7 +687,9 @@ public class InitData {
         List<Tag> bookItem02Tags = new ArrayList<Tag>();
         bookItem02Tags.add(categoryTags.get(5));
         bookItem02.setTags(bookItem02Tags);
-        commodityService.create(bookItem02);
+        bookItem02 = commodityService.create(bookItem02);
+        createCoversForCommodity(bookItem02.getId());
+        createSampleMessagesForCommodity(bookItem02.getId());
 
         Commodity bookItem03 = new Commodity();
         bookItem03.setTitle("包邮正版现货！101个有科学根据的减肥小偏方 邱正宏教你越吃越瘦的101个减肥的秘密！");
@@ -601,7 +701,9 @@ public class InitData {
         List<Tag> bookItem03Tags = new ArrayList<Tag>();
         bookItem03Tags.add(categoryTags.get(5));
         bookItem03.setTags(bookItem03Tags);
-        commodityService.create(bookItem03);
+        bookItem03 = commodityService.create(bookItem03);
+        createCoversForCommodity(bookItem03.getId());
+        createSampleMessagesForCommodity(bookItem03.getId());
 
         Commodity bookItem04 = new Commodity();
         bookItem04.setTitle("拍下8.8赠书 现货星火英语四级真题/CET4级 大学英语四级 (10套真题详解+标准预测4级)英语四级真题试卷 四级英语听力作文词汇翻译");
@@ -613,7 +715,9 @@ public class InitData {
         List<Tag> bookItem04Tags = new ArrayList<Tag>();
         bookItem04Tags.add(categoryTags.get(5));
         bookItem04.setTags(bookItem04Tags);
-        commodityService.create(bookItem04);
+        bookItem04 = commodityService.create(bookItem04);
+        createCoversForCommodity(bookItem04.getId());
+        createSampleMessagesForCommodity(bookItem04.getId());
 
         Commodity bookItem05 = new Commodity();
         bookItem05.setTitle("星火备考2015年6月大学英语四级/CET4级考试改革新题型全真试题+标准模拟(12套真题+5套模拟)词汇写作文听力英语四级真题卷预测");
@@ -625,7 +729,9 @@ public class InitData {
         List<Tag> bookItem05Tags = new ArrayList<Tag>();
         bookItem05Tags.add(categoryTags.get(5));
         bookItem05.setTags(bookItem05Tags);
-        commodityService.create(bookItem05);
+        bookItem05 = commodityService.create(bookItem05);
+        createCoversForCommodity(bookItem05.getId());
+        createSampleMessagesForCommodity(bookItem05.getId());
 
         Commodity bookItem06 = new Commodity();
         bookItem06.setTitle("现货星火大学英语四级/CET4级考试改革新题型点评历年真题试卷(10套真题+30篇作文+15套听力+50篇翻译+2000词汇)");
@@ -637,6 +743,123 @@ public class InitData {
         List<Tag> bookItem06Tags = new ArrayList<Tag>();
         bookItem06Tags.add(categoryTags.get(5));
         bookItem06.setTags(bookItem06Tags);
-        commodityService.create(bookItem06);
+        bookItem06 = commodityService.create(bookItem06);
+        createCoversForCommodity(bookItem06.getId());
+        createSampleMessagesForCommodity(bookItem06.getId());
+    }
+
+    private void createSampleImages() {
+        String path = ConfigManagmentUtil.getConfigProperties(Constants.IMAGE_STORAGE_BASE_PATH);
+        Image image1 = new Image();
+        image1.setUri(path + "/01.jpg");
+        image1.setTitle("Test1");
+        image1.setDescription("for test - 1");
+        image1.setUserId(standardAdmin.getId());
+        sampleImageList.add(imageService.create(image1));
+
+        Image image2 = new Image();
+        image2.setUri(path + "/02.jpg");
+        image2.setTitle("Test2");
+        image2.setDescription("for test - 2");
+        image2.setUserId(standardAdmin.getId());
+        sampleImageList.add(imageService.create(image2));
+
+        Image image3 = new Image();
+        image3.setUri(path + "/03.jpg");
+        image3.setTitle("Test3");
+        image3.setDescription("for test - 3");
+        image3.setUserId(standardAdmin.getId());
+        sampleImageList.add(imageService.create(image3));
+    }
+
+    private void createCoversForCommodity(String commodityId) {
+        Cover cover1 = new Cover();
+        cover1.setCommodityId(commodityId);
+        cover1.setImageId(sampleImageList.get(0).getId());
+        cover1.setMainCoverYN("Y");
+        cover1.setDisplaySequence(0);
+        coverService.create(cover1);
+
+        Cover cover2 = new Cover();
+        cover2.setCommodityId(commodityId);
+        cover2.setImageId(sampleImageList.get(1).getId());
+        cover2.setDisplaySequence(1);
+        coverService.create(cover2);
+
+        Cover cover3 = new Cover();
+        cover3.setCommodityId(commodityId);
+        cover3.setImageId(sampleImageList.get(2).getId());
+        cover3.setDisplaySequence(2);
+        coverService.create(cover3);
+    }
+
+    private void createSampleMessagesForCommodity(String commodityId) {
+        Message message1 = new Message();
+        message1.setCommodityId(commodityId);
+        message1.setContent("测试信息1");
+        message1.setFloor(1);
+        message1.setUserId(standardUser.getId());
+        message1.setUserName(standardUser.getUserName());
+        message1 = messageService.create(message1);
+
+        Message message1r = new Message();
+        message1r.setCommodityId(commodityId);
+        message1r.setContent("测试信息1-回复");
+        message1r.setFloor(1);
+        message1r.setUserId(standardUser.getId());
+        message1r.setUserName(standardUser.getUserName());
+        message1r.setParentId(message1.getId());
+        messageService.create(message1r);
+
+        Message message2 = new Message();
+        message2.setCommodityId(commodityId);
+        message2.setContent("测试信息2");
+        message2.setFloor(1);
+        message2.setUserId(standardUser.getId());
+        message2.setUserName(standardUser.getUserName());
+        messageService.create(message2);
+    }
+
+    private void createSampleSlices() {
+        Slice slice1 = new Slice();
+        slice1.setImageId(sampleImageList.get(0).getId());
+        slice1.setCommodityId(sampleCommodities.get(0).getId());
+        slice1.setDisplaySequence(0);
+        slice1.setDescription("test slice 1");
+        sliceService.create(slice1);
+
+        Slice slice2 = new Slice();
+        slice2.setImageId(sampleImageList.get(1).getId());
+        slice2.setCommodityId(sampleCommodities.get(1).getId());
+        slice2.setDisplaySequence(1);
+        slice2.setDescription("test slice 2");
+        sliceService.create(slice2);
+
+        Slice slice3 = new Slice();
+        slice3.setImageId(sampleImageList.get(2).getId());
+        slice3.setCommodityId(sampleCommodities.get(2).getId());
+        slice3.setDisplaySequence(2);
+        slice3.setDescription("test slice 3");
+        sliceService.create(slice3);
+    }
+
+    private void createSampleHots() {
+        Hot hot1 = new Hot();
+        hot1.setCommodityId(sampleCommodities.get(0).getId());
+        hot1.setImageId(sampleImageList.get(0).getId());
+        hot1.setDisplaySequence(0);
+        hotService.create(hot1);
+
+        Hot hot2 = new Hot();
+        hot2.setCommodityId(sampleCommodities.get(1).getId());
+        hot2.setImageId(sampleImageList.get(1).getId());
+        hot2.setDisplaySequence(1);
+        hotService.create(hot2);
+
+        Hot hot3 = new Hot();
+        hot3.setCommodityId(sampleCommodities.get(2).getId());
+        hot3.setImageId(sampleImageList.get(2).getId());
+        hot3.setDisplaySequence(2);
+        hotService.create(hot3);
     }
 }

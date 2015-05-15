@@ -23,7 +23,6 @@ import com.ntu.igts.enums.ActiveStateEnum;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
-import com.ntu.igts.exception.UnAuthorizedException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.SessionContext;
@@ -226,7 +225,7 @@ public class UserResource extends BaseResource {
         if (user != null) {
             return JsonUtil.getJsonStringFromPojo(user);
         } else {
-            throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
+            return JsonUtil.getJsonStringFromPojo(new User());
         }
     }
 
@@ -234,7 +233,7 @@ public class UserResource extends BaseResource {
     @Path("totalcount")
     @Produces(MediaType.TEXT_PLAIN)
     public int getTotalCount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
-        filterSessionContext(token, RoleEnum.ADMIN);
+        filterSessionContext(token, RoleEnum.ALL);
         return userService.getTotalCount();
     }
 

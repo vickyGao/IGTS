@@ -145,7 +145,7 @@ public class TagResource extends BaseResource {
     @Path("totalcount")
     @Produces(MediaType.TEXT_PLAIN)
     public int getTotalCount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
-        filterSessionContext(token, RoleEnum.ADMIN);
+        filterSessionContext(token, RoleEnum.ALL);
         return tagService.getTotalCount();
     }
 

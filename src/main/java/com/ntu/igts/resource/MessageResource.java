@@ -104,6 +104,22 @@ public class MessageResource extends BaseResource {
         return JsonUtil.getJsonStringFromPojo(pagination);
     }
 
+    @GET
+    @Path("admin/entity")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getMessagesForCommodityForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @QueryParam("page") int currentPage, @QueryParam("size") int pageSize,
+                    @QueryParam("commodityid") String commodityId) {
+        filterSessionContext(token, RoleEnum.ADMIN);
+        Page<Message> page = messageService.getPaginatedMessagesByCommodity(currentPage, pageSize, commodityId);
+        Pagination<Message> pagination = new Pagination<Message>();
+        pagination.setContent(page.getContent());
+        pagination.setCurrentPage(page.getNumber());
+        pagination.setPageCount(page.getTotalPages());
+        pagination.setTotalCount(page.getNumberOfElements());
+        return JsonUtil.getJsonStringFromPojo(pagination);
+    }
+
     private Message checkMessageAvailability(String messageId) {
         Message existingMessage = messageService.getById(messageId);
         if (existingMessage == null) {

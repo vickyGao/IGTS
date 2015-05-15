@@ -163,7 +163,7 @@ public class ImageResource extends BaseResource {
     @Path("location")
     @Produces(MediaType.TEXT_PLAIN)
     public String getStoragePath(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
-        filterSessionContext(token, RoleEnum.USER);
+        filterSessionContext(token, RoleEnum.ALL);
         String path = ConfigManagmentUtil.getConfigProperties(Constants.IMAGE_STORAGE_BASE_PATH);
         File file = new File(path);
         if (!file.exists()) {
@@ -176,7 +176,7 @@ public class ImageResource extends BaseResource {
     @Path("admin/location")
     @Produces(MediaType.TEXT_PLAIN)
     public String getStoragePathForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
-        filterSessionContext(token, RoleEnum.ADMIN);
+        filterSessionContext(token, RoleEnum.ALL);
         String path = ConfigManagmentUtil.getConfigProperties(Constants.IMAGE_STORAGE_BASE_PATH);
         File file = new File(path);
         if (!file.exists()) {
@@ -241,7 +241,7 @@ public class ImageResource extends BaseResource {
     @Path("managedamount")
     @Produces(MediaType.TEXT_PLAIN)
     public int getTotalManagedImageAmount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
-        filterSessionContext(token, RoleEnum.ADMIN);
+        filterSessionContext(token, RoleEnum.ALL);
         return imageService.getTotalCount();
     }
 

@@ -2,6 +2,7 @@ package com.ntu.igts.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -39,6 +40,9 @@ public class Message extends BaseModel implements Serializable {
     @Column(name = "user_name")
     @JsonProperty("username")
     private String userName;
+    @Column(name = "message_time", updatable = false)
+    @JsonProperty("messagetime")
+    private Date messageTime;
     @Transient
     @JsonProperty("messages")
     private List<Message> messages = new ArrayList<Message>();
@@ -89,6 +93,14 @@ public class Message extends BaseModel implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Date getMessageTime() {
+        return messageTime;
+    }
+
+    public void setMessageTime(Date messageTime) {
+        this.messageTime = messageTime;
     }
 
     public List<Message> getMessages() {

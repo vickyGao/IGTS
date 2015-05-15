@@ -1,5 +1,6 @@
 package com.ntu.igts.services.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,8 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public Message create(Message message) {
+        Date currentDate = new Date();
+        message.setMessageTime(currentDate);
         return messageRepository.create(message);
     }
 

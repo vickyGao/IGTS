@@ -6,6 +6,7 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
+import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.utils.JdbcUtil;
 
 public class InitDb {
@@ -17,7 +18,7 @@ public class InitDb {
         createDatabase();
     }
 
-    private static void deleteDatabase() {
+    public static void deleteDatabase() {
         String sql = "DROP DATABASE `idle_goods_trading_system`";
         try {
             Connection conn = JdbcUtil.getConnection();
@@ -30,7 +31,7 @@ public class InitDb {
         }
     }
 
-    private static void createDatabase() {
+    public static void createDatabase() {
         String sql = "CREATE DATABASE `idle_goods_trading_system`";
         try {
             Connection conn = JdbcUtil.getConnection();
@@ -40,6 +41,7 @@ public class InitDb {
             logger.info("Created database idle_goods_trading_system");
         } catch (SQLException e) {
             logger.error("Create database idle_goods_trading_system failed", e);
+            throw new ServiceErrorException("Create data base failed", e);
         }
     }
 }
