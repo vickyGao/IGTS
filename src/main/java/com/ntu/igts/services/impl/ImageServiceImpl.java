@@ -72,4 +72,9 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.getTotalCouont();
     }
 
+    @Override
+    public List<Image> getAll() {
+        return imageRepository.findAll();
+    }
+
 }
