@@ -158,7 +158,7 @@ public class ImageResource extends BaseResource {
         List<Image> images = imageService.getImagesByUserId(sessionContext.getUserId());
         return JsonUtil.getJsonStringFromPojo(new ImageList(images));
     }
-    
+
     @GET
     @Path("admin/entity/token")
     @Produces(MediaType.APPLICATION_JSON)

@@ -25,7 +25,7 @@ public class CommodityTagFilterFactory {
 
     @Factory
     public Filter getFilter() {
-        Query query = new TermQuery(new Term("tags.id", tagId.toLowerCase()));
+        Query query = new TermQuery(new Term("tags.id", tagId));
         return new CachingWrapperFilter(new QueryWrapperFilter(query));
     }
 

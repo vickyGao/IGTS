@@ -25,7 +25,7 @@ public class CommodityDistrictFilterFactory {
 
     @Factory
     public Filter getFilter() {
-        Query query = new TermQuery(new Term("district", district.toLowerCase()));
+        Query query = new TermQuery(new Term("district", district));
         return new CachingWrapperFilter(new QueryWrapperFilter(query));
     }
 

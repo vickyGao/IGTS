@@ -58,6 +58,7 @@ public class Commodity extends BaseModel implements Serializable {
     @Column(name = "description")
     @JsonProperty("description")
     private String description;
+    @Field(analyze = Analyze.NO)
     @Column(name = "active_yn", columnDefinition = "VARCHAR(2)")
     @JsonProperty("activeyn")
     private String activeYN = "Y";

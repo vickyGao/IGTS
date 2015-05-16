@@ -25,7 +25,7 @@ public class CommodityActiveYnFilterFactory {
 
     @Factory
     public Filter getFilter() {
-        Query query = new TermQuery(new Term("activeYN", activeYN.toLowerCase()));
+        Query query = new TermQuery(new Term("activeYN", activeYN));
         return new CachingWrapperFilter(new QueryWrapperFilter(query));
     }
 

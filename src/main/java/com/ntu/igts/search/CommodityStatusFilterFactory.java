@@ -25,7 +25,7 @@ public class CommodityStatusFilterFactory {
 
     @Factory
     public Filter getFilter() {
-        Query query = new TermQuery(new Term("status", status.toLowerCase()));
+        Query query = new TermQuery(new Term("status", status));
         return new CachingWrapperFilter(new QueryWrapperFilter(query));
     }
 
