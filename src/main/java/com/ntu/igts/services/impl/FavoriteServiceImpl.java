@@ -8,8 +8,6 @@ import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
@@ -24,19 +22,16 @@ public class FavoriteServiceImpl implements FavoriteService {
     private FavoriteRepository favoriteRepository;
 
     @Override
-    @Transactional
     public Favorite create(Favorite favorite) {
         return favoriteRepository.create(favorite);
     }
 
     @Override
-    @Transactional
     public Favorite update(Favorite favorite) {
         return favoriteRepository.update(favorite);
     }
 
     @Override
-    @Transactional
     public boolean delete(String favoriteId) {
         favoriteRepository.delete(favoriteId);
         Favorite favorite = favoriteRepository.findById(favoriteId);

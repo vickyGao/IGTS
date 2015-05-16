@@ -5,8 +5,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Commodity;
@@ -26,19 +24,16 @@ public class CustomModuleServiceImpl implements CustomModuleService {
     private CommodityService commodityService;
 
     @Override
-    @Transactional
     public CustomModule create(CustomModule customModule) {
         return customModuleRepository.create(customModule);
     }
 
     @Override
-    @Transactional
     public CustomModule update(CustomModule customModule) {
         return customModuleRepository.update(customModule);
     }
 
     @Override
-    @Transactional
     public boolean delete(String customModuleId) {
         customModuleRepository.delete(customModuleId);
         CustomModule customModule = customModuleRepository.findById(customModuleId);

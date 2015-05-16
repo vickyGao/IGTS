@@ -9,8 +9,6 @@ import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
@@ -25,7 +23,6 @@ public class MessageServiceImpl implements MessageService {
     private MessageRepository messageRepository;
 
     @Override
-    @Transactional
     public Message create(Message message) {
         Date currentDate = new Date();
         message.setMessageTime(currentDate);
@@ -33,13 +30,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    @Transactional
     public Message update(Message message) {
         return messageRepository.update(message);
     }
 
     @Override
-    @Transactional
     public boolean delete(String messageId) {
         messageRepository.delete(messageId);
         Message message = messageRepository.findById(messageId);

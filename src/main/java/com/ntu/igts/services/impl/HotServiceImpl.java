@@ -5,8 +5,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.model.Hot;
 import com.ntu.igts.repository.HotRepository;
 import com.ntu.igts.services.CommodityService;
@@ -24,19 +22,16 @@ public class HotServiceImpl implements HotService {
     private ImageService imageService;
 
     @Override
-    @Transactional
     public Hot create(Hot hot) {
         return hotRepository.create(hot);
     }
 
     @Override
-    @Transactional
     public Hot update(Hot hot) {
         return hotRepository.update(hot);
     }
 
     @Override
-    @Transactional
     public boolean delete(String hotCommodityId) {
         hotRepository.delete(hotCommodityId);
         Hot hot = hotRepository.findById(hotCommodityId);

@@ -7,8 +7,6 @@ import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.enums.SortByEnum;
@@ -35,7 +33,6 @@ public class AdminServiceImpl implements AdminService {
     private RoleService roleService;
 
     @Override
-    @Transactional
     public Admin create(Admin admin) {
         admin.setAdminPassword(MD5Util.getMd5(admin.getAdminPassword()));
         Admin insertedAdmin = adminRepository.create(admin);
@@ -53,14 +50,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
     public Admin update(Admin admin) {
         admin.setAdminPassword(MD5Util.getMd5(admin.getAdminPassword()));
         return adminRepository.update(admin);
     }
 
     @Override
-    @Transactional
     public boolean delete(String adminId) {
         adminRepository.delete(adminId);
         ;

@@ -5,8 +5,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.model.Cover;
 import com.ntu.igts.repository.CoverRepository;
 import com.ntu.igts.services.CoverService;
@@ -21,19 +19,16 @@ public class CoverServiceImpl implements CoverService {
     private ImageService imageService;
 
     @Override
-    @Transactional
     public Cover create(Cover cover) {
         return coverRepository.create(cover);
     }
 
     @Override
-    @Transactional
     public Cover update(Cover cover) {
         return coverRepository.update(cover);
     }
 
     @Override
-    @Transactional
     public boolean delete(String coverId) {
         coverRepository.delete(coverId);
         Cover cover = coverRepository.findById(coverId);

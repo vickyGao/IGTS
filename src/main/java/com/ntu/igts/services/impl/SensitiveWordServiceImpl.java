@@ -6,8 +6,6 @@ import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.SensitiveWord;
@@ -23,19 +21,16 @@ public class SensitiveWordServiceImpl implements SensitiveWordService {
     private SensitiveWordRepository sensitiveWordRepository;
 
     @Override
-    @Transactional
     public SensitiveWord create(SensitiveWord sensitiveWord) {
         return sensitiveWordRepository.create(sensitiveWord);
     }
 
     @Override
-    @Transactional
     public SensitiveWord update(SensitiveWord sensitiveWord) {
         return sensitiveWordRepository.update(sensitiveWord);
     }
 
     @Override
-    @Transactional
     public boolean delete(String sensitiveWordId) {
         sensitiveWordRepository.delete(sensitiveWordId);
         SensitiveWord sensitiveWord = sensitiveWordRepository.findById(sensitiveWordId);

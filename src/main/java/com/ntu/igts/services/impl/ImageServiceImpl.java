@@ -6,8 +6,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.model.Image;
 import com.ntu.igts.repository.ImageRepository;
 import com.ntu.igts.services.ImageService;
@@ -21,13 +19,11 @@ public class ImageServiceImpl implements ImageService {
     private ImageRepository imageRepository;
 
     @Override
-    @Transactional
     public Image create(Image image) {
         return imageRepository.create(image);
     }
 
     @Override
-    @Transactional
     public Image update(Image image) {
         return imageRepository.update(image);
     }
@@ -38,7 +34,6 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    @Transactional
     public boolean delete(String imageId) {
         imageRepository.delete(imageId);
         Image image = imageRepository.findById(imageId);

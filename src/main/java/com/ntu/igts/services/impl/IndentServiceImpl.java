@@ -8,8 +8,6 @@ import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
@@ -24,19 +22,16 @@ public class IndentServiceImpl implements IndentService {
     private IndentRepository indentRepository;
 
     @Override
-    @Transactional
     public Indent create(Indent indent) {
         return indentRepository.create(indent);
     }
 
     @Override
-    @Transactional
     public Indent update(Indent indent) {
         return indentRepository.update(indent);
     }
 
     @Override
-    @Transactional
     public boolean delete(String indentId) {
         indentRepository.delete(indentId);
         Indent indent = indentRepository.findById(indentId);

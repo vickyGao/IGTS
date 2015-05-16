@@ -5,8 +5,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Slice;
@@ -26,19 +24,16 @@ public class SliceServiceImpl implements SliceService {
     private ImageService imageService;
 
     @Override
-    @Transactional
     public Slice create(Slice slice) {
         return sliceRepository.create(slice);
     }
 
     @Override
-    @Transactional
     public Slice update(Slice slice) {
         return sliceRepository.update(slice);
     }
 
     @Override
-    @Transactional
     public boolean delete(String sliceId) {
         sliceRepository.delete(sliceId);
         Slice slice = sliceRepository.findById(sliceId);
