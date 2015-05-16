@@ -53,7 +53,7 @@ public class MessageResource extends BaseResource {
             pojo.setUserId(sessionContext.getUserId());
         }
         if (StringUtil.isEmpty(pojo.getUserName())) {
-            pojo.setUserId(sessionContext.getUserName());
+           pojo.setUserName(sessionContext.getUserName());
         }
         Message insertedMessage = messageService.create(pojo);
         return JsonUtil.getJsonStringFromPojo(insertedMessage);
