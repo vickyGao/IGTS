@@ -204,8 +204,8 @@ public class CommodityServiceImpl implements CommodityService {
         billService.create(buyerBill);
 
         Bill sellerBill = new Bill();
-        sellerBill.setUserId(buyer.getId());
-        sellerBill.setContent("支出");
+        sellerBill.setUserId(seller.getId());
+        sellerBill.setContent("收入");
         sellerBill.setAmount(totalCommodityMoney);
         billService.create(sellerBill);
         return true;
