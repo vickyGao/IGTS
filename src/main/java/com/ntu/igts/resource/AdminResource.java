@@ -23,6 +23,7 @@ import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
+import com.ntu.igts.exception.UnAuthorizedException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Admin;
@@ -176,7 +177,7 @@ public class AdminResource extends BaseResource {
         if (admin != null) {
             return JsonUtil.getJsonStringFromPojo(admin);
         } else {
-            return JsonUtil.getJsonStringFromPojo(new Admin());
+            throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
         }
     }
 
