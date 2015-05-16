@@ -25,6 +25,7 @@ import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Commodity;
+import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.container.CommodityList;
 import com.ntu.igts.model.container.CommodityQueryResult;
 import com.ntu.igts.model.container.Query;
@@ -222,6 +223,18 @@ public class CommodityResource extends BaseResource {
     public String getAllCommodities(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ADMIN);
         return JsonUtil.getJsonStringFromPojo(new CommodityList(commodityService.getAll()));
+    }
+
+    @POST
+    @Path("purchase/{commodityId}")
+    public void commodityPurchase(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("commodityId") String commodityId) {
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
+        boolean purchaseResult = commodityService.purchase(commodityId, sessionContext.getUserId());
+        if (!purchaseResult) {
+            throw new ServiceWarningException("Purchase failed", MessageKeys.PURCHASE_FAIL);
+        }
+
     }
 
     private Commodity checkCommodityAvailability(String commodityId) {

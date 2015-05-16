@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.ntu.igts.annotations.QueryField;
@@ -60,6 +61,9 @@ public class User extends BaseModel implements Serializable {
     @Column(name = "id_number")
     @JsonProperty("idnumber")
     private String idNumber; // id card number
+    @Column(name = "money")
+    @JsonIgnore
+    private double money;
     @Transient
     @JsonProperty("roles")
     private List<Role> roles = new ArrayList<Role>();
@@ -166,6 +170,14 @@ public class User extends BaseModel implements Serializable {
 
     public void setIdNumber(String idNumber) {
         this.idNumber = idNumber;
+    }
+
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
     }
 
     public List<Role> getRoles() {

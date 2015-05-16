@@ -23,7 +23,7 @@ public class Bill extends BaseModel implements Serializable {
     private String content;
     @Column(name = "amount")
     @JsonProperty("amount")
-    private int amount; // pay: '-', achieve: '+'
+    private double amount; // pay: '-', achieve: '+'
     @Column(name = "user_id", columnDefinition = "VARCHAR(36)")
     @JsonProperty("userid")
     private String userId;
@@ -36,11 +36,11 @@ public class Bill extends BaseModel implements Serializable {
         this.content = content;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

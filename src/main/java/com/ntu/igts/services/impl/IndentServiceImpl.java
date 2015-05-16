@@ -65,4 +65,14 @@ public class IndentServiceImpl implements IndentService {
                         criteriaMap);
     }
 
+    @Override
+    public Indent getByCommodityId(String commodityId) {
+        List<Indent> indentList = indentRepository.getByCommodityId(commodityId);
+        if (indentList.size() >= 1) {
+            return indentList.get(0);
+        } else {
+            return null;
+        }
+    }
+
 }

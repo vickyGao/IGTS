@@ -29,4 +29,6 @@ public interface CommodityService {
     public int getTotalCount();
 
     public List<Commodity> getAll();
+
+    public boolean purchase(String commodityId, String userId);
 }

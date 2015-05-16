@@ -44,6 +44,8 @@ public class MessageKeys {
     public static final String COMMODITY_NOT_FOUND_FOR_ID = "commodity.not.found.for.id";
     public static final String DELETE_COMMODITY_SUCCESS = "delete.commodity.success";
     public static final String DELETE_COMMODITY_FAIL = "delete.commodity.fail";
+    public static final String MONEY_NOT_ENOUGH = "money.not.enough";
+    public static final String PURCHASE_FAIL = "purchase.fail";
 
     /** Image */
     public static final String CREATE_IMAGE_FAIL = "create.image.fail";

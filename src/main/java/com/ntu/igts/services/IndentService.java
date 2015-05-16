@@ -19,4 +19,6 @@ public interface IndentService {
     public Indent getById(String indentId);
 
     public Page<Indent> getPaginatedIndentByUserId(int currentPage, int pageSize, String userId);
+
+    public Indent getByCommodityId(String commodityId);
 }

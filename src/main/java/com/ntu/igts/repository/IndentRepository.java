@@ -11,4 +11,7 @@ public interface IndentRepository extends MyRepository<Indent, String> {
 
     @Query("from Indent i where i.userId=:userId and i.deletedYN='N'")
     public List<Indent> getByUserId(@Param("userId") String userId);
+
+    @Query("from Indent i where i.commodityId=:commodityId and i.deletedYN='N'")
+    public List<Indent> getByCommodityId(@Param("commodityId") String commodityId);
 }
