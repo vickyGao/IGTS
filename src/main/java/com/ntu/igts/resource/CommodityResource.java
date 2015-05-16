@@ -59,12 +59,22 @@ public class CommodityResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String createCommodity(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
-        filterSessionContext(token, RoleEnum.USER);
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         Commodity pojo = JsonUtil.getPojoFromJsonString(inString, Commodity.class);
         if (StringUtil.isEmpty(pojo.getStatus())) {
             pojo.setStatus(messageBuilder.buildMessage(MessageKeys.STATUS_NORMAL,
                             CommonUtil.getLocaleFromRequest(webRequest)));
         }
+        pojo.setUserId(sessionContext.getUserId());
+        if (!CommonUtil.isLegalMoneyNumber(pojo.getCarriage())) {
+            throw new ServiceWarningException("Carriage is not a legal money number",
+                            MessageKeys.CARRIAGE_MONEY_NUMBER_ILLEGAL);
+        }
+        if (!CommonUtil.isLegalMoneyNumber(pojo.getPrice())) {
+            throw new ServiceWarningException("Price is not a legal money number",
+                            MessageKeys.PRICE_MONEY_NUMBER_ILLEGAL);
+        }
+
         Commodity insertedCommodity = commodityService.create(pojo);
         if (insertedCommodity == null) {
             throw new ServiceErrorException("Create commodity failed.", MessageKeys.CREATE_COMMODITY_FAIL);

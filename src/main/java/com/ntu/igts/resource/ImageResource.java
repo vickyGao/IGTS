@@ -151,9 +151,18 @@ public class ImageResource extends BaseResource {
     }
 
     @GET
-    @Path("admin/entity/token")
+    @Path("entity/token")
     @Produces(MediaType.APPLICATION_JSON)
     public String getImagesByToken(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
+        List<Image> images = imageService.getImagesByUserId(sessionContext.getUserId());
+        return JsonUtil.getJsonStringFromPojo(new ImageList(images));
+    }
+    
+    @GET
+    @Path("admin/entity/token")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getImagesByTokenForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.ADMIN);
         List<Image> images = imageService.getImagesByUserId(sessionContext.getUserId());
         return JsonUtil.getJsonStringFromPojo(new ImageList(images));

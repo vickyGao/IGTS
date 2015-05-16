@@ -46,6 +46,8 @@ public class MessageKeys {
     public static final String DELETE_COMMODITY_FAIL = "delete.commodity.fail";
     public static final String MONEY_NOT_ENOUGH = "money.not.enough";
     public static final String PURCHASE_FAIL = "purchase.fail";
+    public static final String CARRIAGE_MONEY_NUMBER_ILLEGAL = "carriage.money.number.illegal";
+    public static final String PRICE_MONEY_NUMBER_ILLEGAL = "price.money.number.illegal";
 
     /** Image */
     public static final String CREATE_IMAGE_FAIL = "create.image.fail";
