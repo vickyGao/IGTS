@@ -28,4 +28,8 @@ public interface UserService {
     public User getUserByUserName(String userName);
 
     public int getTotalCount();
+
+    public User lockUserMoney(double money, String userId);
+
+    public User unLockUserMoney(double money, String userId);
 }

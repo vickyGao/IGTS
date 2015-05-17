@@ -258,18 +258,6 @@ public class CommodityResource extends BaseResource {
         return JsonUtil.getJsonStringFromPojo(new CommodityList(commodities));
     }
 
-    @POST
-    @Path("purchase/{commodityId}")
-    public void commodityPurchase(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
-                    @PathParam("commodityId") String commodityId) {
-        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
-        boolean purchaseResult = commodityService.purchase(commodityId, sessionContext.getUserId());
-        if (!purchaseResult) {
-            throw new ServiceWarningException("Purchase failed", MessageKeys.PURCHASE_FAIL);
-        }
-
-    }
-
     private Commodity checkCommodityAvailability(String commodityId) {
         Commodity existingCommodity = commodityService.getById(commodityId);
         if (existingCommodity == null) {

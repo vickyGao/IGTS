@@ -64,6 +64,9 @@ public class User extends BaseModel implements Serializable {
     @Column(name = "money")
     @JsonIgnore
     private double money;
+    @Column(name = "locked_money")
+    @JsonIgnore
+    private double lockedMoney;
     @Transient
     @JsonProperty("roles")
     private List<Role> roles = new ArrayList<Role>();
@@ -178,6 +181,14 @@ public class User extends BaseModel implements Serializable {
 
     public void setMoney(double money) {
         this.money = money;
+    }
+
+    public double getLockedMoney() {
+        return lockedMoney;
+    }
+
+    public void setLockedMoney(double lockedMoney) {
+        this.lockedMoney = lockedMoney;
     }
 
     public List<Role> getRoles() {

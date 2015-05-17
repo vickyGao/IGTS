@@ -30,5 +30,4 @@ public interface CommodityService {
 
     public List<Commodity> getAll();
 
-    public boolean purchase(String commodityId, String userId);
 }

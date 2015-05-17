@@ -34,6 +34,7 @@ import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.services.CommodityService;
 import com.ntu.igts.services.IndentService;
+import com.ntu.igts.services.UserService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
 import com.ntu.igts.utils.StringUtil;
@@ -50,6 +51,8 @@ public class IndentResource extends BaseResource {
     private IndentService indentService;
     @Resource
     private CommodityService commodityService;
+    @Resource
+    private UserService userService;
 
     /**
      * Create Indent, necessary fields are (indentaddress, phonenumber, indentmessage)
@@ -111,19 +114,31 @@ public class IndentResource extends BaseResource {
                     @QueryParam("paytype") PayTypeEnum payTypeEnum) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         Indent existingIndent = checkIndentAvailability(indentId);
-        if (!sessionContext.getUserId().equals(existingIndent.getUserId())) {
-            throw new ServiceWarningException("Cannot edit other user's indent",
-                            MessageKeys.CANNOT_UPDATE_INDENT_OF_OTHER_USER);
-        }
-        existingIndent.setStatus(statusEnum.value());
+
+        // Change Indent from un-paid to paid, will lock parts of user's money
         if (IndentStatusEnum.PAID.equals(statusEnum)) {
-            existingIndent.setPayTime(new Date());
-            existingIndent.setPayType(payTypeEnum.value());
+            indentService.purchase(existingIndent, sessionContext.getUserId(), payTypeEnum);
         } else if (IndentStatusEnum.DELIVERED.equals(statusEnum)) {
+            if (!IndentStatusEnum.PAID.value().equals(existingIndent.getStatus())) {
+                throw new ServiceWarningException("Cannot deliver the goods as buyer has not paid",
+                                MessageKeys.CANNOT_DELIVER_GOODS_NOT_PAID);
+            }
             existingIndent.setDeliverTime(new Date());
         } else if (IndentStatusEnum.COMPLETE.equals(statusEnum)) {
-            existingIndent.setDealCompleteTime(new Date());
+            indentService.dealComplete(existingIndent, sessionContext.getUserId());
+        } else if (IndentStatusEnum.CANCELLED.equals(statusEnum)) {
+            indentService.cancelDeal(existingIndent, sessionContext.getUserId());
+        } else if (IndentStatusEnum.RETURNING.equals(statusEnum)) {
+            indentService.returnDeal(existingIndent, sessionContext.getUserId());
+        } else {
+            String[] param = { statusEnum.value() };
+            String statusLocale = messageBuilder.buildMessage(statusEnum.value(),
+                            CommonUtil.getLocaleFromRequest(webRequest));
+            throw new ServiceWarningException("The status " + statusLocale + " is not supported to be updated",
+                            MessageKeys.STATUS_NOT_SUPPORTED, param);
         }
+        existingIndent.setStatus(statusEnum.value());
+
         Indent updatedIndent = indentService.update(existingIndent);
         return JsonUtil.getJsonStringFromPojo(updatedIndent);
     }

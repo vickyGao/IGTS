@@ -12,7 +12,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.junit.Test;
 
-import com.ntu.igts.enums.IndentStatusEnum;
 import com.ntu.igts.model.Indent;
 import com.ntu.igts.test.Order;
 import com.ntu.igts.utils.CommonUtil;

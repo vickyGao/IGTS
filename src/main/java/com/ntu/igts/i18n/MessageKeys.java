@@ -119,6 +119,12 @@ public class MessageKeys {
     public static final String DELETE_INDENT_FAIL = "delete.indent.fail";
     public static final String CANNOT_UPDATE_INDENT_OF_OTHER_USER = "cannot.update.indent.of.other.user";
     public static final String MONEY_NUMBER_ILLEGAL = "money.number.illegal";
+    public static final String INDENT_NOT_CREATED = "indent.not.created";
+    public static final String CANNOT_DELIVER_GOODS_NOT_PAID = "cannot.deliver.goods.not.paid";
+    public static final String CANNOT_COMPLETE_DEAL_AS_SELLER_NOT_DELEVERED = "cannot.complete.deal.as.seller.not.delevered";
+    public static final String STATUS_NOT_SUPPORTED = "status.not.supported";
+    public static final String CAN_ONLY_CANCEL_UNPAID_INDENT = "can.only.cancel.unpaid.indent";
+    public static final String CAN_ONLY_CANCEL_YOUR_OWN_INDENT = "can.only.cancel.your.own.indent";
 
     /** Message */
     public static final String MESSAGE_NOT_FOUND_FOR_ID = "message.not.found.for.id";

@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.enums.SortByEnum;
@@ -125,6 +126,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public int getTotalCount() {
         return userRepository.getTotalCouont();
+    }
+
+    @Override
+    public User lockUserMoney(double money, String userId) {
+        User user = getUserById(userId);
+        user.setMoney(user.getMoney() - money);
+        user.setLockedMoney(user.getLockedMoney() + money);
+        return update(user);
+    }
+
+    @Override
+    public User unLockUserMoney(double money, String userId) {
+        User user = getUserById(userId);
+        user.setMoney(user.getMoney() + money);
+        user.setLockedMoney(user.getLockedMoney() - money);
+        return update(user);
     }
 
 }

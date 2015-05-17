@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import com.ntu.igts.enums.PayTypeEnum;
 import com.ntu.igts.model.Indent;
 
 public interface IndentService {
@@ -21,4 +22,12 @@ public interface IndentService {
     public Page<Indent> getPaginatedIndentByUserId(int currentPage, int pageSize, String userId);
 
     public Indent getByCommodityId(String commodityId);
+
+    public Indent dealComplete(Indent indent, String buyerId);
+
+    public Indent purchase(Indent indent, String buyerId, PayTypeEnum payTypeEnum);
+
+    public Indent cancelDeal(Indent indent, String buyerId);
+
+    public Indent returnDeal(Indent indent, String buyerId);
 }
