@@ -30,4 +30,6 @@ public interface IndentService {
     public Indent cancelDeal(Indent indent, String buyerId);
 
     public Indent returnDeal(Indent indent, String buyerId);
+
+    public Indent returnComplete(Indent indent, String buyerId);
 }

@@ -228,10 +228,55 @@ public class IndentServiceImpl implements IndentService {
     }
 
     @Override
-    @Transactional
     public Indent returnDeal(Indent indent, String buyerId) {
-        // TODO Auto-generated method stub
-        return null;
+        Indent updatedIndent = null;
+        if (indent != null) {
+            if (IndentStatusEnum.PAID.value().equals(indent.getStatus())
+                            || IndentStatusEnum.DELIVERED.value().equals(indent.getStatus())) {
+                indent.setStatus(IndentStatusEnum.RETURNING.value());
+                updatedIndent = update(indent);
+            }
+        }
+        return updatedIndent;
+    }
+
+    @Override
+    @Transactional
+    public Indent returnComplete(Indent indent, String buyerId) {
+        Indent updatedIndent = null;
+        if (indent != null) {
+            // Only allow to complete a returning indent
+            if (!IndentStatusEnum.RETURNING.value().equals(indent.getStatus())) {
+                throw new ServiceWarningException("Cannot complete deal as its not in Returning status",
+                                MessageKeys.CANNOT_COMPLETE_DEAL_AS_ITS_NOT_IN_RETURNING_STATUS);
+            }
+            // Check whether the commodity exists
+            Commodity commodity = commodityService.getById(indent.getCommodityId());
+            if (commodity == null) {
+                String[] param = { indent.getCommodityId() };
+                throw new ServiceWarningException("Cannot find commodity for id " + indent.getCommodityId(),
+                                MessageKeys.COMMODITY_NOT_FOUND_FOR_ID, param);
+            }
+            // Check whether the buyer exists
+            User buyer = userService.getUserById(buyerId);
+            if (buyer == null) {
+                String[] param = { buyerId };
+                throw new ServiceWarningException("Cannot find user for id " + buyerId,
+                                MessageKeys.USER_NOT_FOUND_FOR_ID, param);
+            }
+
+            // Start the deal complete progress
+            double totalDealMoney = indent.getIndentPrice();
+            buyer.setMoney(buyer.getMoney() + totalDealMoney);
+            buyer.setLockedMoney(buyer.getLockedMoney() - totalDealMoney);
+            userService.update(buyer);
+
+            // Update indent's state
+            indent.setStatus(IndentStatusEnum.COMPLETE.value());
+            indent.setDealCompleteTime(new Date());
+            updatedIndent = update(indent);
+        }
+        return updatedIndent;
     }
 
 }

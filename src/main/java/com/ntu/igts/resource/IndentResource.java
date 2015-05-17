@@ -124,10 +124,17 @@ public class IndentResource extends BaseResource {
                                 MessageKeys.CANNOT_DELIVER_GOODS_NOT_PAID);
             }
             existingIndent.setDeliverTime(new Date());
+            // Change Indent from delivered/returning to complete
         } else if (IndentStatusEnum.COMPLETE.equals(statusEnum)) {
-            indentService.dealComplete(existingIndent, sessionContext.getUserId());
+            if (IndentStatusEnum.DELIVERED.value().equals(existingIndent.getStatus())) {
+                indentService.dealComplete(existingIndent, sessionContext.getUserId());
+            } else if (IndentStatusEnum.RETURNING.value().equals(existingIndent.getStatus())) {
+                indentService.returnComplete(existingIndent, sessionContext.getUserId());
+            }
+            // Change from up-paid to cancelled
         } else if (IndentStatusEnum.CANCELLED.equals(statusEnum)) {
             indentService.cancelDeal(existingIndent, sessionContext.getUserId());
+            // Change from paid/delivered to returning
         } else if (IndentStatusEnum.RETURNING.equals(statusEnum)) {
             indentService.returnDeal(existingIndent, sessionContext.getUserId());
         } else {
