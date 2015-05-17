@@ -73,7 +73,7 @@ public class IndentServiceImpl implements IndentService {
     }
 
     @Override
-    public Page<Indent> getPaginatedIndentByUserId(int currentPage, int pageSize, String userId) {
+    public Page<Indent> getPaginatedIndentByBuyerId(int currentPage, int pageSize, String userId) {
         Map<String, String> criteriaMap = new HashMap<String, String>();
         criteriaMap.put(Constants.FIELD_USERID, userId);
         return indentRepository.findByPage(currentPage, pageSize, SortByEnum.CREATED_TIME, OrderByEnum.DESC,
@@ -277,6 +277,14 @@ public class IndentServiceImpl implements IndentService {
             updatedIndent = update(indent);
         }
         return updatedIndent;
+    }
+
+    @Override
+    public Page<Indent> getPaginatedIndentBySellerId(int currentPage, int pageSize, String userId) {
+        Map<String, String> criteriaMap = new HashMap<String, String>();
+        criteriaMap.put(Constants.FIELD_SELLER_ID, userId);
+        return indentRepository.findByPage(currentPage, pageSize, SortByEnum.CREATED_TIME, OrderByEnum.DESC,
+                        criteriaMap);
     }
 
 }

@@ -67,7 +67,7 @@ public class IndentServiceTest extends TestBase {
     @Test
     @Order(31)
     public void testGetPaginatedIndentByUserId() {
-        Page<Indent> page = indentService.getPaginatedIndentByUserId(0, 5, user.getId());
+        Page<Indent> page = indentService.getPaginatedIndentByBuyerId(0, 5, user.getId());
         assertNotNull("Get paginated indent by user id failed", page);
         assertTrue("Get paginated indent by user id failed", page.getContent().size() > 0);
     }

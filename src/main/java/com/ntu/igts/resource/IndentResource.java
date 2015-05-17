@@ -85,6 +85,9 @@ public class IndentResource extends BaseResource {
         if (StringUtil.isEmpty(pojo.getUserName())) {
             pojo.setUserName(sessionContext.getUserName());
         }
+        if (StringUtil.isEmpty(pojo.getSellerId())) {
+            pojo.setSellerId(commodity.getUserId());
+        }
         pojo.setCarriage(commodity.getCarriage());
         pojo.setCommodityId(commodityId);
         pojo.setCommodityPrice(commodity.getPrice());
@@ -228,10 +231,33 @@ public class IndentResource extends BaseResource {
     @GET
     @Path("entity")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getIndentsForUser(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+    public String getIndentsForBuyer(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @QueryParam("page") int currentPage, @QueryParam("size") int pageSize) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
-        Page<Indent> page = indentService.getPaginatedIndentByUserId(currentPage, pageSize, sessionContext.getUserId());
+        Page<Indent> page = indentService
+                        .getPaginatedIndentByBuyerId(currentPage, pageSize, sessionContext.getUserId());
+        Pagination<Indent> pagination = new Pagination<Indent>();
+        List<Indent> indents = page.getContent();
+        for (Indent indent : indents) {
+            indent.setStatus(messageBuilder.buildMessage(indent.getStatus(),
+                            CommonUtil.getLocaleFromRequest(webRequest)));
+            indent.setCommodity(commodityService.getById(indent.getCommodityId()));
+        }
+        pagination.setContent(indents);
+        pagination.setCurrentPage(page.getNumber());
+        pagination.setPageCount(page.getTotalPages());
+        pagination.setTotalCount(page.getNumberOfElements());
+        return JsonUtil.getJsonStringFromPojo(pagination);
+    }
+
+    @GET
+    @Path("entity/seller")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getIndentsForSeller(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @QueryParam("page") int currentPage, @QueryParam("size") int pageSize) {
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
+        Page<Indent> page = indentService.getPaginatedIndentBySellerId(currentPage, pageSize,
+                        sessionContext.getUserId());
         Pagination<Indent> pagination = new Pagination<Indent>();
         List<Indent> indents = page.getContent();
         for (Indent indent : indents) {

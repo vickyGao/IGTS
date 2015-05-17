@@ -11,6 +11,8 @@ public class Constants {
 
     /** Filed name userId */
     public static String FIELD_USERID = "userId";
+    /** Filed name sellerId */
+    public static String FIELD_SELLER_ID = "sellerId";
     /** Filed name commodityId */
     public static String FIELD_COMMODITYID = "commodityId";
     /** Filed name parentId */

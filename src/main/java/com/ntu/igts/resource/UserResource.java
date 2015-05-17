@@ -27,6 +27,7 @@ import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.User;
+import com.ntu.igts.model.container.AccountContainer;
 import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.UserService;
@@ -235,6 +236,18 @@ public class UserResource extends BaseResource {
     public int getTotalCount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ALL);
         return userService.getTotalCount();
+    }
+
+    @GET
+    @Path("account")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getUserAccount(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
+        User existingUser = checkUserAvailability(sessionContext.getUserId());
+        AccountContainer account = new AccountContainer();
+        account.setTotalMoney(existingUser.getMoney());
+        account.setLockedMoney(existingUser.getLockedMoney());
+        return JsonUtil.getJsonStringFromPojo(account);
     }
 
     private User checkUserAvailability(String userId) {

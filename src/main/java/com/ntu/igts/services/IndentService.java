@@ -19,7 +19,7 @@ public interface IndentService {
 
     public Indent getById(String indentId);
 
-    public Page<Indent> getPaginatedIndentByUserId(int currentPage, int pageSize, String userId);
+    public Page<Indent> getPaginatedIndentByBuyerId(int currentPage, int pageSize, String userId);
 
     public Indent getByCommodityId(String commodityId);
 
@@ -32,4 +32,6 @@ public interface IndentService {
     public Indent returnDeal(Indent indent, String buyerId);
 
     public Indent returnComplete(Indent indent, String buyerId);
+
+    public Page<Indent> getPaginatedIndentBySellerId(int currentPage, int pageSize, String userId);
 }
