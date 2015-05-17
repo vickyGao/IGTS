@@ -64,6 +64,9 @@ public class Indent extends BaseModel implements Serializable {
     @Column(name = "phone_number")
     @JsonProperty("phonenumber")
     private String phoneNumber;
+    @Column(name = "indent_message")
+    @JsonProperty("indentmessage")
+    private String indentMessage;
 
     public String getIndentNumber() {
         return indentNumber;
@@ -183,6 +186,14 @@ public class Indent extends BaseModel implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getIndentMessage() {
+        return indentMessage;
+    }
+
+    public void setIndentMessage(String indentMessage) {
+        this.indentMessage = indentMessage;
     }
 
 }

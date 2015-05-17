@@ -9,6 +9,6 @@ import com.ntu.igts.model.Address;
 
 public interface AddressRepository extends MyRepository<Address, String> {
 
-    @Query("from Address a where a.userId=:userId and a.deletedYN='N'")
+    @Query("from Address a where a.userId=:userId and a.deletedYN='N' order by createdTime DESC")
     public List<Address> getByUserId(@Param("userId") String userId);
 }

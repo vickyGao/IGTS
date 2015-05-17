@@ -1,5 +1,7 @@
 package com.ntu.igts.resource;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BeanParam;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.ActiveStateEnum;
+import com.ntu.igts.enums.CommodityStatusEnum;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceErrorException;
 import com.ntu.igts.exception.ServiceWarningException;
@@ -62,8 +65,7 @@ public class CommodityResource extends BaseResource {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         Commodity pojo = JsonUtil.getPojoFromJsonString(inString, Commodity.class);
         if (StringUtil.isEmpty(pojo.getStatus())) {
-            pojo.setStatus(messageBuilder.buildMessage(MessageKeys.STATUS_NORMAL,
-                            CommonUtil.getLocaleFromRequest(webRequest)));
+            pojo.setStatus(CommodityStatusEnum.NORMAL.value());
         }
         pojo.setUserId(sessionContext.getUserId());
         if (!CommonUtil.isLegalMoneyNumber(pojo.getCarriage())) {
@@ -170,7 +172,10 @@ public class CommodityResource extends BaseResource {
     public String getCommodityByIdForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("commodityid") String commodityId) {
         filterSessionContext(token, RoleEnum.ADMIN);
-        return JsonUtil.getJsonStringFromPojo(commodityService.getCommodityWithDetailById(commodityId));
+        Commodity returnCommodity = commodityService.getCommodityWithDetailById(commodityId);
+        returnCommodity.setStatus(messageBuilder.buildMessage(returnCommodity.getStatus(),
+                        CommonUtil.getLocaleFromRequest(webRequest)));
+        return JsonUtil.getJsonStringFromPojo(returnCommodity);
     }
 
     /**
@@ -187,7 +192,10 @@ public class CommodityResource extends BaseResource {
     public String getCommodityById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("commodityid") String commodityId) {
         filterSessionContext(token, RoleEnum.USER);
-        return JsonUtil.getJsonStringFromPojo(commodityService.getCommodityWithDetailById(commodityId));
+        Commodity returnCommodity = commodityService.getCommodityWithDetailById(commodityId);
+        returnCommodity.setStatus(messageBuilder.buildMessage(returnCommodity.getStatus(),
+                        CommonUtil.getLocaleFromRequest(webRequest)));
+        return JsonUtil.getJsonStringFromPojo(returnCommodity);
     }
 
     /**
@@ -206,6 +214,11 @@ public class CommodityResource extends BaseResource {
                     @BeanParam Query query) {
         filterSessionContext(token, RoleEnum.ALL);
         CommodityQueryResult commodityQueryResult = commodityService.getCommoditiesBySearchTerm(query);
+        List<Commodity> commodities = commodityQueryResult.getContent();
+        for (Commodity commodity : commodities) {
+            commodity.setStatus(messageBuilder.buildMessage(commodity.getStatus(),
+                            CommonUtil.getLocaleFromRequest(webRequest)));
+        }
         return JsonUtil.getJsonStringFromPojo(commodityQueryResult);
     }
 
@@ -216,6 +229,11 @@ public class CommodityResource extends BaseResource {
                     @BeanParam Query query) {
         filterSessionContext(token, RoleEnum.ADMIN);
         CommodityQueryResult commodityQueryResult = commodityService.getCommoditiesBySearchTerm(query);
+        List<Commodity> commodities = commodityQueryResult.getContent();
+        for (Commodity commodity : commodities) {
+            commodity.setStatus(messageBuilder.buildMessage(commodity.getStatus(),
+                            CommonUtil.getLocaleFromRequest(webRequest)));
+        }
         return JsonUtil.getJsonStringFromPojo(commodityQueryResult);
     }
 
@@ -232,7 +250,12 @@ public class CommodityResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllCommodities(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ADMIN);
-        return JsonUtil.getJsonStringFromPojo(new CommodityList(commodityService.getAll()));
+        List<Commodity> commodities = commodityService.getAll();
+        for (Commodity commodity : commodities) {
+            commodity.setStatus(messageBuilder.buildMessage(commodity.getStatus(),
+                            CommonUtil.getLocaleFromRequest(webRequest)));
+        }
+        return JsonUtil.getJsonStringFromPojo(new CommodityList(commodities));
     }
 
     @POST

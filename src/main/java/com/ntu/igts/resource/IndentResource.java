@@ -1,6 +1,7 @@
 package com.ntu.igts.resource;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +23,16 @@ import org.springframework.stereotype.Component;
 
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.IndentStatusEnum;
+import com.ntu.igts.enums.PayTypeEnum;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.ServiceWarningException;
 import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
+import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.Indent;
 import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.container.Pagination;
+import com.ntu.igts.services.CommodityService;
 import com.ntu.igts.services.IndentService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
@@ -44,40 +48,83 @@ public class IndentResource extends BaseResource {
     private MessageBuilder messageBuilder;
     @Resource
     private IndentService indentService;
+    @Resource
+    private CommodityService commodityService;
 
+    /**
+     * Create Indent, necessary fields are (indentaddress, phonenumber, indentmessage)
+     * 
+     * @param token
+     *            The x-auth-token
+     * @param commodityId
+     *            The id of Commodity
+     * @param inString
+     *            The post body
+     * @return The created Indent
+     */
     @POST
-    @Path("entity")
+    @Path("entity/{commodityId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
+    public String create(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("commodityId") String commodityId, String inString) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         Indent pojo = JsonUtil.getPojoFromJsonString(inString, Indent.class);
+        Commodity commodity = commodityService.getById(commodityId);
+        if (commodity == null) {
+            String[] param = { commodityId };
+            throw new ServiceWarningException("Cannot find commodity for id " + commodityId,
+                            MessageKeys.COMMODITY_NOT_FOUND_FOR_ID, param);
+        }
         if (StringUtil.isEmpty(pojo.getUserId())) {
             pojo.setUserId(sessionContext.getUserId());
         }
         if (StringUtil.isEmpty(pojo.getUserName())) {
             pojo.setUserId(sessionContext.getUserName());
         }
+        pojo.setCarriage(commodity.getCarriage());
+        pojo.setCommodityId(commodityId);
+        pojo.setCommodityPrice(commodity.getPrice());
+        pojo.setIndentTime(new Date());
+        pojo.setIndentPrice(pojo.getCarriage() + pojo.getCommodityPrice());
+        pojo.setStatus(IndentStatusEnum.UNPAID.value());
         pojo.setIndentNumber(CommonUtil.getIndentNumber());
         Indent insertedIndent = indentService.create(pojo);
         return JsonUtil.getJsonStringFromPojo(insertedIndent);
     }
 
+    /**
+     * Update the indent's status, if the operation is to update the status to PAID, will set pay type together
+     * 
+     * @param token
+     *            The x-auth-token
+     * @param inString
+     *            The put body
+     * @return The updated Indent
+     */
     @PUT
-    @Path("entity")
+    @Path("entity/{status}/{indentId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
+    public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("status") IndentStatusEnum statusEnum, @PathParam("indentId") String indentId,
+                    @QueryParam("paytype") PayTypeEnum payTypeEnum) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
-        Indent pojo = JsonUtil.getPojoFromJsonString(inString, Indent.class);
-        Indent existingIndent = checkIndentAvailability(pojo.getId());
+        Indent existingIndent = checkIndentAvailability(indentId);
         if (!sessionContext.getUserId().equals(existingIndent.getUserId())) {
             throw new ServiceWarningException("Cannot edit other user's indent",
                             MessageKeys.CANNOT_UPDATE_INDENT_OF_OTHER_USER);
         }
-        pojo.setUserId(existingIndent.getUserId());
-        pojo.setUserName(existingIndent.getUserName());
-        Indent updatedIndent = indentService.update(pojo);
+        existingIndent.setStatus(statusEnum.value());
+        if (IndentStatusEnum.PAID.equals(statusEnum)) {
+            existingIndent.setPayTime(new Date());
+            existingIndent.setPayType(payTypeEnum.value());
+        } else if (IndentStatusEnum.DELIVERED.equals(statusEnum)) {
+            existingIndent.setDeliverTime(new Date());
+        } else if (IndentStatusEnum.COMPLETE.equals(statusEnum)) {
+            existingIndent.setDealCompleteTime(new Date());
+        }
+        Indent updatedIndent = indentService.update(existingIndent);
         return JsonUtil.getJsonStringFromPojo(updatedIndent);
     }
 
@@ -178,7 +225,10 @@ public class IndentResource extends BaseResource {
     public String getIndentById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("indentid") String indentId) {
         filterSessionContext(token, RoleEnum.USER);
-        return JsonUtil.getJsonStringFromPojo(indentService.getById(indentId));
+        Indent returnIndent = indentService.getById(indentId);
+        returnIndent.setStatus(messageBuilder.buildMessage(returnIndent.getStatus(),
+                        CommonUtil.getLocaleFromRequest(webRequest)));
+        return JsonUtil.getJsonStringFromPojo(returnIndent);
     }
 
     @GET
@@ -189,7 +239,12 @@ public class IndentResource extends BaseResource {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         Page<Indent> page = indentService.getPaginatedIndentByUserId(currentPage, pageSize, sessionContext.getUserId());
         Pagination<Indent> pagination = new Pagination<Indent>();
-        pagination.setContent(page.getContent());
+        List<Indent> indents = page.getContent();
+        for (Indent indent : indents) {
+            indent.setStatus(messageBuilder.buildMessage(indent.getStatus(),
+                            CommonUtil.getLocaleFromRequest(webRequest)));
+        }
+        pagination.setContent(indents);
         pagination.setCurrentPage(page.getNumber());
         pagination.setPageCount(page.getTotalPages());
         pagination.setTotalCount(page.getNumberOfElements());
