@@ -80,7 +80,7 @@ public class IndentResource extends BaseResource {
             pojo.setUserId(sessionContext.getUserId());
         }
         if (StringUtil.isEmpty(pojo.getUserName())) {
-            pojo.setUserId(sessionContext.getUserName());
+            pojo.setUserName(sessionContext.getUserName());
         }
         pojo.setCarriage(commodity.getCarriage());
         pojo.setCommodityId(commodityId);
