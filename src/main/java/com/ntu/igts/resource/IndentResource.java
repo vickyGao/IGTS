@@ -169,35 +169,6 @@ public class IndentResource extends BaseResource {
         return JsonUtil.getJsonStringFromPojo(updatedIndent);
     }
 
-    @PUT
-    @Path("status")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String updateIndentStatus(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
-        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
-        Indent pojo = JsonUtil.getPojoFromJsonString(inString, Indent.class);
-        IndentStatusEnum indentStatusEnum = IndentStatusEnum.fromValue(pojo.getStatus());
-        Indent existingIndent = checkIndentAvailability(pojo.getId());
-        if (!sessionContext.getUserId().equals(existingIndent.getUserId())) {
-            throw new ServiceWarningException("Cannot edit other user's indent",
-                            MessageKeys.CANNOT_UPDATE_INDENT_OF_OTHER_USER);
-        }
-        Date currentDate = new Date();
-        if (IndentStatusEnum.UNPAID.equals(indentStatusEnum)) {
-            existingIndent.setIndentTime(currentDate);
-        } else if (IndentStatusEnum.PAID.equals(indentStatusEnum)) {
-            existingIndent.setPayTime(currentDate);
-        } else if (IndentStatusEnum.DELIVERED.equals(indentStatusEnum)) {
-            existingIndent.setDeliverTime(currentDate);
-        } else if (IndentStatusEnum.COMPLETE.equals(indentStatusEnum)) {
-            existingIndent.setDealCompleteTime(currentDate);
-        }
-        existingIndent.setStatus(messageBuilder.buildMessage(indentStatusEnum.value(),
-                        CommonUtil.getLocaleFromRequest(webRequest)));
-        Indent updatedIndent = indentService.update(existingIndent);
-        return JsonUtil.getJsonStringFromPojo(updatedIndent);
-    }
-
     @DELETE
     @Path("entity/{indentid}")
     @Produces(MediaType.TEXT_PLAIN)

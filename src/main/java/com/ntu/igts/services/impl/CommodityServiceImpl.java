@@ -1,5 +1,6 @@
 package com.ntu.igts.services.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -195,6 +196,7 @@ public class CommodityServiceImpl implements CommodityService {
         Indent indent = indentService.getByCommodityId(commodity.getId());
         if (indent != null) {
             indent.setStatus(IndentStatusEnum.COMPLETE.value());
+            indent.setDealCompleteTime(new Date());
         }
         // Create bill for buyer & seller
         Bill buyerBill = new Bill();

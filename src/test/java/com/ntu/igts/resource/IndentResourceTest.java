@@ -68,14 +68,6 @@ public class IndentResourceTest extends TestBase {
     }
 
     @Test
-    @Order(40)
-    public void testUpdateIndentStatus() {
-        indent.setStatus(IndentStatusEnum.PAID.value());
-        Response updateIndentResponse = doPut(BASE_PATH + "status", userToken, JsonUtil.getJsonStringFromPojo(indent));
-        assertEquals("Update indent status failed", Status.OK.getStatusCode(), updateIndentResponse.getStatus());
-    }
-
-    @Test
     @Order(50)
     public void testGetIndentById() {
         String path = BASE_PATH + "entity/" + indent.getId();
