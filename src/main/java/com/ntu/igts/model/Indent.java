@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -67,6 +68,9 @@ public class Indent extends BaseModel implements Serializable {
     @Column(name = "indent_message")
     @JsonProperty("indentmessage")
     private String indentMessage;
+    @Transient
+    @JsonProperty("commodity")
+    private Commodity commodity;
 
     public String getIndentNumber() {
         return indentNumber;
@@ -194,6 +198,14 @@ public class Indent extends BaseModel implements Serializable {
 
     public void setIndentMessage(String indentMessage) {
         this.indentMessage = indentMessage;
+    }
+
+    public Commodity getCommodity() {
+        return commodity;
+    }
+
+    public void setCommodity(Commodity commodity) {
+        this.commodity = commodity;
     }
 
 }

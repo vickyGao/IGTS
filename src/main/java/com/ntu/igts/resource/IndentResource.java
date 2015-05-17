@@ -228,6 +228,7 @@ public class IndentResource extends BaseResource {
         Indent returnIndent = indentService.getById(indentId);
         returnIndent.setStatus(messageBuilder.buildMessage(returnIndent.getStatus(),
                         CommonUtil.getLocaleFromRequest(webRequest)));
+        returnIndent.setCommodity(commodityService.getById(returnIndent.getCommodityId()));
         return JsonUtil.getJsonStringFromPojo(returnIndent);
     }
 
@@ -243,6 +244,7 @@ public class IndentResource extends BaseResource {
         for (Indent indent : indents) {
             indent.setStatus(messageBuilder.buildMessage(indent.getStatus(),
                             CommonUtil.getLocaleFromRequest(webRequest)));
+            indent.setCommodity(commodityService.getById(indent.getCommodityId()));
         }
         pagination.setContent(indents);
         pagination.setCurrentPage(page.getNumber());
