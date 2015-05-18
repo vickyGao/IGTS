@@ -114,7 +114,7 @@ public class IndentResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("status") IndentStatusEnum statusEnum, @PathParam("indentId") String indentId,
-                    @QueryParam("paytype") PayTypeEnum payTypeEnum) {
+                    @HeaderParam("paytype") PayTypeEnum payTypeEnum) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         Indent existingIndent = checkIndentAvailability(indentId);
 
