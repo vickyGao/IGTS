@@ -41,6 +41,8 @@ public class InitData {
     private Role roleAdmin;
     private User standardUser;
     private Admin standardAdmin;
+    private User sampleBuyer;
+    private User sampleSeller;
 
     private List<Tag> categoryTags = new ArrayList<Tag>();
     private List<Image> sampleImageList = new ArrayList<Image>();
@@ -79,6 +81,8 @@ public class InitData {
 
     public void createSampleData() {
         LOGGER.info("Start to init sample data");
+        createSampleUser();
+        updateSampleUserDetail();
         createSampleImages();
         createSampleTags();
         createSampleCommodities();
@@ -107,6 +111,26 @@ public class InitData {
         admin.setRoles(roles);
         standardAdmin = adminService.create(admin);
         LOGGER.info("Created admin " + standardAdmin.getAdminName());
+    }
+
+    private void createSampleUser() {
+
+        User buyer = new User();
+        buyer.setUserName("buyer");
+        buyer.setPassword("password");
+        List<Role> buyerRoles = new ArrayList<Role>();
+        buyerRoles.add(roleUser);
+        buyer.setRoles(buyerRoles);
+        buyer.setMoney(99999);
+        sampleBuyer = userService.create(buyer);
+
+        User seller = new User();
+        seller.setUserName("seller");
+        seller.setPassword("password");
+        List<Role> sellerRoles = new ArrayList<Role>();
+        sellerRoles.add(roleUser);
+        seller.setRoles(sellerRoles);
+        sampleSeller = userService.create(seller);
     }
 
     private void createRole() {
@@ -241,6 +265,7 @@ public class InitData {
         foodItem01.setPrice(68.6);
         foodItem01.setCarriage(3);
         foodItem01.setCollectionNumber(34);
+        foodItem01.setUserId(sampleSeller.getId());
         foodItem01.setDistrict("浙江衢州");
         List<Tag> foodItem01Tags = new ArrayList<Tag>();
         foodItem01Tags.add(categoryTags.get(0));
@@ -257,6 +282,7 @@ public class InitData {
         foodItem02.setCarriage(20);
         foodItem02.setCollectionNumber(5);
         foodItem02.setDistrict("上海");
+        foodItem02.setUserId(sampleSeller.getId());
         List<Tag> foodItem02Tags = new ArrayList<Tag>();
         foodItem02Tags.add(categoryTags.get(0));
         foodItem02.setTags(foodItem02Tags);
@@ -272,6 +298,7 @@ public class InitData {
         foodItem03.setCarriage(0);
         foodItem03.setCollectionNumber(99);
         foodItem03.setDistrict("河北廊坊");
+        foodItem03.setUserId(sampleSeller.getId());
         List<Tag> foodItem03Tags = new ArrayList<Tag>();
         foodItem03Tags.add(categoryTags.get(0));
         foodItem03.setTags(foodItem03Tags);
@@ -287,6 +314,7 @@ public class InitData {
         foodItem04.setCarriage(0);
         foodItem04.setCollectionNumber(10);
         foodItem04.setDistrict("广东广州");
+        foodItem04.setUserId(sampleSeller.getId());
         List<Tag> foodItem04Tags = new ArrayList<Tag>();
         foodItem04Tags.add(categoryTags.get(0));
         foodItem04.setTags(foodItem04Tags);
@@ -302,6 +330,7 @@ public class InitData {
         foodItem05.setCarriage(1);
         foodItem05.setCollectionNumber(0);
         foodItem05.setDistrict("天津");
+        foodItem05.setUserId(sampleSeller.getId());
         List<Tag> foodItem05Tags = new ArrayList<Tag>();
         foodItem05Tags.add(categoryTags.get(0));
         foodItem05.setTags(foodItem05Tags);
@@ -316,6 +345,7 @@ public class InitData {
         foodItem06.setCarriage(3);
         foodItem06.setCollectionNumber(2);
         foodItem06.setDistrict("上海");
+        foodItem06.setUserId(sampleSeller.getId());
         List<Tag> foodItem06Tags = new ArrayList<Tag>();
         foodItem06Tags.add(categoryTags.get(0));
         foodItem06.setTags(foodItem06Tags);
@@ -331,6 +361,7 @@ public class InitData {
         appItem01.setCarriage(10);
         appItem01.setCollectionNumber(7);
         appItem01.setDistrict("上海");
+        appItem01.setUserId(sampleSeller.getId());
         List<Tag> appItem01Tags = new ArrayList<Tag>();
         appItem01Tags.add(categoryTags.get(1));
         appItem01.setTags(appItem01Tags);
@@ -345,6 +376,7 @@ public class InitData {
         appItem02.setCarriage(30);
         appItem02.setCollectionNumber(20);
         appItem02.setDistrict("北京");
+        appItem02.setUserId(sampleSeller.getId());
         List<Tag> appItem02Tags = new ArrayList<Tag>();
         appItem02Tags.add(categoryTags.get(1));
         appItem02.setTags(appItem02Tags);
@@ -359,6 +391,7 @@ public class InitData {
         appItem03.setCarriage(23);
         appItem03.setCollectionNumber(15);
         appItem03.setDistrict("北京");
+        appItem03.setUserId(sampleSeller.getId());
         List<Tag> appItem03Tags = new ArrayList<Tag>();
         appItem03Tags.add(categoryTags.get(1));
         appItem03.setTags(appItem03Tags);
@@ -373,6 +406,7 @@ public class InitData {
         appItem04.setCarriage(65);
         appItem04.setCollectionNumber(23);
         appItem04.setDistrict("北京");
+        appItem04.setUserId(sampleSeller.getId());
         List<Tag> appItem04Tags = new ArrayList<Tag>();
         appItem04Tags.add(categoryTags.get(1));
         appItem04.setTags(appItem04Tags);
@@ -387,6 +421,7 @@ public class InitData {
         appItem05.setCarriage(25);
         appItem05.setCollectionNumber(31);
         appItem05.setDistrict("电器城上海仓");
+        appItem05.setUserId(sampleSeller.getId());
         List<Tag> appItem05Tags = new ArrayList<Tag>();
         appItem05Tags.add(categoryTags.get(1));
         appItem05.setTags(appItem05Tags);
@@ -404,6 +439,7 @@ public class InitData {
         List<Tag> appItem06Tags = new ArrayList<Tag>();
         appItem06Tags.add(categoryTags.get(1));
         appItem06.setTags(appItem06Tags);
+        appItem06.setUserId(sampleSeller.getId());
         appItem06 = commodityService.create(appItem06);
         createCoversForCommodity(appItem06.getId());
         createSampleMessagesForCommodity(appItem06.getId());
@@ -416,6 +452,7 @@ public class InitData {
         clothingItem01.setCarriage(26);
         clothingItem01.setCollectionNumber(14);
         clothingItem01.setDistrict("江苏苏州");
+        clothingItem01.setUserId(sampleSeller.getId());
         List<Tag> clothingItem01Tags = new ArrayList<Tag>();
         clothingItem01Tags.add(categoryTags.get(2));
         clothingItem01.setTags(clothingItem01Tags);
@@ -430,6 +467,7 @@ public class InitData {
         clothingItem02.setCarriage(13);
         clothingItem02.setCollectionNumber(3);
         clothingItem02.setDistrict("浙江杭州");
+        clothingItem02.setUserId(sampleSeller.getId());
         List<Tag> clothingItem02Tags = new ArrayList<Tag>();
         clothingItem02Tags.add(categoryTags.get(2));
         clothingItem02.setTags(clothingItem02Tags);
@@ -444,6 +482,7 @@ public class InitData {
         clothingItem03.setCarriage(44);
         clothingItem03.setCollectionNumber(44);
         clothingItem03.setDistrict("上海");
+        clothingItem03.setUserId(sampleSeller.getId());
         List<Tag> clothingItem03Tags = new ArrayList<Tag>();
         clothingItem03Tags.add(categoryTags.get(2));
         clothingItem03.setTags(clothingItem03Tags);
@@ -458,6 +497,7 @@ public class InitData {
         clothingItem04.setCarriage(33);
         clothingItem04.setCollectionNumber(13);
         clothingItem04.setDistrict("广东深圳");
+        clothingItem04.setUserId(sampleSeller.getId());
         List<Tag> clothingItem04Tags = new ArrayList<Tag>();
         clothingItem04Tags.add(categoryTags.get(2));
         clothingItem04.setTags(clothingItem04Tags);
@@ -472,6 +512,7 @@ public class InitData {
         clothingItem05.setCarriage(21);
         clothingItem05.setCollectionNumber(3);
         clothingItem05.setDistrict("河南郑州");
+        clothingItem05.setUserId(sampleSeller.getId());
         List<Tag> clothingItem05Tags = new ArrayList<Tag>();
         clothingItem05Tags.add(categoryTags.get(2));
         clothingItem05.setTags(clothingItem05Tags);
@@ -486,6 +527,7 @@ public class InitData {
         clothingItem06.setCarriage(10);
         clothingItem06.setCollectionNumber(6);
         clothingItem06.setDistrict("浙江杭州");
+        clothingItem06.setUserId(sampleSeller.getId());
         List<Tag> clothingItem06Tags = new ArrayList<Tag>();
         clothingItem06Tags.add(categoryTags.get(2));
         clothingItem06.setTags(clothingItem06Tags);
@@ -501,6 +543,7 @@ public class InitData {
         shoesItem01.setCarriage(43);
         shoesItem01.setCollectionNumber(9);
         shoesItem01.setDistrict("广东佛山");
+        shoesItem01.setUserId(sampleSeller.getId());
         List<Tag> shoesItem01Tags = new ArrayList<Tag>();
         shoesItem01Tags.add(categoryTags.get(3));
         shoesItem01.setTags(shoesItem01Tags);
@@ -515,6 +558,7 @@ public class InitData {
         shoesItem02.setCarriage(12);
         shoesItem02.setCollectionNumber(3);
         shoesItem02.setDistrict("广东佛山");
+        shoesItem02.setUserId(sampleSeller.getId());
         List<Tag> shoesItem02Tags = new ArrayList<Tag>();
         shoesItem02Tags.add(categoryTags.get(3));
         shoesItem02.setTags(shoesItem02Tags);
@@ -529,6 +573,7 @@ public class InitData {
         shoesItem03.setCarriage(67);
         shoesItem03.setCollectionNumber(8);
         shoesItem03.setDistrict("福建泉州");
+        shoesItem03.setUserId(sampleSeller.getId());
         List<Tag> shoesItem03Tags = new ArrayList<Tag>();
         shoesItem03Tags.add(categoryTags.get(3));
         shoesItem03.setTags(shoesItem03Tags);
@@ -543,6 +588,7 @@ public class InitData {
         shoesItem04.setCarriage(10);
         shoesItem04.setCollectionNumber(7);
         shoesItem04.setDistrict("浙江温州");
+        shoesItem04.setUserId(sampleSeller.getId());
         List<Tag> shoesItem04Tags = new ArrayList<Tag>();
         shoesItem04Tags.add(categoryTags.get(3));
         shoesItem04.setTags(shoesItem04Tags);
@@ -557,6 +603,7 @@ public class InitData {
         shoesItem05.setCarriage(3);
         shoesItem05.setCollectionNumber(1);
         shoesItem05.setDistrict("浙江温州");
+        shoesItem05.setUserId(sampleSeller.getId());
         List<Tag> shoesItem05Tags = new ArrayList<Tag>();
         shoesItem05Tags.add(categoryTags.get(3));
         shoesItem05.setTags(shoesItem05Tags);
@@ -571,6 +618,7 @@ public class InitData {
         shoesItem06.setCarriage(20);
         shoesItem06.setCollectionNumber(23);
         shoesItem06.setDistrict("浙江温州");
+        shoesItem06.setUserId(sampleSeller.getId());
         List<Tag> shoesItem06Tags = new ArrayList<Tag>();
         shoesItem06Tags.add(categoryTags.get(3));
         shoesItem06.setTags(shoesItem06Tags);
@@ -589,6 +637,7 @@ public class InitData {
         List<Tag> bagItem01Tags = new ArrayList<Tag>();
         bagItem01Tags.add(categoryTags.get(4));
         bagItem01.setTags(bagItem01Tags);
+        bagItem01.setUserId(sampleSeller.getId());
         bagItem01 = commodityService.create(bagItem01);
         createCoversForCommodity(bagItem01.getId());
 
@@ -599,6 +648,7 @@ public class InitData {
         bagItem02.setCarriage(21);
         bagItem02.setCollectionNumber(8);
         bagItem02.setDistrict("广东广州");
+        bagItem02.setUserId(sampleSeller.getId());
         List<Tag> bagItem02Tags = new ArrayList<Tag>();
         bagItem02Tags.add(categoryTags.get(4));
         bagItem02.setTags(bagItem02Tags);
@@ -613,6 +663,7 @@ public class InitData {
         bagItem03.setCarriage(100);
         bagItem03.setCollectionNumber(78);
         bagItem03.setDistrict("广东广州");
+        bagItem03.setUserId(sampleSeller.getId());
         List<Tag> bagItem03Tags = new ArrayList<Tag>();
         bagItem03Tags.add(categoryTags.get(4));
         bagItem03.setTags(bagItem03Tags);
@@ -627,6 +678,7 @@ public class InitData {
         bagItem04.setCarriage(342);
         bagItem04.setCollectionNumber(45);
         bagItem04.setDistrict("上海");
+        bagItem04.setUserId(sampleSeller.getId());
         List<Tag> bagItem04Tags = new ArrayList<Tag>();
         bagItem04Tags.add(categoryTags.get(4));
         bagItem04.setTags(bagItem04Tags);
@@ -641,6 +693,7 @@ public class InitData {
         bagItem05.setCarriage(271);
         bagItem05.setCollectionNumber(20);
         bagItem05.setDistrict("上海");
+        bagItem05.setUserId(sampleSeller.getId());
         List<Tag> bagItem05Tags = new ArrayList<Tag>();
         bagItem05Tags.add(categoryTags.get(4));
         bagItem05.setTags(bagItem05Tags);
@@ -655,6 +708,7 @@ public class InitData {
         bagItem06.setCarriage(129);
         bagItem06.setCollectionNumber(10);
         bagItem06.setDistrict("上海");
+        bagItem06.setUserId(sampleSeller.getId());
         List<Tag> bagItem06Tags = new ArrayList<Tag>();
         bagItem06Tags.add(categoryTags.get(4));
         bagItem06.setTags(bagItem06Tags);
@@ -670,6 +724,7 @@ public class InitData {
         bookItem01.setCarriage(58);
         bookItem01.setCollectionNumber(6);
         bookItem01.setDistrict("北京");
+        bookItem01.setUserId(sampleSeller.getId());
         List<Tag> bookItem01Tags = new ArrayList<Tag>();
         bookItem01Tags.add(categoryTags.get(5));
         bookItem01.setTags(bookItem01Tags);
@@ -684,6 +739,7 @@ public class InitData {
         bookItem02.setCarriage(39);
         bookItem02.setCollectionNumber(8);
         bookItem02.setDistrict("北京");
+        bookItem02.setUserId(sampleSeller.getId());
         List<Tag> bookItem02Tags = new ArrayList<Tag>();
         bookItem02Tags.add(categoryTags.get(5));
         bookItem02.setTags(bookItem02Tags);
@@ -698,6 +754,7 @@ public class InitData {
         bookItem03.setCarriage(15);
         bookItem03.setCollectionNumber(5);
         bookItem03.setDistrict("北京");
+        bookItem03.setUserId(sampleSeller.getId());
         List<Tag> bookItem03Tags = new ArrayList<Tag>();
         bookItem03Tags.add(categoryTags.get(5));
         bookItem03.setTags(bookItem03Tags);
@@ -712,6 +769,7 @@ public class InitData {
         bookItem04.setCarriage(4);
         bookItem04.setCollectionNumber(1);
         bookItem04.setDistrict("江苏南京");
+        bookItem04.setUserId(sampleSeller.getId());
         List<Tag> bookItem04Tags = new ArrayList<Tag>();
         bookItem04Tags.add(categoryTags.get(5));
         bookItem04.setTags(bookItem04Tags);
@@ -729,6 +787,7 @@ public class InitData {
         List<Tag> bookItem05Tags = new ArrayList<Tag>();
         bookItem05Tags.add(categoryTags.get(5));
         bookItem05.setTags(bookItem05Tags);
+        bookItem05.setUserId(sampleSeller.getId());
         bookItem05 = commodityService.create(bookItem05);
         createCoversForCommodity(bookItem05.getId());
         createSampleMessagesForCommodity(bookItem05.getId());
@@ -740,6 +799,7 @@ public class InitData {
         bookItem06.setCarriage(2);
         bookItem06.setCollectionNumber(2);
         bookItem06.setDistrict("上海");
+        bookItem06.setUserId(sampleSeller.getId());
         List<Tag> bookItem06Tags = new ArrayList<Tag>();
         bookItem06Tags.add(categoryTags.get(5));
         bookItem06.setTags(bookItem06Tags);
@@ -861,5 +921,11 @@ public class InitData {
         hot3.setImageId(sampleImageList.get(2).getId());
         hot3.setDisplaySequence(2);
         hotService.create(hot3);
+    }
+
+    private void updateSampleUserDetail() {
+        sampleBuyer.setAge(20);
+        sampleBuyer.setRealName("张三");
+        sampleBuyer = userService.update(sampleBuyer);
     }
 }
