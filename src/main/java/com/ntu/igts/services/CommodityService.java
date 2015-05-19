@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import com.ntu.igts.enums.ActiveStateEnum;
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.container.CommodityQueryResult;
 import com.ntu.igts.model.container.Query;
@@ -30,6 +31,6 @@ public interface CommodityService {
 
     public List<Commodity> getAll();
 
-    public Page<Commodity> getCommoditiesForUser(int page, int size, String userId);
+    public Page<Commodity> getCommoditiesForUser(int page, int size, ActiveStateEnum activeStateEnum, String userId);
 
 }

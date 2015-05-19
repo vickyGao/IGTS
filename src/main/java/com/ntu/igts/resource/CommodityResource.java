@@ -265,9 +265,11 @@ public class CommodityResource extends BaseResource {
     @Path("detail")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllCommodititesForUser(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
-                    @QueryParam("page") int currentPage, @QueryParam("size") int size) {
+                    @QueryParam("page") int currentPage, @QueryParam("size") int size,
+                    @QueryParam("activestate") ActiveStateEnum activeStateEnum) {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
-        Page<Commodity> page = commodityService.getCommoditiesForUser(currentPage, size, sessionContext.getUserId());
+        Page<Commodity> page = commodityService.getCommoditiesForUser(currentPage, size, activeStateEnum,
+                        sessionContext.getUserId());
         Pagination<Commodity> pagination = new Pagination<Commodity>();
         pagination.setContent(page.getContent());
         pagination.setCurrentPage(page.getNumber());

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.ntu.igts.constants.Constants;
+import com.ntu.igts.enums.ActiveStateEnum;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Commodity;
@@ -147,9 +148,12 @@ public class CommodityServiceImpl implements CommodityService {
     }
 
     @Override
-    public Page<Commodity> getCommoditiesForUser(int page, int size, String userId) {
+    public Page<Commodity> getCommoditiesForUser(int page, int size, ActiveStateEnum activeStateEnum, String userId) {
         Map<String, String> criteriaMap = new HashMap<String, String>();
         criteriaMap.put(Constants.FIELD_USERID, userId);
+        if (activeStateEnum != null) {
+            criteriaMap.put(Constants.FIELD_ACTIVE_YN, activeStateEnum.value());
+        }
         return commodityRepository.findByPage(page, size, SortByEnum.CREATED_TIME, OrderByEnum.DESC, criteriaMap);
     }
 
