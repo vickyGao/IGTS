@@ -86,7 +86,7 @@ public class CustomModuleResource extends BaseResource {
     }
 
     @GET
-    @Path("entity/{custommoduleid}")
+    @Path("detail/{custommoduleid}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getSliceById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("custommoduleid") String customModuleId) {
@@ -99,6 +99,14 @@ public class CustomModuleResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getCustomModules(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
         filterSessionContext(token, RoleEnum.ALL);
+        return JsonUtil.getJsonStringFromPojo(new CustomModuleList(customModuleService.getCustomModulesWithDetail()));
+    }
+
+    @GET
+    @Path("admin/entity")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getCustomModulesForAdmin(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        filterSessionContext(token, RoleEnum.ADMIN);
         return JsonUtil.getJsonStringFromPojo(new CustomModuleList(customModuleService.getCustomModules()));
     }
 

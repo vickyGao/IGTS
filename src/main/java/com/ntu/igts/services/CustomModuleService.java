@@ -15,4 +15,6 @@ public interface CustomModuleService {
     public CustomModule getById(String customModuleId);
 
     public List<CustomModule> getCustomModules();
+
+    public List<CustomModule> getCustomModulesWithDetail();
 }

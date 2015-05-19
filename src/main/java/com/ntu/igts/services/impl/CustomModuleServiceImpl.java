@@ -51,8 +51,12 @@ public class CustomModuleServiceImpl implements CustomModuleService {
 
     @Override
     public List<CustomModule> getCustomModules() {
-        List<CustomModule> customModules = customModuleRepository
-                        .findAll(SortByEnum.LAST_UPDATED_TIME, OrderByEnum.ASC);
+        return customModuleRepository.findAll(SortByEnum.DISPLAY_SEQUENCE, OrderByEnum.ASC);
+    }
+
+    @Override
+    public List<CustomModule> getCustomModulesWithDetail() {
+        List<CustomModule> customModules = customModuleRepository.findAll(SortByEnum.DISPLAY_SEQUENCE, OrderByEnum.ASC);
         for (CustomModule customModule : customModules) {
             Query query = new Query();
             query.setSearchTerm(customModule.getKeyword());
