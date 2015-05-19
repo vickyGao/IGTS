@@ -140,4 +140,8 @@ public class MessageKeys {
     public static final String UPDATE_SENSITIVE_WORD_FAIL = "update.sensitive.word.fail";
     public static final String DELETE_SENSITIVE_WORD_SUCCESS = "delete.sensitive.word.success";
     public static final String DELETE_SENSITIVE_WORD_FAIL = "delete.sensitive.word.fail";
+
+    /** Cover */
+    public static final String COVER_NOT_FOUND_FOR_ID = "cover.not.found.for.id";
+    public static final String COMMODITY_ID_REQUIERED = "commodity.id.requiered";
 }

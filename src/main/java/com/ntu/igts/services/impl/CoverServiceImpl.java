@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+
 import com.ntu.igts.model.Cover;
 import com.ntu.igts.repository.CoverRepository;
 import com.ntu.igts.services.CoverService;
@@ -51,6 +52,15 @@ public class CoverServiceImpl implements CoverService {
             cover.setImage(imageService.getById(cover.getImageId()));
         }
         return covers;
+    }
+
+    @Override
+    public int getCurrentMaxDisplaySequenceForCommodity(String commodityId) {
+        List<Cover> covers = coverRepository.getCoversByCommodityId(commodityId);
+        if (covers.size() > 0) {
+            return covers.get(0).getDisplaySequence();
+        }
+        return 0;
     }
 
 }

@@ -15,4 +15,6 @@ public interface CoverService {
     public Cover getById(String coverId);
 
     public List<Cover> getCoversByCommodityId(String commodityId);
+
+    public int getCurrentMaxDisplaySequenceForCommodity(String commodityId);
 }

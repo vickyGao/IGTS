@@ -21,6 +21,9 @@ public class Constants {
     /** The vale which represents the entity is logic deleted */
     public static String LOGIC_DELETED = "Y";
 
+    /** Common */
+    public static String N = "N";
+
     /** I18N */
     public static final String I18N_LOCALE_ATTRIBUTE = "request-locale";
     public static final String I18N_USER_LOCALE = "i18n.user.locale";
