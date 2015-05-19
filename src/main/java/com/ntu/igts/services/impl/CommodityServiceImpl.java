@@ -1,11 +1,15 @@
 package com.ntu.igts.services.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Commodity;
@@ -140,6 +144,13 @@ public class CommodityServiceImpl implements CommodityService {
     @Override
     public List<Commodity> getAll() {
         return commodityRepository.findAll();
+    }
+
+    @Override
+    public Page<Commodity> getCommoditiesForUser(int page, int size, String userId) {
+        Map<String, String> criteriaMap = new HashMap<String, String>();
+        criteriaMap.put(Constants.FIELD_USERID, userId);
+        return commodityRepository.findByPage(page, size, SortByEnum.CREATED_TIME, OrderByEnum.DESC, criteriaMap);
     }
 
 }

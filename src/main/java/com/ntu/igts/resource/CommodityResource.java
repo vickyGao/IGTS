@@ -14,9 +14,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.ntu.igts.constants.Constants;
@@ -31,6 +33,7 @@ import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.container.CommodityList;
 import com.ntu.igts.model.container.CommodityQueryResult;
+import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.CommodityService;
 import com.ntu.igts.utils.CommonUtil;
@@ -256,6 +259,21 @@ public class CommodityResource extends BaseResource {
                             CommonUtil.getLocaleFromRequest(webRequest)));
         }
         return JsonUtil.getJsonStringFromPojo(new CommodityList(commodities));
+    }
+
+    @GET
+    @Path("detail")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAllCommodititesForUser(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @QueryParam("page") int currentPage, @QueryParam("size") int size) {
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
+        Page<Commodity> page = commodityService.getCommoditiesForUser(currentPage, size, sessionContext.getUserId());
+        Pagination<Commodity> pagination = new Pagination<Commodity>();
+        pagination.setContent(page.getContent());
+        pagination.setCurrentPage(page.getNumber());
+        pagination.setPageCount(page.getTotalPages());
+        pagination.setTotalCount(page.getNumberOfElements());
+        return JsonUtil.getJsonStringFromPojo(pagination);
     }
 
     private Commodity checkCommodityAvailability(String commodityId) {

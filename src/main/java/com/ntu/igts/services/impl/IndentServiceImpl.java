@@ -164,7 +164,8 @@ public class IndentServiceImpl implements IndentService {
 
             // Check whether the commodity exists
             Commodity commodity = commodityService.getById(indent.getCommodityId());
-            if (commodity == null) {
+            if (commodity == null
+                            || (commodity != null && ActiveStateEnum.NEGATIVE.value().equals(commodity.getActiveYN()))) {
                 String[] param = { indent.getCommodityId() };
                 throw new ServiceWarningException("Cannot find commodity for id " + indent.getCommodityId(),
                                 MessageKeys.COMMODITY_NOT_FOUND_FOR_ID, param);
@@ -210,14 +211,14 @@ public class IndentServiceImpl implements IndentService {
     }
 
     @Override
-    public Indent cancelDeal(Indent indent, String buyerId) {
+    public Indent cancelDeal(Indent indent, String userId) {
         Indent updatedIndent = null;
         if (indent != null) {
             if (!IndentStatusEnum.UNPAID.value().equals(indent.getStatus())) {
                 throw new ServiceWarningException("Can only cancel un-paid indent",
                                 MessageKeys.CAN_ONLY_CANCEL_UNPAID_INDENT);
             }
-            if (!indent.getUserId().equals(buyerId)) {
+            if (!indent.getUserId().equals(userId) || !indent.getSellerId().equals(userId)) {
                 throw new ServiceWarningException("Can only cancel your own indent",
                                 MessageKeys.CAN_ONLY_CANCEL_YOUR_OWN_INDENT);
             }

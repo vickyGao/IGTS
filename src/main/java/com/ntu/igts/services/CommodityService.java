@@ -30,4 +30,6 @@ public interface CommodityService {
 
     public List<Commodity> getAll();
 
+    public Page<Commodity> getCommoditiesForUser(int page, int size, String userId);
+
 }

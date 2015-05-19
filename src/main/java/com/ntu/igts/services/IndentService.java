@@ -27,7 +27,7 @@ public interface IndentService {
 
     public Indent purchase(Indent indent, String buyerId, PayTypeEnum payTypeEnum);
 
-    public Indent cancelDeal(Indent indent, String buyerId);
+    public Indent cancelDeal(Indent indent, String userId);
 
     public Indent returnDeal(Indent indent, String buyerId);
 
