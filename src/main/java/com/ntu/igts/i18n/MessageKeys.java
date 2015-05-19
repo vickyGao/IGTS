@@ -126,6 +126,7 @@ public class MessageKeys {
     public static final String CAN_ONLY_CANCEL_UNPAID_INDENT = "can.only.cancel.unpaid.indent";
     public static final String CAN_ONLY_CANCEL_YOUR_OWN_INDENT = "can.only.cancel.your.own.indent";
     public static final String CANNOT_COMPLETE_DEAL_AS_ITS_NOT_IN_RETURNING_STATUS = "cannot.complete.deal.as.its.not.in.returning.status";
+    public static final String CANNOT_BUY_UNDER_CARRIAGE_COMMODITY = "cannot.buy.under.carriage.commodity";
 
     /** Message */
     public static final String MESSAGE_NOT_FOUND_FOR_ID = "message.not.found.for.id";

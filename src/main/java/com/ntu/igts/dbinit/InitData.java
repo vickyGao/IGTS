@@ -971,7 +971,7 @@ public class InitData {
         sampleBuyer.setRealName("张三");
         sampleBuyer = userService.update(sampleBuyer);
     }
-    
+
     private void createSampleAddress() {
         Address address1 = new Address();
         address1.setAddressCountry("中国");
@@ -982,7 +982,7 @@ public class InitData {
         address1.setPostcode("210104");
         address1.setUserId(sampleBuyer.getId());
         addressService.create(address1);
-        
+
         Address address2 = new Address();
         address2.setAddressCountry("中国");
         address2.setAddressProvince("江苏");
@@ -992,7 +992,7 @@ public class InitData {
         address2.setPostcode("210104");
         address2.setUserId(sampleBuyer.getId());
         addressService.create(address2);
-        
+
         Address address3 = new Address();
         address3.setAddressCountry("中国");
         address3.setAddressProvince("上海");

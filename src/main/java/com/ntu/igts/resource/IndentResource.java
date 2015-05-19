@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.ntu.igts.constants.Constants;
+import com.ntu.igts.enums.ActiveStateEnum;
 import com.ntu.igts.enums.IndentStatusEnum;
 import com.ntu.igts.enums.PayTypeEnum;
 import com.ntu.igts.enums.RoleEnum;
@@ -79,6 +80,16 @@ public class IndentResource extends BaseResource {
             throw new ServiceWarningException("Cannot find commodity for id " + commodityId,
                             MessageKeys.COMMODITY_NOT_FOUND_FOR_ID, param);
         }
+        if (ActiveStateEnum.NEGATIVE.value().equals(commodity.getActiveYN())) {
+            throw new ServiceWarningException("Cannot by a under carriaged commodity",
+                            MessageKeys.CANNOT_BUY_UNDER_CARRIAGE_COMMODITY);
+        }
+
+        // Upon a user has bought a commodity, set activeYN as N
+        commodity.setActiveYN(ActiveStateEnum.NEGATIVE.value());
+        commodityService.update(commodity);
+
+        // Start create the Indent
         if (StringUtil.isEmpty(pojo.getUserId())) {
             pojo.setUserId(sessionContext.getUserId());
         }
