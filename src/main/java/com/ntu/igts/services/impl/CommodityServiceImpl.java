@@ -154,7 +154,12 @@ public class CommodityServiceImpl implements CommodityService {
         if (activeStateEnum != null) {
             criteriaMap.put(Constants.FIELD_ACTIVE_YN, activeStateEnum.value());
         }
-        return commodityRepository.findByPage(page, size, SortByEnum.CREATED_TIME, OrderByEnum.DESC, criteriaMap);
+        Page<Commodity> commodities = commodityRepository.findByPage(page, size, SortByEnum.CREATED_TIME,
+                        OrderByEnum.DESC, criteriaMap);
+        for (Commodity commodity : commodities) {
+            commodity = getCommodityDetailForCommodity(commodity);
+        }
+        return commodities;
     }
 
 }
