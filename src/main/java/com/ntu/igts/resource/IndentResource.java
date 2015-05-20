@@ -81,7 +81,7 @@ public class IndentResource extends BaseResource {
                             MessageKeys.COMMODITY_NOT_FOUND_FOR_ID, param);
         }
         if (ActiveStateEnum.NEGATIVE.value().equals(commodity.getActiveYN())) {
-            throw new ServiceWarningException("Cannot by a under carriaged commodity",
+            throw new ServiceWarningException("Cannot buy a under carriage commodity",
                             MessageKeys.CANNOT_BUY_UNDER_CARRIAGE_COMMODITY);
         }
 
