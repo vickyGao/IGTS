@@ -164,8 +164,7 @@ public class IndentServiceImpl implements IndentService {
 
             // Check whether the commodity exists
             Commodity commodity = commodityService.getById(indent.getCommodityId());
-            if (commodity == null
-                            || (commodity != null && ActiveStateEnum.NEGATIVE.value().equals(commodity.getActiveYN()))) {
+            if (commodity == null) {
                 String[] param = { indent.getCommodityId() };
                 throw new ServiceWarningException("Cannot find commodity for id " + indent.getCommodityId(),
                                 MessageKeys.COMMODITY_NOT_FOUND_FOR_ID, param);

@@ -1,5 +1,6 @@
 package com.ntu.igts.utils;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
@@ -99,5 +100,40 @@ public class CommonUtil {
             }
         }
         return token;
+    }
+
+    /**
+     * Delete an empty dir
+     * 
+     * @param dir
+     */
+    public static void doDeleteEmptyDir(String dir) {
+        boolean success = (new File(dir)).delete();
+        if (success) {
+            System.out.println("Successfully deleted empty directory: " + dir);
+        } else {
+            System.out.println("Failed to delete empty directory: " + dir);
+        }
+    }
+
+    /**
+     * Recurrence and delete folder together with files under it
+     * 
+     * @param dir
+     * 
+     * @return boolean Returns "true" if all deletions were successful. If a deletion fails, the method stops attempting
+     *         to delete and returns "false".
+     */
+    public static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
     }
 }
