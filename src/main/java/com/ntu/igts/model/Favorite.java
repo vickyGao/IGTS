@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -24,6 +25,9 @@ public class Favorite extends BaseModel implements Serializable {
     @Column(name = "user_id", columnDefinition = "VARCHAR(36)")
     @JsonProperty("userid")
     private String userId;
+    @Transient
+    @JsonProperty("commodity")
+    private Commodity commodity;
 
     public String getCommodityId() {
         return commodityId;
@@ -39,6 +43,14 @@ public class Favorite extends BaseModel implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Commodity getCommodity() {
+        return commodity;
+    }
+
+    public void setCommodity(Commodity commodity) {
+        this.commodity = commodity;
     }
 
 }

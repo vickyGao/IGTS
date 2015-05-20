@@ -83,7 +83,7 @@ public class FavoriteResource extends BaseResource {
     }
 
     @GET
-    @Path("entity")
+    @Path("detail")
     @Produces(MediaType.APPLICATION_JSON)
     public String getFavoritesForUser(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @QueryParam("page") int currentPage, @QueryParam("size") int pageSize) {
