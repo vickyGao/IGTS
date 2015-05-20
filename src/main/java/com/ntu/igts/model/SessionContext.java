@@ -30,9 +30,9 @@ public class SessionContext implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "token", columnDefinition = "VARCHAR(36)")
+    @Column(name = "id", columnDefinition = "VARCHAR(36)")
     @JsonProperty("token")
-    private String token;
+    private String id;
     @Column(name = "login_time")
     @JsonProperty("logintime")
     private Date loginTime;
@@ -61,11 +61,11 @@ public class SessionContext implements Serializable {
     private Admin admin;
 
     public String getToken() {
-        return token;
+        return id;
     }
 
     public void setToken(String token) {
-        this.token = token;
+        this.id = token;
     }
 
     public Date getLoginTime() {

@@ -72,7 +72,7 @@ public class SessionContextServiceImpl implements SessionContextService {
     public boolean delete(String token) {
         token = CommonUtil.getFormattedToken(token);
         sessionContextRepository.delete(token, false);
-        SessionContext sessionContext = sessionContextRepository.getByToken(token);
+        SessionContext sessionContext = getByToken(token);
         if (sessionContext == null) {
             return true;
         } else {

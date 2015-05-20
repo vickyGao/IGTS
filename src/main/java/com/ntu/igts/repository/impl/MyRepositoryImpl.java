@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
@@ -35,6 +36,8 @@ import com.ntu.igts.utils.StringUtil;
 @NoRepositoryBean
 public class MyRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements
                 MyRepository<T, ID> {
+
+    @PersistenceContext
     private EntityManager entityManager;
     private Class<T> domainClass;
 

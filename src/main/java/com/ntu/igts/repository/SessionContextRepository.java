@@ -9,7 +9,7 @@ import com.ntu.igts.model.SessionContext;
 
 public interface SessionContextRepository extends MyRepository<SessionContext, String> {
 
-    @Query("from SessionContext s where s.token=:token")
+    @Query("from SessionContext s where s.id=:token")
     public SessionContext getByToken(@Param("token") String token);
 
     @Query("from SessionContext s where s.userId=:userId")
