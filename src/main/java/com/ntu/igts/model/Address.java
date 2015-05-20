@@ -27,6 +27,9 @@ public class Address extends BaseModel implements Serializable {
     @Column(name = "address_city")
     @JsonProperty("addresscity")
     private String addressCity;
+    @Column(name = "address_district")
+    @JsonProperty("addressdistrict")
+    private String addressDistrict;
     @Column(name = "address_detail")
     @JsonProperty("addressdetail")
     private String addressDetail;
@@ -64,6 +67,14 @@ public class Address extends BaseModel implements Serializable {
         this.addressCity = addressCity;
     }
 
+    public String getAddressDistrict() {
+        return addressDistrict;
+    }
+
+    public void setAddressDistrict(String addressDistrict) {
+        this.addressDistrict = addressDistrict;
+    }
+
     public String getAddressDetail() {
         return addressDetail;
     }
@@ -95,4 +106,5 @@ public class Address extends BaseModel implements Serializable {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
 }

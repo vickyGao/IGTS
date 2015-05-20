@@ -65,7 +65,7 @@ public class SessionContext implements Serializable {
     }
 
     public void setToken(String token) {
-        this.id = token;
+        id = token;
     }
 
     public Date getLoginTime() {

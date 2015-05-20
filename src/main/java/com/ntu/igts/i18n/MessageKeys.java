@@ -145,4 +145,9 @@ public class MessageKeys {
     /** Cover */
     public static final String COVER_NOT_FOUND_FOR_ID = "cover.not.found.for.id";
     public static final String COMMODITY_ID_REQUIERED = "commodity.id.requiered";
+
+    /** Json */
+    public static final String CANNOT_TRANSFER_FROM_STRING_TO_POJO = "cannot.transfer.from.string.to.pojo";
+    public static final String CANNOT_TRANSFER_FROM_POJO_TO_STRING = "cannot.transfer.from.pojo.to.string";
+
 }
