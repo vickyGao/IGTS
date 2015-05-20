@@ -55,8 +55,8 @@ public class CommodityRepositoryImpl implements CommodityCustomizeRepository {
         } else {
             luceneQuery = queryBuilder
                             .bool()
-                            .must(queryBuilder.keyword().fuzzy().onFields("title", "description", "tags.name")
-                                            .matching(query.getSearchTerm()).createQuery())
+                            .must(queryBuilder.keyword().wildcard().onFields("title", "description", "tags.name")
+                                            .matching(getWildcardSerchTerm(query.getSearchTerm())).createQuery())
                             .must(queryBuilder.range().onField("price").from(query.getStartPrice())
                                             .to(query.getEndPrice()).createQuery()).createQuery();
         }
@@ -164,5 +164,28 @@ public class CommodityRepositoryImpl implements CommodityCustomizeRepository {
      */
     private int getTotalPagesByTotalCountAndPageSize(int toalCount, int pageSize) {
         return (toalCount - 1) / pageSize + 1;
+    }
+
+    /**
+     * Split the search term into different parts (e.g [A B] -> [*A*B*])
+     * 
+     * @param originSearchTerm
+     *            The search term get from front
+     * @return The split search term, with * between each two characters
+     */
+    private String getWildcardSerchTerm(String originSearchTerm) {
+        StringBuffer serchTermStringBuffer = new StringBuffer("*");
+        if (originSearchTerm != null) {
+            String[] splitSearchTerms = originSearchTerm.split(" ");
+            if (splitSearchTerms != null) {
+                for (String splitSearchTerm : splitSearchTerms) {
+                    if (splitSearchTerm.trim().length() > 0) {
+                        serchTermStringBuffer.append(splitSearchTerm + "*");
+                    }
+                }
+            }
+        }
+
+        return serchTermStringBuffer.toString();
     }
 }

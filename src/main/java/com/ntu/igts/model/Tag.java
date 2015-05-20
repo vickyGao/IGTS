@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.Field;
 
@@ -26,7 +27,7 @@ public class Tag extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -2616479631469825693L;
 
-    @Field
+    @Field(analyze = Analyze.NO)
     @Boost(1.2f)
     @Column(name = "name")
     @JsonProperty("name")

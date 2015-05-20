@@ -48,12 +48,12 @@ public class Commodity extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -7857399618945670063L;
 
-    @Field
+    @Field(analyze = Analyze.NO)
     @Boost(2.0f)
     @Column(name = "title")
     @JsonProperty("title")
     private String title;
-    @Field
+    @Field(analyze = Analyze.NO)
     @Boost(1.8f)
     @Column(name = "description")
     @JsonProperty("description")
