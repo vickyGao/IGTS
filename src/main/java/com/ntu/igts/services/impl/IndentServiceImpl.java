@@ -221,6 +221,17 @@ public class IndentServiceImpl implements IndentService {
                 throw new ServiceWarningException("Can only cancel your own indent",
                                 MessageKeys.CAN_ONLY_CANCEL_YOUR_OWN_INDENT);
             }
+            // Check whether the commodity exists
+            Commodity commodity = commodityService.getById(indent.getCommodityId());
+            if (commodity == null) {
+                String[] param = { indent.getCommodityId() };
+                throw new ServiceWarningException("Cannot find commodity for id " + indent.getCommodityId(),
+                                MessageKeys.COMMODITY_NOT_FOUND_FOR_ID, param);
+            }
+            // If the Indent is cancelled, turn the active state of the commodity back to active
+            commodity.setActiveYN(ActiveStateEnum.ACTIVE.value());
+            commodityService.update(commodity);
+
             indent.setStatus(IndentStatusEnum.CANCELLED.value());
             updatedIndent = update(indent);
         }
