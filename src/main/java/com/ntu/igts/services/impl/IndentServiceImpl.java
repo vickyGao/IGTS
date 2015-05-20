@@ -218,7 +218,7 @@ public class IndentServiceImpl implements IndentService {
                 throw new ServiceWarningException("Can only cancel un-paid indent",
                                 MessageKeys.CAN_ONLY_CANCEL_UNPAID_INDENT);
             }
-            if (!indent.getUserId().equals(userId) || !indent.getSellerId().equals(userId)) {
+            if (!indent.getUserId().equals(userId) && !indent.getSellerId().equals(userId)) {
                 throw new ServiceWarningException("Can only cancel your own indent",
                                 MessageKeys.CAN_ONLY_CANCEL_YOUR_OWN_INDENT);
             }
