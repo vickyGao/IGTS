@@ -91,8 +91,7 @@ public class UserResource extends BaseResource {
             throw new ServiceWarningException("Origin password is not correct", MessageKeys.ORIGIN_PASSWORD_WRONG);
         }
 
-        existingUser.setPassword(pojo.getNewPassword());
-        User updatedUser = userService.updatePassword(pojo.getId(), pojo.getPassword());
+        User updatedUser = userService.updatePassword(pojo.getId(), pojo.getNewPassword());
         if (updatedUser == null) {
             String[] param = { existingUser.getUserName() };
             throw new ServiceErrorException("Update user " + existingUser.getUserName() + " failed.",
