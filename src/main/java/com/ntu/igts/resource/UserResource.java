@@ -34,6 +34,7 @@ import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.UserService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
+import com.ntu.igts.utils.MD5Util;
 import com.ntu.igts.utils.StringUtil;
 
 @Component
@@ -86,7 +87,7 @@ public class UserResource extends BaseResource {
         SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
         User existingUser = checkUserAvailability(sessionContext.getUserId());
-        if (!existingUser.getPassword().equals(pojo.getPassword())) {
+        if (!existingUser.getPassword().equals(MD5Util.getMd5(pojo.getPassword()))) {
             throw new ServiceWarningException("Origin password is not correct", MessageKeys.ORIGIN_PASSWORD_WRONG);
         }
 
