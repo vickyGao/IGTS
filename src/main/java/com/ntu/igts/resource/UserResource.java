@@ -83,21 +83,22 @@ public class UserResource extends BaseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String update(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token, String inString) {
-        filterSessionContext(token, RoleEnum.USER);
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
-        User existingUser = checkUserAvailability(pojo.getId());
+        User existingUser = checkUserAvailability(sessionContext.getUserId());
         if (!existingUser.getPassword().equals(pojo.getPassword())) {
-            existingUser.setPassword(pojo.getPassword());
-            User updatedUser = userService.updatePassword(pojo.getId(), pojo.getPassword());
-            if (updatedUser == null) {
-                String[] param = { existingUser.getUserName() };
-                throw new ServiceErrorException("Update user " + existingUser.getUserName() + " failed.",
-                                MessageKeys.UPDATE_USER_FAILED, param);
-            }
-            return JsonUtil.getJsonStringFromPojo(updatedUser);
-        } else {
-            return JsonUtil.getJsonStringFromPojo(existingUser);
+            throw new ServiceWarningException("Origin password is not correct", MessageKeys.ORIGIN_PASSWORD_WRONG);
         }
+
+        existingUser.setPassword(pojo.getNewPassword());
+        User updatedUser = userService.updatePassword(pojo.getId(), pojo.getPassword());
+        if (updatedUser == null) {
+            String[] param = { existingUser.getUserName() };
+            throw new ServiceErrorException("Update user " + existingUser.getUserName() + " failed.",
+                            MessageKeys.UPDATE_USER_FAILED, param);
+        }
+        return JsonUtil.getJsonStringFromPojo(updatedUser);
+
     }
 
     /**
