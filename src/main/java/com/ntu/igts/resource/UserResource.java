@@ -28,6 +28,7 @@ import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.model.User;
 import com.ntu.igts.model.container.AccountContainer;
+import com.ntu.igts.model.container.Asset;
 import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.UserService;
@@ -228,6 +229,22 @@ public class UserResource extends BaseResource {
         } else {
             return JsonUtil.getJsonStringFromPojo(new User());
         }
+    }
+
+    @GET
+    @Path("asset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAssetByUserId(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
+        User user = userService.getUserById(sessionContext.getUserId());
+        Asset asset = new Asset();
+        if (user != null) {
+            asset.setMoney(user.getMoney());
+            asset.setLockedMoney(user.getLockedMoney());
+            asset.setUserId(user.getId());
+        }
+
+        return JsonUtil.getJsonStringFromPojo(asset);
     }
 
     @GET
