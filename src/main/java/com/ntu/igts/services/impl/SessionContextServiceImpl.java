@@ -8,10 +8,12 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+
 import com.ntu.igts.model.SessionContext;
 import com.ntu.igts.repository.SessionContextRepository;
 import com.ntu.igts.services.SessionContextService;
 import com.ntu.igts.utils.CommonUtil;
+import com.ntu.igts.utils.StringUtil;
 
 @Service
 public class SessionContextServiceImpl implements SessionContextService {
@@ -48,8 +50,12 @@ public class SessionContextServiceImpl implements SessionContextService {
 
     @Override
     public SessionContext getByToken(String token) {
-        token = CommonUtil.getFormattedToken(token);
-        return sessionContextRepository.findById(token);
+        if (!StringUtil.isEmpty(token)) {
+            token = CommonUtil.getFormattedToken(token);
+            return sessionContextRepository.findById(token, true);
+        } else {
+            return null;
+        }
     }
 
     @Override
