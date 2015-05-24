@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import com.ntu.igts.constants.Constants;
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.model.Role;
+import com.ntu.igts.model.User;
 
 public class CommonUtil {
 
@@ -135,5 +136,50 @@ public class CommonUtil {
             }
         }
         return dir.delete();
+    }
+
+    /**
+     * Each time using this method, will auto add 1 to user's buyerExp, if the Exp is up to the max Exp of each level,
+     * will then add 1 to the level
+     * 
+     * @param user
+     * @return The user object with new level and Exp
+     */
+    public static User getNewLevelForBuyer(User user) {
+        int currentLevel = user.getBuyerLevel();
+        int currentExp = user.getBuyerExp();
+        int maxExp = LevelUtil.getMaxExpForLevel(currentLevel);
+        if (currentExp + 1 >= maxExp) {
+            currentLevel += 1;
+            currentExp = 0;
+        } else {
+            currentExp += 1;
+        }
+        user.setBuyerLevel(currentLevel);
+        user.setBuyerExp(currentExp);
+        return user;
+    }
+
+    /**
+     * Each time using this method, will auto add 1 to user's sellerExp, if the Exp is up to the max Exp of each level,
+     * will then add 1 to the level
+     * 
+     * @param user
+     * @return The user object with new level and Exp
+     */
+    public static User getNewLevelForSeller(User user) {
+        int currentLevel = user.getSellerLevel();
+        int currentExp = user.getSellerExp();
+        int maxExp = LevelUtil.getMaxExpForLevel(currentLevel);
+        if (currentExp + 1 >= maxExp) {
+            currentLevel += 1;
+            currentExp = 0;
+        } else {
+            currentExp += 1;
+        }
+        user.setSellerLevel(currentLevel);
+        user.setSellerExp(currentExp);
+        return user;
+
     }
 }

@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.SensitiveWord;
@@ -69,6 +70,19 @@ public class SensitiveWordServiceImpl implements SensitiveWordService {
         query.setSortBy(SortByEnum.WORD);
         query.setOrderBy(OrderByEnum.ASC);
         return sensitiveWordRepository.findByPage(query);
+    }
+
+    @Override
+    public boolean containsSensitiveWord(String word) {
+        if (!StringUtil.isEmpty(word)) {
+            List<SensitiveWord> sensitiveWords = getAll();
+            for (SensitiveWord sensitiveWord : sensitiveWords) {
+                if (word.contains(sensitiveWord.getWord())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

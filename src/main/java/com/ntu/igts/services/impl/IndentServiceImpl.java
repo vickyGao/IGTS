@@ -28,6 +28,7 @@ import com.ntu.igts.services.BillService;
 import com.ntu.igts.services.CommodityService;
 import com.ntu.igts.services.IndentService;
 import com.ntu.igts.services.UserService;
+import com.ntu.igts.utils.CommonUtil;
 
 @Service
 public class IndentServiceImpl implements IndentService {
@@ -128,6 +129,10 @@ public class IndentServiceImpl implements IndentService {
             double totalDealMoney = indent.getIndentPrice();
             buyer.setLockedMoney(seller.getLockedMoney() - totalDealMoney);
             seller.setMoney(seller.getMoney() + totalDealMoney);
+
+            // After each Indent is completed, the buyer's and the seller's level & exp will be updated
+            buyer = CommonUtil.getNewLevelForBuyer(buyer);
+            seller = CommonUtil.getNewLevelForSeller(seller);
             userService.update(buyer);
             userService.update(seller);
 
@@ -140,7 +145,7 @@ public class IndentServiceImpl implements IndentService {
             Bill buyerBill = new Bill();
             buyerBill.setUserId(buyer.getId());
             buyerBill.setContent("支出");
-            buyerBill.setAmount(-totalDealMoney);
+            buyerBill.setAmount(totalDealMoney);
             billService.create(buyerBill);
 
             Bill sellerBill = new Bill();
@@ -260,6 +265,10 @@ public class IndentServiceImpl implements IndentService {
             if (!IndentStatusEnum.RETURNING.value().equals(indent.getStatus())) {
                 throw new ServiceWarningException("Cannot complete deal as its not in Returning status",
                                 MessageKeys.CANNOT_COMPLETE_DEAL_AS_ITS_NOT_IN_RETURNING_STATUS);
+            }
+            if (!IndentStatusEnum.DELIVERED.value().equals(indent.getStatus())) {
+                throw new ServiceWarningException("Seller has not delivered the commodity",
+                                MessageKeys.SELLER_HAS_NOT_DELIVERED_COMMODITY);
             }
             // Check whether the commodity exists
             Commodity commodity = commodityService.getById(indent.getCommodityId());

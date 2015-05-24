@@ -47,4 +47,6 @@ public class Constants {
     public static final String MGMT_PROPS_FILE = "igts.properties";
     public static final String IMAGE_STORAGE_BASE_PATH = "igts.image.location";
     public static final String INDEX_STORAGE_PATH = "igts.index.location";
+    public static final String LEVEL_EXP_FIRST = "igts.exp.level.first";
+    public static final String LEVEL_EXP_STEP = "igts.exp.level.step";
 }

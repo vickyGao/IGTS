@@ -49,7 +49,7 @@ public class SessionContextServiceImpl implements SessionContextService {
     @Override
     public SessionContext getByToken(String token) {
         token = CommonUtil.getFormattedToken(token);
-        return sessionContextRepository.getByToken(token);
+        return sessionContextRepository.findById(token);
     }
 
     @Override

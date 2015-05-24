@@ -15,7 +15,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -38,8 +37,6 @@ import com.ntu.igts.utils.MD5Util;
 @Component
 @Path("admin")
 public class AdminResource extends BaseResource {
-
-    private static final Logger LOGGER = Logger.getLogger(AdminResource.class);
 
     @Context
     private HttpServletRequest webRequest;
@@ -167,7 +164,6 @@ public class AdminResource extends BaseResource {
     @Path("detail/token")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAdminByToken(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
-        LOGGER.debug("Current token is " + token);
         token = CommonUtil.getFormattedToken(token);
         SessionContext sessionContext = sessionContextService.getByToken(token);
         Admin admin = null;

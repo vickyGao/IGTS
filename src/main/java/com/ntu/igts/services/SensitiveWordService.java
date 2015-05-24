@@ -22,4 +22,6 @@ public interface SensitiveWordService {
     public boolean isSensitiveWord(String sensitiveWord);
 
     public Page<SensitiveWord> getPaginatedSensitiveWord(Query query);
+
+    public boolean containsSensitiveWord(String word);
 }

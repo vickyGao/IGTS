@@ -48,6 +48,7 @@ public class MessageKeys {
     public static final String PURCHASE_FAIL = "purchase.fail";
     public static final String CARRIAGE_MONEY_NUMBER_ILLEGAL = "carriage.money.number.illegal";
     public static final String PRICE_MONEY_NUMBER_ILLEGAL = "price.money.number.illegal";
+    public static final String COMMODITY_TITLE_CONTAINS_SENSITIVE_WORD = "commodity.title.contains.sensitive.word";
 
     /** Image */
     public static final String CREATE_IMAGE_FAIL = "create.image.fail";
@@ -127,6 +128,7 @@ public class MessageKeys {
     public static final String CAN_ONLY_CANCEL_YOUR_OWN_INDENT = "can.only.cancel.your.own.indent";
     public static final String CANNOT_COMPLETE_DEAL_AS_ITS_NOT_IN_RETURNING_STATUS = "cannot.complete.deal.as.its.not.in.returning.status";
     public static final String CANNOT_BUY_UNDER_CARRIAGE_COMMODITY = "cannot.buy.under.carriage.commodity";
+    public static final String SELLER_HAS_NOT_DELIVERED_COMMODITY = "seller.has.not.delivered.commodity";
 
     /** Message */
     public static final String MESSAGE_NOT_FOUND_FOR_ID = "message.not.found.for.id";

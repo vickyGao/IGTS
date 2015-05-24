@@ -36,6 +36,7 @@ import com.ntu.igts.model.container.CommodityQueryResult;
 import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.CommodityService;
+import com.ntu.igts.services.SensitiveWordService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
 import com.ntu.igts.utils.StringUtil;
@@ -50,6 +51,8 @@ public class CommodityResource extends BaseResource {
     private MessageBuilder messageBuilder;
     @Resource
     private CommodityService commodityService;
+    @Resource
+    private SensitiveWordService sensitiveWordService;
 
     /**
      * Create a commodity
@@ -78,6 +81,10 @@ public class CommodityResource extends BaseResource {
         if (!CommonUtil.isLegalMoneyNumber(pojo.getPrice())) {
             throw new ServiceWarningException("Price is not a legal money number",
                             MessageKeys.PRICE_MONEY_NUMBER_ILLEGAL);
+        }
+        if (sensitiveWordService.containsSensitiveWord(pojo.getTitle())) {
+            throw new ServiceWarningException("The commodity title contains sensitive word",
+                            MessageKeys.COMMODITY_TITLE_CONTAINS_SENSITIVE_WORD);
         }
 
         Commodity insertedCommodity = commodityService.create(pojo);

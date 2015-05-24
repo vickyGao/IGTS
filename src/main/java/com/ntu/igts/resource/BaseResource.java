@@ -4,8 +4,6 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
-
 import com.ntu.igts.enums.RoleEnum;
 import com.ntu.igts.exception.UnAuthorizedException;
 import com.ntu.igts.i18n.MessageKeys;
@@ -18,8 +16,6 @@ import com.ntu.igts.services.UserService;
 import com.ntu.igts.utils.CommonUtil;
 
 public class BaseResource {
-
-    private static final Logger LOGGER = Logger.getLogger(BaseResource.class);
 
     @Resource
     protected SessionContextService sessionContextService;
@@ -39,7 +35,7 @@ public class BaseResource {
      */
     protected SessionContext filterSessionContext(String token, RoleEnum allowedRole) {
         token = CommonUtil.getFormattedToken(token);
-        LOGGER.debug("Current token is: " + token + ", allowed role is " + allowedRole.value());
+
         SessionContext sessionContext = sessionContextService.getByToken(token);
         if (sessionContext != null) { // If the session exists
             if (RoleEnum.ALL.equals(allowedRole)) { // If the session exits and all roles are allowed
