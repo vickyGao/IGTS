@@ -19,6 +19,8 @@ public class Constants {
     public static String FIELD_PARENTID = "parentId";
     /** Filed name activeYN */
     public static String FIELD_ACTIVE_YN = "activeYN";
+    /** Filed name status */
+    public static String FIELD_STATUS = "status";
 
     /** The vale which represents the entity is logic deleted */
     public static String LOGIC_DELETED = "Y";

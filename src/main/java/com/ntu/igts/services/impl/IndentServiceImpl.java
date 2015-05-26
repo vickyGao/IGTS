@@ -308,4 +308,14 @@ public class IndentServiceImpl implements IndentService {
                         criteriaMap);
     }
 
+    @Override
+    public Page<Indent> getPaginatedSpecifiedIndentBySellerId(IndentStatusEnum indentStatusEnum, int currentPage,
+                    int pageSize, String userId) {
+        Map<String, String> criteriaMap = new HashMap<String, String>();
+        criteriaMap.put(Constants.FIELD_SELLER_ID, userId);
+        criteriaMap.put(Constants.FIELD_STATUS, indentStatusEnum.value());
+        return indentRepository.findByPage(currentPage, pageSize, SortByEnum.CREATED_TIME, OrderByEnum.DESC,
+                        criteriaMap);
+    }
+
 }

@@ -283,6 +283,29 @@ public class IndentResource extends BaseResource {
         return JsonUtil.getJsonStringFromPojo(pagination);
     }
 
+    @GET
+    @Path("entity/seller/indentstatus/{indentstatus}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getSpecifiedIndentsForSeller(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
+                    @PathParam("indentstatus") IndentStatusEnum indentStatusEnum, @QueryParam("page") int currentPage,
+                    @QueryParam("size") int pageSize) {
+        SessionContext sessionContext = filterSessionContext(token, RoleEnum.USER);
+        Page<Indent> page = indentService.getPaginatedSpecifiedIndentBySellerId(indentStatusEnum, currentPage,
+                        pageSize, sessionContext.getUserId());
+        Pagination<Indent> pagination = new Pagination<Indent>();
+        List<Indent> indents = page.getContent();
+        for (Indent indent : indents) {
+            indent.setStatus(messageBuilder.buildMessage(indent.getStatus(),
+                            CommonUtil.getLocaleFromRequest(webRequest)));
+            indent.setCommodity(commodityService.getById(indent.getCommodityId()));
+        }
+        pagination.setContent(indents);
+        pagination.setCurrentPage(page.getNumber());
+        pagination.setPageCount(page.getTotalPages());
+        pagination.setTotalCount(page.getNumberOfElements());
+        return JsonUtil.getJsonStringFromPojo(pagination);
+    }
+
     private Indent checkIndentAvailability(String indentId) {
         Indent existingIndent = indentService.getById(indentId);
         if (existingIndent == null) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import com.ntu.igts.enums.IndentStatusEnum;
 import com.ntu.igts.enums.PayTypeEnum;
 import com.ntu.igts.model.Indent;
 
@@ -34,4 +35,7 @@ public interface IndentService {
     public Indent returnComplete(Indent indent, String buyerId);
 
     public Page<Indent> getPaginatedIndentBySellerId(int currentPage, int pageSize, String userId);
+
+    public Page<Indent> getPaginatedSpecifiedIndentBySellerId(IndentStatusEnum indentStatusEnum, int currentPage,
+                    int pageSize, String userId);
 }
