@@ -1,5 +1,7 @@
 package com.ntu.igts.resource;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -55,7 +57,18 @@ public class FavoriteResource extends BaseResource {
         if (StringUtil.isEmpty(pojo.getUserId())) {
             pojo.setUserId(sessionContext.getUserId());
         }
+        List<Favorite> existingFavoriteList = favoriteService.getByCommodityIdAndUserId(pojo.getCommodityId(),
+                        sessionContext.getUserId());
+        if (existingFavoriteList.size() > 0) {
+            throw new ServiceWarningException("This commodity has already been collected",
+                            MessageKeys.COMMODITY_HAS_BEEN_COLLECTED);
+        }
         Commodity existingCommodity = commodityService.getById(pojo.getCommodityId());
+        if (existingCommodity == null) {
+            String[] param = { pojo.getCommodityId() };
+            throw new ServiceWarningException("Cannot find commodity for id " + pojo.getCommodityId(),
+                            MessageKeys.COMMODITY_NOT_FOUND_FOR_ID, param);
+        }
         existingCommodity.setCollectionNumber(existingCommodity.getCollectionNumber() + 1);
         Commodity updatedCommodity = commodityService.update(existingCommodity);
         Favorite insertedFavorite = null;

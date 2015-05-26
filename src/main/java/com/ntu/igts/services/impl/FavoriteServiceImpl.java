@@ -73,4 +73,12 @@ public class FavoriteServiceImpl implements FavoriteService {
         return favoritePage;
     }
 
+    @Override
+    public List<Favorite> getByCommodityIdAndUserId(String commodityId, String userId) {
+        Map<String, String> criteriaMap = new HashMap<String, String>();
+        criteriaMap.put(Constants.FIELD_COMMODITYID, commodityId);
+        criteriaMap.put(Constants.FIELD_USERID, userId);
+        return favoriteRepository.findByCriteria(criteriaMap);
+    }
+
 }

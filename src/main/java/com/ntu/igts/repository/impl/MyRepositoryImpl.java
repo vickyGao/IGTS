@@ -305,4 +305,37 @@ public class MyRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepos
         }
     }
 
+    @Override
+    public List<T> findByCriteria(Map<String, String> criteriaMap) {
+        return findByCriteria(criteriaMap, false);
+    }
+
+    @Override
+    public List<T> findByCriteria(Map<String, String> criteriaMap, boolean isIncludeDeleted) {
+
+        final Map<String, String> queryCriteriaMap = criteriaMap;
+
+        if (isIncludeDeleted) {
+            return super.findAll(new Specification<T>() {
+                @Override
+                public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicateList = getPredicateListByCriteriaMap(root, cb, queryCriteriaMap);
+                    query.where(cb.and(predicateList.toArray(new Predicate[predicateList.size()])));
+                    return null;
+                }
+            });
+        } else {
+            return super.findAll(new Specification<T>() {
+                @Override
+                public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                    List<Predicate> predicateList = getPredicateListByCriteriaMap(root, cb, queryCriteriaMap);
+                    Path<String> deletedYN = root.get(Constants.FIELD_DELETED_YN);
+                    query.where(cb.and(cb.and(predicateList.toArray(new Predicate[predicateList.size()])),
+                                    cb.equal(deletedYN, "N")));
+                    return null;
+                }
+            });
+        }
+    }
+
 }

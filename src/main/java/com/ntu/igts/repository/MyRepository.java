@@ -92,4 +92,8 @@ public interface MyRepository<T, ID extends Serializable> extends JpaRepository<
 
     public Page<T> findByPage(int currentPage, int pageSize, SortByEnum sortByEnum, OrderByEnum orderByEnum,
                     Map<String, String> criteriaMap, boolean isIncludeDeleted);
+
+    public List<T> findByCriteria(Map<String, String> criteriaMap);
+
+    public List<T> findByCriteria(Map<String, String> criteriaMap, boolean isIncludeDeleted);
 }

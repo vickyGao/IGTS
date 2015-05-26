@@ -72,6 +72,14 @@ public class FavoriteServiceTest extends TestBase {
     }
 
     @Test
+    @Order(32)
+    public void testGetByCommodityIdAndUserId() {
+        List<Favorite> favoriteList = favoriteService.getByCommodityIdAndUserId(commodity.getId(), user.getId());
+        assertNotNull("Get favorite by commodity id and user id failed", favoriteList);
+        assertTrue("Get favorite by commodity id and user id failed", favoriteList.size() > 0);
+    }
+
+    @Test
     @Order(40)
     public void testDelete() {
         boolean tagDeleteFlag = tagService.delete(tag.getId());

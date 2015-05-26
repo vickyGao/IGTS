@@ -99,6 +99,7 @@ public class MessageKeys {
     public static final String UPDATE_FAVORITE_FAIL = "update.favorite.fail";
     public static final String DELETE_FAVORITE_SUCCESS = "delete.favorite.success";
     public static final String DELETE_FAVORITE_FAIL = "delete.favorite.fail";
+    public static final String COMMODITY_HAS_BEEN_COLLECTED = "commodity.has.been.collected";
 
     /** Indent Status */
     public static final String STATUS_UNPAID = "status.unpaid";

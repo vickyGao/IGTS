@@ -19,4 +19,6 @@ public interface FavoriteService {
     public List<Favorite> getByUserId(String userId);
 
     public Page<Favorite> getPaginatedFavoritesByUserId(int currentPage, int pageSize, String userId);
+
+    public List<Favorite> getByCommodityIdAndUserId(String commodityId, String userId);
 }
