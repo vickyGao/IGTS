@@ -123,6 +123,11 @@ public class IndentServiceImpl implements IndentService {
                 throw new ServiceWarningException("Cannot find user for id " + buyerId,
                                 MessageKeys.USER_NOT_FOUND_FOR_ID, param);
             }
+            // Check whether the seller has delivered the commodity
+            if (!IndentStatusEnum.DELIVERED.value().equals(indent.getStatus())) {
+                throw new ServiceWarningException("Seller has not delivered the commodity",
+                                MessageKeys.SELLER_HAS_NOT_DELIVERED_COMMODITY);
+            }
 
             // Start to complete the deal
             // Update the buyer's and the seller's money
@@ -265,10 +270,6 @@ public class IndentServiceImpl implements IndentService {
             if (!IndentStatusEnum.RETURNING.value().equals(indent.getStatus())) {
                 throw new ServiceWarningException("Cannot complete deal as its not in Returning status",
                                 MessageKeys.CANNOT_COMPLETE_DEAL_AS_ITS_NOT_IN_RETURNING_STATUS);
-            }
-            if (!IndentStatusEnum.DELIVERED.value().equals(indent.getStatus())) {
-                throw new ServiceWarningException("Seller has not delivered the commodity",
-                                MessageKeys.SELLER_HAS_NOT_DELIVERED_COMMODITY);
             }
             // Check whether the commodity exists
             Commodity commodity = commodityService.getById(indent.getCommodityId());
