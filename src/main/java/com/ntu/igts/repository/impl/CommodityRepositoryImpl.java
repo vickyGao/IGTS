@@ -35,6 +35,8 @@ public class CommodityRepositoryImpl implements CommodityCustomizeRepository {
         if (query == null) {
             return null;
         }
+
+        //通过JPA创建和运行搜索
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         // create native Lucene query unsing the query DSL
         // alternatively you can write the Lucene query using the Lucene query parser

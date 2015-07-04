@@ -82,9 +82,7 @@ public class AuthorizationResource {
     @DELETE
     @Path("logout")
     public void logout(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token) {
-        if (sessionContextService.delete(token)) {
-            throw new UnAuthorizedException("Error 401 Unauthorized", MessageKeys.UNAUTHORIZED);
-        } else {
+        if (!sessionContextService.delete(token)) {
             throw new ServiceErrorException("Logout failed", MessageKeys.LOGOUT_FAIL);
         }
     }

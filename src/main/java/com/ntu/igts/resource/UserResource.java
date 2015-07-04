@@ -61,6 +61,10 @@ public class UserResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String create(String inString) {
         User pojo = JsonUtil.getPojoFromJsonString(inString, User.class);
+        User existUser = userService.getUserByUserName(pojo.getUserName());
+        if(existUser != null){
+            throw new ServiceWarningException("The username was registered", MessageKeys.USERNAME_REGISTERED);
+        }
         User user = userService.create(pojo);
         if (user == null) {
             String[] param = { pojo.getUserName() };
@@ -121,6 +125,8 @@ public class UserResource extends BaseResource {
         if (StringUtil.isEmpty(pojo.getPassword())) {
             pojo.setPassword(existingUser.getPassword());
         }
+        pojo.setLockedMoney(existingUser.getLockedMoney());
+        pojo.setMoney(existingUser.getMoney());
         User returnUser = userService.update(pojo);
         return JsonUtil.getJsonStringFromPojo(returnUser);
     }

@@ -132,7 +132,7 @@ public class IndentServiceImpl implements IndentService {
             // Start to complete the deal
             // Update the buyer's and the seller's money
             double totalDealMoney = indent.getIndentPrice();
-            buyer.setLockedMoney(seller.getLockedMoney() - totalDealMoney);
+            buyer.setLockedMoney(buyer.getLockedMoney() - totalDealMoney);
             seller.setMoney(seller.getMoney() + totalDealMoney);
 
             // After each Indent is completed, the buyer's and the seller's level & exp will be updated

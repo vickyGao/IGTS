@@ -27,9 +27,11 @@ import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.Favorite;
 import com.ntu.igts.model.SessionContext;
+import com.ntu.igts.model.Tag;
 import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.services.CommodityService;
 import com.ntu.igts.services.FavoriteService;
+import com.ntu.igts.services.TagService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
 import com.ntu.igts.utils.StringUtil;
@@ -46,6 +48,8 @@ public class FavoriteResource extends BaseResource {
     private FavoriteService favoriteService;
     @Resource
     private CommodityService commodityService;
+    @Resource
+    private TagService tagService;
 
     @POST
     @Path("entity")
@@ -70,6 +74,10 @@ public class FavoriteResource extends BaseResource {
                             MessageKeys.COMMODITY_NOT_FOUND_FOR_ID, param);
         }
         existingCommodity.setCollectionNumber(existingCommodity.getCollectionNumber() + 1);
+
+        List<Tag> commodityTags = tagService.getTagsHorizontalByCommodityId(existingCommodity.getId());
+        existingCommodity.setTags(commodityTags);
+
         Commodity updatedCommodity = commodityService.update(existingCommodity);
         Favorite insertedFavorite = null;
         if (updatedCommodity != null) {

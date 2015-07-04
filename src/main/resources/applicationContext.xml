@@ -13,6 +13,20 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
 
     <tx:annotation-driven transaction-manager="transactionManager" />
 
+<!--
+        spring data jpa repository
+        base-package:扫描的包，所有继承GenericRepository的接口所在的包需要在这里定义
+        repository-impl-postfix:仓库自定义实现类型的后缀  自动扫描并添加到接口的实现
+        factory-class 仓库接口的实现工厂
+        
+        使用 Spring Data JPA 进行持久层开发大致需要的三个步骤：
+
+1.声明持久层的接口，该接口继承 Repository，Repository 是一个标记型接口，它不包含任何方法，当然如果有需要，Spring Data 也提供了若干 Repository 子接口，其中定义了一些常用的增删改查，以及分页相关的方法。
+
+2.在接口中声明需要的业务方法。Spring Data 将根据给定的策略来为其生成实现代码。
+
+3.在 Spring 配置文件中增加一行声明，让 Spring 为声明的接口创建代理对象。配置了 <jpa:repositories> 后，Spring 初始化容器时将会扫描 base-package 指定的包目录及其子目录，为继承 Repository 或其子接口的接口创建代理对象，并将代理对象注册为 Spring Bean，业务层便可以通过 Spring 自动封装的特性来直接使用该对象。
+    -->
     <jpa:repositories base-package="com.ntu.igts.repository" repository-impl-postfix="Impl"
         entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"
         factory-class="com.ntu.igts.repository.factory.MyRepositoryFactoryBean"

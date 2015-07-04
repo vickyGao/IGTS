@@ -10,6 +10,8 @@ public interface SessionContextService {
 
     public SessionContext getByToken(String token);
 
+    public SessionContext getUserByToken(String token);
+
     public SessionContext flushSessionContext(SessionContext sessionContext);
 
     public boolean delete(String token);

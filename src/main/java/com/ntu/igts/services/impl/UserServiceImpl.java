@@ -35,7 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
-        user.setPassword(MD5Util.getMd5(user.getPassword()));
+        String passwordMD5 = MD5Util.getMd5(user.getPassword());
+        user.setSellerLevel(passwordLevel(passwordMD5));
+        user.setPassword(passwordMD5);
         User insertedUser = userRepository.create(user);
         if (insertedUser != null) {
             UserRole userRole = new UserRole();
@@ -50,6 +52,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    private int passwordLevel(String password){
+        if(password.matches("((?=[\\x21-\\x7e]+)[^A-Za-z0-9])")){
+            return 3;
+        }else if(password.matches("^[a-zA-Z0-9]{6,16}+$")){
+            return 2;
+        }else if(password.matches("^[A-Za-z]+$")){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
     @Override
     public User update(User user) {
         return userRepository.update(user);
@@ -57,8 +71,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updatePassword(String userId, String password) {
-        int count = userRepository.updatePassword(userId, MD5Util.getMd5(password));
+        String passwordMD5 = MD5Util.getMd5(password);
+        int count = userRepository.updatePassword(userId, passwordMD5);
         if (count > 0) {
+            User updateUser = getUserById(userId);
+            updateUser.setSellerLevel(passwordLevel(passwordMD5));
+            update(updateUser);
             return getUserById(userId);
         } else {
             return null;

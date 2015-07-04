@@ -29,6 +29,7 @@ public class MessageKeys {
     public static final String UPDATE_USER_FAILED = "update.user.failed";
     public static final String DELETE_USER_FOR_ID_SUCCESS = "delete.user.for.id.success";
     public static final String DELETE_USER_FOR_ID_FAIL = "delete.user.for.id.fail";
+    public static final String USERNAME_REGISTERED = "username.registered";
 
     /** Admin */
     public static final String ADMIN_NOT_FOUND_FOR_ID = "admin.not.found.for.id";

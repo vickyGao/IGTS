@@ -5,6 +5,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+
+import com.ntu.igts.enums.ActiveStateEnum;
 import com.ntu.igts.enums.OrderByEnum;
 import com.ntu.igts.enums.SortByEnum;
 import com.ntu.igts.model.Commodity;
@@ -59,10 +61,14 @@ public class CustomModuleServiceImpl implements CustomModuleService {
         List<CustomModule> customModules = customModuleRepository.findAll(SortByEnum.DISPLAY_SEQUENCE, OrderByEnum.ASC);
         for (CustomModule customModule : customModules) {
             Query query = new Query();
+//            query.setActiveYN(ActiveStateEnum.ACTIVE);
+//            query.setDistrict("");
             query.setSearchTerm(customModule.getKeyword());
             query.setSortBy(null);
-            query.setOrderBy(OrderByEnum.ASC);
+            query.setOrderBy(OrderByEnum.DESC);
             query.setPage(0);
+//            query.setTagId("");
+//            query.setSortBy(SortByEnum.RELEASE_DATE);
             query.setSize(customModule.getDisplayAmount());
             CommodityQueryResult result = commodityService.getCommoditiesBySearchTerm(query);
             List<Commodity> commodities = result.getContent();

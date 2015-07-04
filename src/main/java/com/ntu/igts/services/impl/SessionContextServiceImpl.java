@@ -52,8 +52,27 @@ public class SessionContextServiceImpl implements SessionContextService {
     public SessionContext getByToken(String token) {
         if (!StringUtil.isEmpty(token)) {
             token = CommonUtil.getFormattedToken(token);
-            return sessionContextRepository.findById(token, true);
+            SessionContext sessionContext = sessionContextRepository.findById(token, true);
+            if(sessionContext == null){
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    LOGGER.warn("Sleep 2s to get sessionContext");;
+                }
+                sessionContext = sessionContextRepository.findById(token, true);
+            }
+            return sessionContext;
         } else {
+            return null;
+        }
+    }
+
+    @Override
+    public SessionContext getUserByToken(String token) {
+        if (!StringUtil.isEmpty(token)) {
+            token = CommonUtil.getFormattedToken(token);
+            return sessionContextRepository.findById(token, true);
+        }else{
             return null;
         }
     }
@@ -78,7 +97,12 @@ public class SessionContextServiceImpl implements SessionContextService {
     public boolean delete(String token) {
         token = CommonUtil.getFormattedToken(token);
         sessionContextRepository.delete(token, false);
-        SessionContext sessionContext = getByToken(token);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            LOGGER.warn("Sleep 2s to get sessionContext");;
+        }
+        SessionContext sessionContext = getUserByToken(token);
         if (sessionContext == null) {
             return true;
         } else {

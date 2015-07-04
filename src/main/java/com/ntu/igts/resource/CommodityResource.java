@@ -1,6 +1,11 @@
 package com.ntu.igts.resource;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,12 +36,14 @@ import com.ntu.igts.i18n.MessageBuilder;
 import com.ntu.igts.i18n.MessageKeys;
 import com.ntu.igts.model.Commodity;
 import com.ntu.igts.model.SessionContext;
+import com.ntu.igts.model.Tag;
 import com.ntu.igts.model.container.CommodityList;
 import com.ntu.igts.model.container.CommodityQueryResult;
 import com.ntu.igts.model.container.Pagination;
 import com.ntu.igts.model.container.Query;
 import com.ntu.igts.services.CommodityService;
 import com.ntu.igts.services.SensitiveWordService;
+import com.ntu.igts.services.TagService;
 import com.ntu.igts.utils.CommonUtil;
 import com.ntu.igts.utils.JsonUtil;
 import com.ntu.igts.utils.StringUtil;
@@ -53,6 +60,8 @@ public class CommodityResource extends BaseResource {
     private CommodityService commodityService;
     @Resource
     private SensitiveWordService sensitiveWordService;
+    @Resource
+    private TagService tagService;
 
     /**
      * Create a commodity
@@ -87,6 +96,18 @@ public class CommodityResource extends BaseResource {
                             MessageKeys.COMMODITY_TITLE_CONTAINS_SENSITIVE_WORD);
         }
 
+        List<Tag> commodityTags = new ArrayList<Tag>();
+        List<Tag> tagsPost = pojo.getTags();
+        if (tagsPost != null && tagsPost.size() != 0) {
+            for (int i = 0; i < tagsPost.size(); i++) {
+                Tag commodityTag = tagService.getById(tagsPost.get(i).getId());
+                commodityTags.add(commodityTag);
+            }
+        }
+
+        pojo.setTags(commodityTags);
+
+        pojo.setReleaseDate(new Date());
         Commodity insertedCommodity = commodityService.create(pojo);
         if (insertedCommodity == null) {
             throw new ServiceErrorException("Create commodity failed.", MessageKeys.CREATE_COMMODITY_FAIL);
@@ -201,7 +222,7 @@ public class CommodityResource extends BaseResource {
     @Path("detail/{commodityid}")
     public String getCommodityById(@HeaderParam(Constants.HEADER_X_AUTH_HEADER) String token,
                     @PathParam("commodityid") String commodityId) {
-        filterSessionContext(token, RoleEnum.USER);
+        filterSessionContext(token, RoleEnum.ALL);
         Commodity returnCommodity = commodityService.getCommodityWithDetailById(commodityId);
         returnCommodity.setStatus(messageBuilder.buildMessage(returnCommodity.getStatus(),
                         CommonUtil.getLocaleFromRequest(webRequest)));
